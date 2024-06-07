@@ -43,6 +43,7 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<Profile> Profiles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -58,6 +59,10 @@ public partial class ApplicationDbContext : DbContext
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
+        BuildProfiles(modelBuilder);
+        BuildProfileSkills(modelBuilder);
+        BuildExperiences(modelBuilder);
+        BuildEducations(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 }
