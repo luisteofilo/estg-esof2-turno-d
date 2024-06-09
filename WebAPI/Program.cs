@@ -3,8 +3,14 @@ using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
+using ESOF.WebApp.WebAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -26,6 +32,7 @@ builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 
 
+builder.Services.AddScoped<EmailTemplateService>();
 
 var app = builder.Build();
 
@@ -65,7 +72,6 @@ app.MapGet("/users/emails", () =>
     })
     .WithName("GetUsersNames")
     .WithOpenApi();
-
 
 app.MapControllers();
 
