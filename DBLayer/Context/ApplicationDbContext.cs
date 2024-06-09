@@ -57,7 +57,7 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Interviewer> Interviewers { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
     // Email Template
-    public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
+    public DbSet<EmailTemplate> EmailTemplates { get; set; }
     // Job Features
     
     public DbSet<Job> Jobs { get; set; }

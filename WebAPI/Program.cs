@@ -1,10 +1,10 @@
-using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
 using ESOF.WebApp.WebAPI.Services;
-using Microsoft.EntityFrameworkCore;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,7 +62,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapControllers();
 
-app.Run();
+app.Run(); 
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {

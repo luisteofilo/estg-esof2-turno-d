@@ -2,10 +2,13 @@
 using ESOF.WebApp.DBLayer.Entities.Emails;
 using Microsoft.EntityFrameworkCore;
 
+
+
 namespace ESOF.WebApp.WebAPI.Services
 {
     public class EmailTemplateService
     {
+
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         // Método para obter todos os templates
@@ -15,7 +18,7 @@ namespace ESOF.WebApp.WebAPI.Services
         }
 
         // Método para obter um template específico pelo ID
-        public async Task<EmailTemplate?> GetTemplateByIdAsync(int id)
+        public async Task<EmailTemplate> GetTemplateByIdAsync(int id)
         {
             return await _db.EmailTemplates.FindAsync(id);
         }
@@ -23,6 +26,7 @@ namespace ESOF.WebApp.WebAPI.Services
         // Método para adicionar um novo template
         public async Task AddTemplateAsync(EmailTemplate template)
         {
+
             _db.EmailTemplates.Add(template);
             await _db.SaveChangesAsync();
         }
@@ -30,6 +34,7 @@ namespace ESOF.WebApp.WebAPI.Services
         // Método para atualizar um template existente
         public async Task UpdateTemplateAsync(EmailTemplate template)
         {
+
             _db.EmailTemplates.Update(template);
             await _db.SaveChangesAsync();
         }

@@ -4,22 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class EmailTemplateController : ControllerBase
     {
-        private readonly EmailTemplateService _reademailTemplateService;
+        private readonly EmailTemplateService ReademailTemplateService;
 
         public EmailTemplateController(EmailTemplateService emailTemplateService)
         {
-            _reademailTemplateService = emailTemplateService;
+            ReademailTemplateService = emailTemplateService;
         }
 
-        // Endpoint para obter todos os templates da 
+        // Endpoint para obter todos os templates
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmailTemplate>>> GetAllTemplates()
         {
-            var templates = await _reademailTemplateService.GetAllTemplatesAsync();
+            var templates = await ReademailTemplateService.GetAllTemplatesAsync();
             return Ok(templates);
         }
 
@@ -27,7 +27,8 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EmailTemplate>> GetTemplateById(int id)
         {
-            var template = await _reademailTemplateService.GetTemplateByIdAsync(id);
+            var template = await ReademailTemplateService.GetTemplateByIdAsync(id);
+            
             if (template == null)
             {
                 return NotFound();
@@ -39,7 +40,8 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> AddTemplate([FromBody] EmailTemplate template)
         {
-            await _reademailTemplateService.AddTemplateAsync(template);
+            await ReademailTemplateService.AddTemplateAsync(template);
+            
             return CreatedAtAction(nameof(GetTemplateById), new { id = template.Id }, template);
         }
 
@@ -54,8 +56,8 @@ namespace ESOF.WebApp.WebAPI.Controllers
             
             try
             {
-            await _reademailTemplateService.UpdateTemplateAsync(template);
-            return NoContent();
+                await ReademailTemplateService.UpdateTemplateAsync(template);
+                return NoContent();
             }
             catch (Exception)
             {
@@ -67,10 +69,11 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTemplate(int id)
         {
+
             try
             {
-            await _reademailTemplateService.DeleteTemplateAsync(id);
-            return NoContent();
+                await ReademailTemplateService.DeleteTemplateAsync(id);
+                return NoContent();
             }
             catch (Exception)
             {

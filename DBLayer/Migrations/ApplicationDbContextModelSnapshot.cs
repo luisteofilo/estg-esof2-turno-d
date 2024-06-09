@@ -22,6 +22,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+<<<<<<< HEAD
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
                 {
                     b.Property<Guid>("EducationId")
@@ -55,6 +56,8 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Educations");
                 });
 
+=======
+>>>>>>> 81a5f90 (First Snapshot of EmailTemplate Feature)
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Emails.EmailTemplate", b =>
                 {
                     b.Property<int>("Id")
@@ -76,6 +79,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("EmailTemplates");
                 });
 
+<<<<<<< HEAD
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
                 {
                     b.Property<Guid>("ExperienceId")
@@ -245,6 +249,8 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
 
+=======
+>>>>>>> 81a5f90 (First Snapshot of EmailTemplate Feature)
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
                 {
                     b.Property<Guid>("PermissionId")
