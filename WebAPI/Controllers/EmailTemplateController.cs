@@ -1,0 +1,66 @@
+﻿using ESOF.WebApp.DBLayer.Entities.Emails;
+using ESOF.WebApp.WebAPI.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ESOF.WebApp.WebAPI.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EmailTemplateController : ControllerBase
+    {
+        private readonly EmailTemplateService ReademailTemplateService;
+
+        public EmailTemplateController(EmailTemplateService emailTemplateService)
+        {
+            ReademailTemplateService = emailTemplateService;
+        }
+
+        // Endpoint para obter todos os templates
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<EmailTemplate>>> GetAllTemplates()
+        {
+            var templates = await ReademailTemplateService.GetAllTemplatesAsync();
+            return Ok(templates);
+        }
+
+        // Endpoint para obter um template específico pelo ID
+        [HttpGet("{id}")]
+        public async Task<ActionResult<EmailTemplate>> GetTemplateById(int id)
+        {
+            var template = await ReademailTemplateService.GetTemplateByIdAsync(id);
+            if (template == null)
+            {
+                return NotFound();
+            }
+            return Ok(template);
+        }
+
+        // Endpoint para adicionar um novo template
+        [HttpPost]
+        public async Task<ActionResult> AddTemplate([FromBody] EmailTemplate template)
+        {
+            await ReademailTemplateService.AddTemplateAsync(template);
+            return CreatedAtAction(nameof(GetTemplateById), new { id = template.Id }, template);
+        }
+
+        // Endpoint para atualizar um template existente
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateTemplate(int id, [FromBody] EmailTemplate template)
+        {
+            if (id != template.Id)
+            {
+                return BadRequest();
+            }
+            await ReademailTemplateService.UpdateTemplateAsync(template);
+            return NoContent();
+        }
+
+        // Endpoint para deletar um template pelo ID
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTemplate(int id)
+        {
+            await ReademailTemplateService.DeleteTemplateAsync(id);
+            return NoContent();
+        }
+    }
+}
