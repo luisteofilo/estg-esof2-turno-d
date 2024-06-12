@@ -44,6 +44,7 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
     public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
+    public DbSet<Profile> Profiles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -57,6 +58,11 @@ public partial class ApplicationDbContext : DbContext
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
+        BuildProfiles(modelBuilder);
+        BuildProfileSkills(modelBuilder);
+        BuildExperiences(modelBuilder);
+        BuildEducations(modelBuilder);
+        BuildSkills(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 }

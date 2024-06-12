@@ -1,0 +1,57 @@
+﻿@page "/profile"
+@using ESOF.WebApp.DBLayer.Entities
+@inherits ProfileBase
+
+@if (Profile == null)
+{
+    <h2>Loading...</h2>
+}else
+{
+    {
+        <div class="container">
+            <div class="profile-header">
+                <img src="https://via.placeholder.com/120x120" alt="Profile Picture" class="profile-picture">
+                <div class="profile-info">
+                    <h2 class="profile-name">@Profile.FirstName @Profile.LastName</h2>
+                    <p class="profile-location">@Profile.Location</p>
+                    <p class="profile-bio">@Profile.Bio</p>
+                    <div class="profile-skills">
+                    @foreach (var skill in Profile.Skills)
+                    {
+                        <span class="skill">@skill</span>
+                    }
+                    </div>
+                </div>
+            </div>
+    
+            <div class="profile-experience">
+                <h2>Experience</h2>
+                @foreach (var exp in Profile.Experiences)
+                {
+                    <div class="experience-item">
+                        <h3 class="experience-title">@exp.Name</h3>
+                        <p class="experience-company">@exp.CompanyName</p>
+                        <p class="experience-duration">@exp.Duration</p>
+                        <p>@exp.Description</p>
+                    </div>
+                }
+            </div>
+    
+            <div class="profile-education">
+                <h2>Education</h2>
+                @foreach (var edu in Profile.Educations)
+                {
+                    <div class="education-item">
+                        <h3 class="education-title">@edu.Name</h3>
+                        <p class="education-institution">@edu.SchoolName</p>
+                        <p class="education-duration">@edu.StartDate - @edu.EndDate</p>
+                    </div> 
+                }
+            </div>
+        </div>
+    }
+    
+
+}
+
+
