@@ -15,7 +15,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
             ReademailTemplateService = emailTemplateService;
         }
 
-        // Endpoint para obter todos os templates
+        // Endpoint para obter todos os templates da 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmailTemplate>>> GetAllTemplates()
         {
@@ -51,16 +51,31 @@ namespace ESOF.WebApp.WebAPI.Controllers
             {
                 return BadRequest();
             }
+            
+            try
+            {
             await ReademailTemplateService.UpdateTemplateAsync(template);
             return NoContent();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Failed to update the email template.");
+            }
         }
 
         // Endpoint para deletar um template pelo ID
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTemplate(int id)
         {
+            try
+            {
             await ReademailTemplateService.DeleteTemplateAsync(id);
             return NoContent();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Failed to delete the email template.");
+            }
         }
     }
 }
