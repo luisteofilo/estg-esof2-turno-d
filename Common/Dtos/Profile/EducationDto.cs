@@ -1,6 +1,6 @@
 ﻿using ESOF.WebApp.DBLayer.Entities;
 
-namespace ESOF.WebApp.WebAPI.Dtos.Profile;
+namespace Common.Dtos.Profile;
 
 public class EducationDto
 {

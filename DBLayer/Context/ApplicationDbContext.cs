@@ -1,4 +1,3 @@
-using DotNetEnv;
 using ESOF.WebApp.DBLayer.Entities;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +62,7 @@ public partial class ApplicationDbContext : DbContext
         BuildProfileSkills(modelBuilder);
         BuildExperiences(modelBuilder);
         BuildEducations(modelBuilder);
+        BuildSkills(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 }

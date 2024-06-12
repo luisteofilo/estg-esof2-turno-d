@@ -1,9 +1,5 @@
-﻿using ESOF.WebApp.DBLayer.Context;
-using ESOF.WebApp.WebAPI.Dtos.Profile;
-using ESOF.WebApp.WebAPI.Repositories.Contracts;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.WebAPI.Controllers;
 

@@ -1,6 +1,6 @@
-﻿namespace ESOF.WebApp.WebAPI.Dtos.Profile;
-
-using DBLayer.Entities;
+﻿
+using Common.Dtos.Profile;
+using ESOF.WebApp.DBLayer.Entities;
 
 public static class DtoConversion
 {

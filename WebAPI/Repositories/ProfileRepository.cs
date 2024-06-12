@@ -17,7 +17,7 @@ public class ProfileRepository() : IProfileRepository
             .Include(p => p.Experiences)
             .Include(p => p.Educations)
             // Hard coded Profile ID
-            .FirstOrDefaultAsync(p => p.ProfileId == Guid.Parse("d841ca87-e89d-4eea-9953-95f2d44dcbda"));
+            .FirstOrDefaultAsync(p => p.ProfileId == Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0155f"));
 
         return profile;
     }

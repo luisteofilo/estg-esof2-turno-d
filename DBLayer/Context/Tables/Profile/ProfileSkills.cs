@@ -1,7 +1,6 @@
 using ESOF.WebApp.DBLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 
-// ReSharper disable once CheckNamespace
 namespace ESOF.WebApp.DBLayer.Context;
 
 public partial class ApplicationDbContext
@@ -15,5 +14,10 @@ public partial class ApplicationDbContext
             .HasOne(ps => ps.Profile)
             .WithMany(p => p.ProfileSkills)
             .HasForeignKey(ps => ps.ProfileId);
+        
+        modelBuilder.Entity<ProfileSkill>()
+            .HasOne(ps => ps.Skill)
+            .WithMany(p => p.ProfileSkills)
+            .HasForeignKey(ps => ps.SkillId);
     }
 }
