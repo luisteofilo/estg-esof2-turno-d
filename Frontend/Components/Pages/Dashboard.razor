@@ -167,6 +167,174 @@ else
 ﻿@page "/Dashboard"
 <h3>Dashboard Page</h3>
 
+@* Link to the CSS file *@
+<link href="Dashboard/dashboard.css" rel="stylesheet" />
+
+<h3 class="dashboard-title">HR Recruitment Dashboard to Monitor Job Interview Status</h3>
+
+<div class="dashboard-container">
+    <div class="dashboard-stats">
+        <div class="stat-item">
+            <span class="stat-title">Total Applicants</span>
+            <h1 class="stat-value">122</h1>
+        </div>
+        <div class="stat-item">
+            <span class="stat-title">Shortlisted Candidates</span>
+            <h1 class="stat-value">77</h1>
+        </div>
+        <div class="stat-item">
+            <span class="stat-title">Hired Candidates</span>
+            <h1 class="stat-value">16</h1>
+        </div>
+        <div class="stat-item">
+            <span class="stat-title">Rejected Candidates</span>
+            <h1 class="stat-value">13</h1>
+        </div>
+        <div class="stat-item">
+            <span class="stat-title">Time to Hire (Days)</span>
+            <h1 class="stat-value">16</h1>
+        </div>
+        <div class="stat-item">
+            <span class="stat-title">Cost to Hire</span>
+            <h1 class="stat-value">$175</h1>
+        </div>
+    </div>
+
+    <div class="dashboard-graph">
+        <h4>Open Position by Department</h4>
+        <canvas id="openPositionChart"></canvas>
+    </div>
+
+    <div class="dashboard-graph">
+        <h4>Application Received by Source</h4>
+        <canvas id="applicationSourceChart"></canvas>
+    </div>
+
+    <div class="dashboard-graph">
+        <h4>Recruitment Funnel</h4>
+        <canvas id="recruitmentFunnelChart"></canvas>
+    </div>
+
+    <div class="dashboard-stats">
+        <div class="stat-item">
+            <span class="stat-title">Offer Acceptance Ratio</span>
+            <h1 class="stat-value">79%</h1>
+        </div>
+        <div class="stat-item">
+            <span class="stat-title">Offers Accepted</span>
+            <h1 class="stat-value">19</h1>
+        </div>
+        <div class="stat-item">
+            <span class="stat-title">Offers Provided</span>
+            <h1 class="stat-value">24</h1>
+        </div>
+    </div>
+
+    <div class="weekly-summary">
+        <h4>Application Received by Department</h4>
+        <table>
+            <thead>
+            <tr>
+                <th>Department</th>
+                <th>Applications</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Accounts</td>
+                <td>24</td>
+            </tr>
+            <tr>
+                <td>Analytics</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>HR</td>
+                <td>17</td>
+            </tr>
+            <tr>
+                <td>IT</td>
+                <td>22</td>
+            </tr>
+            <tr>
+                <td>Marketing</td>
+                <td>18</td>
+            </tr>
+            <tr>
+                <td>Operations</td>
+                <td>16</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="user-profile">
+        <img src="https://via.placeholder.com/120x120" alt="Profile Picture" class="profile-picture">
+        <div>
+            <h4>Applicant Details</h4>
+            <p>John Doe - Hired</p>
+            <p>Steve Smith - Applications</p>
+            <!-- Add more applicant details here -->
+        </div>
+    </div>
+
+    <div class="applicant-table">
+        <h4>Applicants</h4>
+        <table>
+            <thead>
+            <tr>
+                <th>Candidate</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>John Doe</td>
+                <td>Empresa</td>
+                <td><span class="status approved">Approved</span></td>
+                <td>Just now</td>
+            </tr>
+            <tr>
+                <td>Ashley Garrett</td>
+                <td>Empresa</td>
+                <td><span class="status approved">Approved</span></td>
+                <td>Just now</td>
+            </tr>
+            <tr>
+                <td>Woodrow Burton</td>
+                <td>Empresa</td>
+                <td><span class="status pending">Pending</span></td>
+                <td>Just now</td>
+            </tr>
+            <tr>
+                <td>Eric McGee</td>
+                <td>Empresa</td>
+                <td><span class="status pending">Pending</span></td>
+                <td>Nov 09, 3:23 AM</td>
+            </tr>
+            
+            <tr>
+                <td>Barbara Lucas</td>
+                <td>Empresa</td>
+                <td><span class="status rejected">Refused</span></td>
+                <td>Nov 08, 8:53 AM</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@* Reference the JavaScript file *@
+<script src="Dashboard/dashboard.js"></script>
+
 @code {
-    
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+if (firstRender)
+{
+await JSRuntime.InvokeVoidAsync("initCharts");
+}
+}
 }
