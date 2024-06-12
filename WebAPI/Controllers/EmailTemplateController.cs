@@ -15,7 +15,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
             ReademailTemplateService = emailTemplateService;
         }
 
-        // Endpoint para obter todos os templates
+        // Endpoint para obter todos os templates da 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmailTemplate>>> GetAllTemplates()
         {
