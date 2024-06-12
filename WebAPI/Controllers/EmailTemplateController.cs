@@ -8,18 +8,18 @@ namespace ESOF.WebApp.WebAPI.Controllers
     [Route("api/[controller]")]
     public class EmailTemplateController : ControllerBase
     {
-        private readonly EmailTemplateService ReademailTemplateService;
+        private readonly EmailTemplateService _reademailTemplateService;
 
         public EmailTemplateController(EmailTemplateService emailTemplateService)
         {
-            ReademailTemplateService = emailTemplateService;
+            _reademailTemplateService = emailTemplateService;
         }
 
         // Endpoint para obter todos os templates da 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<EmailTemplate>>> GetAllTemplates()
         {
-            var templates = await ReademailTemplateService.GetAllTemplatesAsync();
+            var templates = await _reademailTemplateService.GetAllTemplatesAsync();
             return Ok(templates);
         }
 
@@ -27,7 +27,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EmailTemplate>> GetTemplateById(int id)
         {
-            var template = await ReademailTemplateService.GetTemplateByIdAsync(id);
+            var template = await _reademailTemplateService.GetTemplateByIdAsync(id);
             if (template == null)
             {
                 return NotFound();
@@ -39,7 +39,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> AddTemplate([FromBody] EmailTemplate template)
         {
-            await ReademailTemplateService.AddTemplateAsync(template);
+            await _reademailTemplateService.AddTemplateAsync(template);
             return CreatedAtAction(nameof(GetTemplateById), new { id = template.Id }, template);
         }
 
@@ -54,7 +54,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
             
             try
             {
-            await ReademailTemplateService.UpdateTemplateAsync(template);
+            await _reademailTemplateService.UpdateTemplateAsync(template);
             return NoContent();
             }
             catch (Exception)
@@ -69,7 +69,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
         {
             try
             {
-            await ReademailTemplateService.DeleteTemplateAsync(id);
+            await _reademailTemplateService.DeleteTemplateAsync(id);
             return NoContent();
             }
             catch (Exception)
