@@ -1,4 +1,4 @@
-﻿namespace ESOF.WebApp.DBLayer.Entities
+namespace ESOF.WebApp.DBLayer.Entities
 {
     public enum InterviewState
     {
