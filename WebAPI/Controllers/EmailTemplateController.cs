@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class EmailTemplateController : ControllerBase
     {
         private readonly EmailTemplateService _reademailTemplateService;
