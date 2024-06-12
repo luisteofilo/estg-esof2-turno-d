@@ -1,5 +1,4 @@
-﻿using ESOF.WebApp.WebAPI.Dtos.Profile;
-using Frontend.Services.Contracts;
+﻿using Frontend.Services.Contracts;
 using Microsoft.AspNetCore.Components;
 
 namespace Frontend.Components.Pages;

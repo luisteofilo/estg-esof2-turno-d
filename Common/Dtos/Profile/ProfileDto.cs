@@ -1,6 +1,5 @@
-﻿using ESOF.WebApp.DBLayer.Entities;
-
-namespace ESOF.WebApp.WebAPI.Dtos.Profile;
+﻿
+using Common.Dtos.Profile;
 
 public class ProfileDto
 {
