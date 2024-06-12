@@ -1,0 +1,89 @@
+﻿.dashboard-container {
+    width: 95%;
+    max-width: 1200px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.dashboard-title {
+    text-align: center;
+    color: #333;
+}
+
+.dashboard-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+    margin-bottom: 10px;
+    flex: 1 1 30%;
+}
+
+.stat-title {
+    font-size: 16px;
+    color: #666;
+}
+
+.stat-value {
+    font-size: 28px;
+    color: #333;
+}
+
+.dashboard-graph {
+    margin-bottom: 20px;
+}
+
+.weekly-summary table,
+.applicant-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.weekly-summary th, .weekly-summary td,
+.applicant-table th, .applicant-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.weekly-summary th, .applicant-table th {
+    background-color: #f9f9f9;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
+    margin-right: 20px;
+}
+
+.applicant-table .status {
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.applicant-table .status.approved {
+    background-color: #4CAF50;
+}
+
+.applicant-table .status.pending {
+    background-color: #FFA500;
+}
+.applicant-table .status.rejected {
+    background-color: #FF0000; 
+}
