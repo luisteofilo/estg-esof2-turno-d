@@ -42,6 +42,9 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+
+    // Interview Features
+    public DbSet<Interview> Interviews { get; set; }
     
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
@@ -65,8 +68,12 @@ public partial class ApplicationDbContext : DbContext
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
         
+        // Interviews Features
+        BuildInterviews(modelBuilder);
+        
         // Profile Features 
         BuildProfiles(modelBuilder);
+        BuildProfileSkills(modelBuilder);
         BuildExperiences(modelBuilder);
         BuildEducations(modelBuilder);
         BuildProfileSkills(modelBuilder);
