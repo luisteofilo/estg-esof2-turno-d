@@ -11,6 +11,7 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Remove="Components\Pages\Dashboard.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,6 +21,10 @@
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Components\Pages\Dashboard.cshtml.cs" />
     </ItemGroup>
 
 </Project>
