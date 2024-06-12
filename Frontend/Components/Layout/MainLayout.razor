@@ -8,11 +8,10 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-            <button @onclick="GoToYt" formtarget="_blank">Login</button>
-            <button>Sign in</button>
+            <button @onclick="Login" Color="ButtonColor.Link"> Login </button>
+            <Button Color="ButtonColor.Primary" Outline="true" @onclick="Register"> Register </Button>
         </div>
-
+        
         <article class="content px-4">
             @Body
         </article>
@@ -25,11 +24,14 @@
     <a class="dismiss">🗙</a>
 </div>
 
-@code
-{
-    private void GoToYt()
+@code {
+    private void Register()
     {
-        NavigationManager.NavigateTo("https://www.youtube.com/");
+        NavigationManager.NavigateTo("/Register");
     }
-    
+
+    private void Login()
+    {
+        NavigationManager.NavigateTo("/Login");
+    }
 }
