@@ -27,4 +27,8 @@
       <Compile Remove="Components\Pages\Dashboard.cshtml.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Components\Pages\Dashboard.cshtml.cs" />
+    </ItemGroup>
+
 </Project>
