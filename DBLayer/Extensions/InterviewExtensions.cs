@@ -25,6 +25,7 @@ public static class InterviewExtensions
     {
         if (interview.isOnGoing())
         {
+            
             /*Função para desativar o campo onde se insere o DateTime
              A entrevista OnGoing (a decorrer) não precisa de ter data e hora
              por isso quando a entrevista está a decorrer o campo de inserção

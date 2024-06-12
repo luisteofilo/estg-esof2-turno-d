@@ -1,10 +1,10 @@
-﻿namespace ESOF.WebApp.DBLayer.Entities;
-
-public enum InterviewState
+﻿namespace ESOF.WebApp.DBLayer.Entities
 {
-    Scheduled,
-    OnGoing,
-    Finished,
-    Canceled,
-    Delayed
+    public enum InterviewState
+    {
+        Scheduled,
+        OnGoing,
+        Completed,
+        Canceled
+    }
 }
