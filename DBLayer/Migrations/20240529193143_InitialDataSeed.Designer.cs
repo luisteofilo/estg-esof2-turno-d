@@ -168,6 +168,43 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 {
                     b.Navigation("UserRoles");
                 });
+            
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Companies", b =>
+            {
+                b.Property<Guid>("CompanieId")
+                    .HasColumnType("uuid")
+                    .HasDefaultValueSql("gen_random_uuid()");
+
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("text");
+
+                b.Property<string>("Location")
+                    .IsRequired()
+                    .HasColumnType("text");
+
+                b.Property<int>("MinFunc")
+                    .IsRequired()
+                    .HasColumnType("integer");
+
+                b.Property<int>("MaxFunc")
+                    .IsRequired()
+                    .HasColumnType("integer");
+
+                b.Property<string>("Site")
+                    .IsRequired()
+                    .HasColumnType("text");
+
+                b.Property<string>("UrlImage")
+                    .HasColumnType("text");
+
+                b.HasKey("CompanieId");
+
+                b.HasIndex("Name")
+                    .IsUnique();
+
+                b.ToTable("Companies");
+            });
 #pragma warning restore 612, 618
         }
     }

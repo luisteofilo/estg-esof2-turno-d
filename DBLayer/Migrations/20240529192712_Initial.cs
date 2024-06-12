@@ -96,6 +96,30 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
+            
+            migrationBuilder.CreateTable(
+                name: "Companies",
+                columns: table => new
+                {
+                    CompanieId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: false),
+                    MinFunc = table.Column<int>(type: "integer", nullable: false),
+                    MaxFunc = table.Column<int>(type: "integer", nullable: false),
+                    Site = table.Column<string>(type: "text", nullable: false),
+                    UrlImage = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.CompanieId);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Companies_Name",
+                table: "Companies",
+                column: "Name",
+                unique: true);
+
 
             migrationBuilder.CreateIndex(
                 name: "IX_RolePermissions_PermissionId",
@@ -113,6 +137,8 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 column: "Email",
                 unique: true);
         }
+        
+        
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -131,6 +157,9 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+            
+            migrationBuilder.DropTable(
+                name: "Companies");
         }
     }
 }
