@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Fronte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{B87DF5B0-8517-414E-B3A2-3799E668D423}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{6467C0E9-02B2-4632-89A4-1465A8020751}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B87DF5B0-8517-414E-B3A2-3799E668D423}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B87DF5B0-8517-414E-B3A2-3799E668D423}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B87DF5B0-8517-414E-B3A2-3799E668D423}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6467C0E9-02B2-4632-89A4-1465A8020751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6467C0E9-02B2-4632-89A4-1465A8020751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6467C0E9-02B2-4632-89A4-1465A8020751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6467C0E9-02B2-4632-89A4-1465A8020751}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
