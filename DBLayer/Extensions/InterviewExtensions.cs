@@ -9,9 +9,9 @@ public static class InterviewExtensions
         interview.InterviewState = newState;
     }
     
-    public static bool IsFinished(this Interview interview)
+    public static bool isOnGoing(this Interview interview)
     {
-        if (interview.InterviewState == InterviewState.Canceled || interview.InterviewState == InterviewState.Completed)
+        if (interview.InterviewState == InterviewState.OnGoing)
         {
             return true;
         }
