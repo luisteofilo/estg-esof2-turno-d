@@ -1,0 +1,45 @@
+@page "/searchresults"
+@page "/searchresults/{query}"
+
+<h3>Search Results for "@query"</h3>
+
+@if (string.IsNullOrEmpty(query))
+{
+    <p>No results found. Please try searching for something.</p>
+}
+else
+{
+   
+    <ul>
+        @foreach (var result in searchResults)
+        {
+            <li>@result</li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public string query { get; set; }
+
+    private List<string> searchResults;
+
+    protected override void OnParametersSet()
+    {
+        if (!string.IsNullOrEmpty(query))
+        {
+            PerformSearch(query);
+        }
+    }
+
+    private void PerformSearch(string query)
+    {
+        
+        searchResults = new List<string>
+        {
+            "Result 1 for " + query,
+            "Result 2 for " + query,
+            "Result 3 for " + query,
+        };
+    }
+}
