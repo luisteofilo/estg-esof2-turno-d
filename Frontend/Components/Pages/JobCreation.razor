@@ -1,0 +1,136 @@
+﻿@page "/JobCreation"
+@rendermode InteractiveServer
+
+@using ESOF.WebApp.DBLayer.Entities
+
+<PageTitle>Job Creation</PageTitle>
+
+<h3>Job Creation</h3>
+
+<style>
+    form {
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        gap: 20px;
+        max-width: 600px;
+        margin-left: 300px;
+        margin-right: auto;
+    }
+    label {
+        text-align: right;
+        padding-right: 20px;
+        height: 40px;
+        line-height: 40px;
+    }
+    input, textarea, select {
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+    }
+    .description-label {
+        grid-column: 1 / span 2;
+        text-align: left;
+        height: 20px;
+    }
+    .description-input {
+        grid-column: 1 / span 2;
+        height: auto;
+    }
+    button {
+        grid-column: span 2;
+        justify-self: center;
+        padding: 10px 30px;
+        cursor: pointer;
+    }
+</style>
+
+<form @onsubmit="HandleSubmit">
+
+    <div>
+        <label for="salary">Position:</label>
+        <InputText id="salary" @bind-Value="job.Position" />    
+    </div>
+
+    <div>
+        <label for="date">End Date:</label>
+        <InputDate id="date" @bind-Value="job.Date" />
+    </div>
+
+    <div>
+        <label for="experience">Experience:</label>
+        <InputText id="experience" @bind-Value="job.Experience" />
+    </div>
+    
+    <div>
+        <label for="commitment">Commitment:</label>
+        <InputSelect id="commitment" @bind-Value="job.Commitment">
+            <option value="">--- Select Commitment Type ---</option>
+            <option value="@CommitmentType.Hourly">Hourly</option>
+            <option value="@CommitmentType.PartTime">Part Time</option>
+            <option value="@CommitmentType.FullTime">Full Time</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label for="localization">Localization:</label>
+        <InputText id="localization" @bind-Value="job.Localization" />
+    </div>
+    
+    <div>
+        <label for="remote">Remote:</label>
+        <InputSelect id="remote" @bind-Value="job.Remote">
+            <option value="">--- Select Remote Type ---</option>
+            <option value="@RemoteType.Hybrid">Hybrid</option>
+            <option value="@RemoteType.Home">Home</option>
+            <option value="@RemoteType.Office">Office</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label for="language">Language:</label>
+        <InputText id="language" @bind-Value="job.Language" />
+    </div>
+    
+    <div>
+        <label for="education">Education:</label>
+        <InputSelect id="education" @bind-Value="job.Education">
+            <option value="">--- Select Education Level ---</option>
+            <option value="@EducationLevel.PrimaryEducation">Primary Education</option>
+            <option value="@EducationLevel.SecondaryEducation">Secondary Education</option>
+            <option value="@EducationLevel.Bachelors">Bachelors</option>
+            <option value="@EducationLevel.Masters">Masters</option>
+            <option value="@EducationLevel.Doctoral">Doctoral</option>
+        </InputSelect>
+    </div>
+
+    <div class="description-label">
+        <label for="description">Description:</label>
+    </div>
+    <div class="description-input">
+        <InputTextArea id="description" @bind-Value="job.Description"></InputTextArea>
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+
+@code {
+    private Job job = new Job
+    {
+        Date = DateTime.Now
+    };
+    
+    private void HandleSubmit()
+    {
+         
+        Console.WriteLine($"Position: {job.Position}");
+        Console.WriteLine($"Date: {job.Date:dd/MM/yyyy}");
+        Console.WriteLine($"Commitment: {job.Commitment}");
+        Console.WriteLine($"Remote: {job.Remote}");
+        Console.WriteLine($"Localization: {job.Localization}");
+        Console.WriteLine($"Education: {job.Education}");
+        Console.WriteLine($"Experience: {job.Experience}");
+        Console.WriteLine($"Language: {job.Language}");
+        Console.WriteLine($"Description: {job.Description}");
+    }
+    
+}

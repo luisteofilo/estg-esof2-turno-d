@@ -9,6 +9,15 @@ public enum CommitmentType
     FullTime
 }
 
+public enum EducationLevel
+{
+    PrimaryEducation,
+    SecondaryEducation,
+    Bachelors,
+    Masters,
+    Doctoral
+}
+
 public enum RemoteType
 {
     Hybrid,
@@ -22,32 +31,35 @@ public class Job
     public Guid JobId { get; set; }
     
     //public Client Client { get; set; }    // Client who created the Job
+
+    [Required]
+    public DateTime Date { get; set; }
     
     [Required]
-    public String Salary { get; set; }
+    public String Position { get; set; }
     
     [Required]
-    public CommitmentType Commitment { get; set; }  // Commitment type of the job
+    public CommitmentType? Commitment { get; set; }  // Commitment type of the job
     
     [Required]
-    public RemoteType Remote { get; set; } // Remote type of the Job
+    public RemoteType? Remote { get; set; } // Remote type of the Job
     
     [Required]
     public String Localization { get; set; }    // Localization of the Job
     
     [Required]
-    public String Education { get; set; }   // Minimum education required
+    public EducationLevel? Education { get; set; }   // Minimum education required
     
     //public ICollection<Skill> RequiredSkills { get; set; }
     
     //public ICollection<Skill> NiceToHaveSkills { get; set; }
     
     [Required]
-    public String experience { get; set; }  // Minimum experience required
+    public String Experience { get; set; }  // Minimum experience required
     
     [Required]
-    public String language { get; set; } // Speaking language required
+    public String Language { get; set; } // Speaking language required
     
-    public String description { get; set; } // Additional information about the Job
+    public String Description { get; set; } // Additional information about the Job
     
 }
