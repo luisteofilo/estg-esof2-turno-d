@@ -22,4 +22,9 @@
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\20240613112144_MigrationNametest.cs" />
+      <Compile Remove="Migrations\20240613112144_MigrationNametest.Designer.cs" />
+    </ItemGroup>
+
 </Project>

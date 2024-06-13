@@ -8,18 +8,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="DotNetEnv" Version="3.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Dockerfile" />
     </ItemGroup>
 
 </Project>

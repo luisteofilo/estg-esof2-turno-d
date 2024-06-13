@@ -63,6 +63,10 @@ public partial class ApplicationDbContext : DbContext
         BuildExperiences(modelBuilder);
         BuildEducations(modelBuilder);
         BuildSkills(modelBuilder);
+        BuildVerticals(modelBuilder);
+        BuildverticalUser(modelBuilder);
+        BuildRoleVerticals(modelBuilder);
+        BuildSkilVerticals(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 }
