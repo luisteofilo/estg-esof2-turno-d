@@ -1,0 +1,14 @@
+.search-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /
+}
+
+.search-container input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 25px; 
+    width: 300px;
+    font-size: 16px;
+    margin-right: 10px;
+}
