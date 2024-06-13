@@ -1,4 +1,32 @@
+@inject NavigationManager Navigation
+
 <div class="search-container">
-    <input type="text" placeholder="Search" />
+    <input type="text" @bind="SearchText" @onkeydown="HandleKeyDown" placeholder="Search" />
 </div>
 
+@code {
+    [Parameter]
+    public EventCallback<string> OnSearch { get; set; }
+
+    private string SearchText { get; set; } = string.Empty;
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            Console.WriteLine($"Key pressed: {e.Key}");
+            await PerformSearch();
+        }
+    }
+
+    private async Task PerformSearch()
+    {
+        if (OnSearch.HasDelegate)
+        {
+            Console.WriteLine(SearchText);
+            await OnSearch.InvokeAsync(SearchText);
+        }
+        
+        Navigation.NavigateTo($"/searchresults/{SearchText}");
+    }
+}
