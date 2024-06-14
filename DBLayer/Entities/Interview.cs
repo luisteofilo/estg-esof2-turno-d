@@ -10,6 +10,7 @@ public class Interview
     [Key]
     public Guid CandidateId { get; set; }
     
+    [Required]
     public DateTime DateHour { get; set; }
     
     [Required]
