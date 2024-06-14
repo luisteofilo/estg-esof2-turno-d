@@ -23,4 +23,7 @@ public interface IProfileService
     Task<EducationDto> CreateEducation(Guid profileId, EducationDto educationDto);
     Task<EducationDto> UpdateEducation(Guid profileId, EducationDto updatedEducationDto);
     Task DeleteEducation(Guid profileId, Guid educationId);
+        
+        
+        Task<ProfileDto> GetProfiles();
 }

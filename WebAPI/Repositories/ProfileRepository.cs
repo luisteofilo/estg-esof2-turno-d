@@ -46,4 +46,17 @@ public class ProfileRepository : IProfileRepository
             await _dbContext.SaveChangesAsync();
         }
     }
+    public async Task<List<Profile>> GetProfiles()
+    {
+        var db = new ApplicationDbContext();
+        
+        var profiles = await db.Profiles
+            .Include(p => p.ProfileSkills)
+            .ThenInclude(ps => ps.Skill)
+            .Include(p => p.Experiences)
+            .Include(p => p.Educations)
+            .ToListAsync();
+
+        return profiles;
+    }
 }
