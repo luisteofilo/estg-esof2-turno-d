@@ -25,5 +25,5 @@ public interface IProfileService
     Task DeleteEducation(Guid profileId, Guid educationId);
         
         
-        Task<ProfileDto> GetProfiles();
+        
 }
