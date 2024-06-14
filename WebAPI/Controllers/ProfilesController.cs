@@ -8,13 +8,13 @@ namespace ESOF.WebApp.WebAPI.Controllers;
 [ApiController]
 public class ProfilesController(IProfileRepository profileRepository) : ControllerBase
 {
-    [HttpGet]
+    /*[HttpGet]
     public async Task<ActionResult<ProfileDto>> GetProfile()
     {
         try
         {
             var profiles = await profileRepository.GetProfiles();
-            
+
             if(profiles == null)
             {
                 return NotFound();
@@ -23,13 +23,13 @@ public class ProfilesController(IProfileRepository profileRepository) : Controll
             var eventDto = profiles.Select(profile => profile.ToDto()).ToList();
             return Ok(eventDto);
 
-                
+
         }
         catch (Exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError,
                 "Error retrieving data from the database.");
         }
-            
-    }
+
+    }*/
 }
