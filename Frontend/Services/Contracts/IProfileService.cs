@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Common.Dtos.Profile;
 
 namespace Frontend.Services.Contracts;
@@ -27,4 +27,5 @@ public interface IProfileService
         
         
         
+        Task<ProfileDto> GetProfiles();
 }
