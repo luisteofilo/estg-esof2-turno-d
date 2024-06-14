@@ -14,6 +14,7 @@ builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository >();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 
+builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 
 var app = builder.Build();
 

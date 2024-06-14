@@ -8,6 +8,6 @@ public partial class ApplicationDbContext
     private void BuildInterviews(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Interview>()
-            .HasKey(e => new { e.InterviewId, e.CandidateId });
+            .HasKey(e => new { e.InterviewId });
     }
 }
