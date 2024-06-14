@@ -22,4 +22,9 @@
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\20240612212640_JobFAQ.cs" />
+      <Compile Remove="Migrations\20240612212640_JobFAQ.Designer.cs" />
+    </ItemGroup>
+
 </Project>
