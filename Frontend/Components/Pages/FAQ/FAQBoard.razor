@@ -1,0 +1,38 @@
+@page "/faqs"
+@using Frontend.Helpers
+@inject NavigationManager Navigation
+
+<PageTitle>Job FAQs</PageTitle>
+
+<h1>Job FAQs</h1>
+<hr/>
+
+<div class="list-group">
+    @if (_faqJobs != null && _faqJobs.Any())
+    {
+        foreach (var job in _faqJobs)
+        {
+            <a href="@($"/faq/{job.Id}")" class="list-group-item list-group-item-action">
+                @job.Name
+            </a>
+        }
+    }
+    else
+    {
+        <p>No FAQ topics available.</p>
+    }
+</div>
+
+@code {
+    private List<FaqJobs>? _faqJobs;
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+    private class FaqJobs
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = default!;
+    }
+}
