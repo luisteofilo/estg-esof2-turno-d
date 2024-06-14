@@ -1,32 +1,33 @@
 @inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Mvc.Localization
+@inherits Frontend.Components.Pages.SearchBase
 
-<div class="search-container">
-    <input type="text" @bind="SearchText" @onkeydown="HandleKeyDown" placeholder="Search" />
-</div>
+<form method="get" @onsubmit="HandleSubmitAsync">
+    <input type="text" @bind="SearchText" placeholder="SearchText"/>
+    <button type="submit">OK</button>
+    <a href="/searchresults/@SearchText">awdawdawd</a>
+</form>
+
+@if (Profile == null)
+{
+<h2>Loading...</h2>
+}
+else
+{
+// <h2>@Profile.FirstName</h2>
+}
 
 @code {
-    [Parameter]
-    public EventCallback<string> OnSearch { get; set; }
+private string SearchText { get; set; } = string.Empty;
 
-    private string SearchText { get; set; } = string.Empty;
+private async Task HandleSubmitAsync()
+{
+Console.WriteLine(SearchText);
+Console.WriteLine("aaaaaaaaaaaaaaaaaaaaa");
 
-    private async Task HandleKeyDown(KeyboardEventArgs e)
-    {
-        if (e.Key == "Enter")
-        {
-            Console.WriteLine($"Key pressed: {e.Key}");
-            await PerformSearch();
-        }
-    }
+// Navigate to the search results page with the search text as a parameter
+Navigation.NavigateTo($"/searchresults/{SearchText}");
 
-    private async Task PerformSearch()
-    {
-        if (OnSearch.HasDelegate)
-        {
-            Console.WriteLine(SearchText);
-            await OnSearch.InvokeAsync(SearchText);
-        }
-        
-        Navigation.NavigateTo($"/searchresults/{SearchText}");
-    }
+await Task.CompletedTask;
+}
 }
