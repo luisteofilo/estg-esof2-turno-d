@@ -1,45 +1,13 @@
-@page "/searchresults"
-@page "/searchresults/{query}"
+@page "/searchresults/{SearchText}"
+@using Microsoft.AspNetCore.Components
 
-<h3>Search Results for "@query"</h3>
+<h3>Search Resultsss</h3>
 
-@if (string.IsNullOrEmpty(query))
-{
-    <p>No results found. Please try searching for something.</p>
-}
-else
-{
-   
-    <ul>
-        @foreach (var result in searchResults)
-        {
-            <li>@result</li>
-        }
-    </ul>
-}
+<p>You searched for: @SearchText</p>
 
 @code {
     [Parameter]
-    public string query { get; set; }
-
-    private List<string> searchResults;
-
-    protected override void OnParametersSet()
-    {
-        if (!string.IsNullOrEmpty(query))
-        {
-            PerformSearch(query);
-        }
-    }
-
-    private void PerformSearch(string query)
-    {
-        
-        searchResults = new List<string>
-        {
-            "Result 1 for " + query,
-            "Result 2 for " + query,
-            "Result 3 for " + query,
-        };
-    }
+    public string SearchText { get; set; }
 }
+
+
