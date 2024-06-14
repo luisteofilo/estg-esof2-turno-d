@@ -1,6 +1,5 @@
-using DotNetEnv;
 using ESOF.WebApp.DBLayer.Entities;
-using ESOF.WebApp.DBLayer.Entities.FAQ;
+using ESOF.WebApp.DBLayer.Migrations;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,12 +43,15 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
-    public DbSet<Question> FAQQuestions { get; set; }
-    public DbSet<Answer> FAQAnswers { get; set; }
+    public DbSet<Profile> Profiles { get; set; }
+    public DbSet<Entities.FAQ.Question> FAQQuestions { get; set; }
+    public DbSet<Entities.FAQ.Answer> FAQAnswers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
+
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -59,6 +61,11 @@ public partial class ApplicationDbContext : DbContext
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
+        BuildProfiles(modelBuilder);
+        BuildProfileSkills(modelBuilder);
+        BuildExperiences(modelBuilder);
+        BuildEducations(modelBuilder);
+        BuildSkills(modelBuilder);
         BuildQuestions(modelBuilder);
         BuildAnswers(modelBuilder);
         base.OnModelCreating(modelBuilder);
