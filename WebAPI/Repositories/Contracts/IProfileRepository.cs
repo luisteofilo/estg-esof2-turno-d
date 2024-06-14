@@ -10,4 +10,8 @@ public interface IProfileRepository
     Task<int> UpdateProfileAsync(Profile profile);
     Task AddProfileAsync(Profile profile);
     Task DeleteProfileAsync(Guid profileId);
+
+   
+    
+    Task<List<Profile>> GetProfiles();
 }
