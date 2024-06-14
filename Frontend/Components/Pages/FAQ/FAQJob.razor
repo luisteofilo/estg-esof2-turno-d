@@ -1,0 +1,88 @@
+@page "/faqs/{text?}"
+@using Frontend.Helpers
+@attribute [StreamRendering]
+@inject ApiHelper ApiHelper
+
+<PageTitle>Jobs FAQ</PageTitle>
+
+<div class="d-flex justify-content-between">
+<h1>Job Name FAQ</h1>
+    
+</div>
+<hr/>
+
+<div>
+    <div class="card shadow-lg mb-4">
+        <div class="card-body">
+            <h3>New Question</h3>
+            <textarea class="form-control mb-3" placeholder="Your Question"></textarea>
+            <button class="btn btn-primary" @onclick="SubmitQuestion">Submit</button>
+        </div>
+    </div>
+    
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h3>Previously Asked Questions</h3>
+        </div>
+        <div class="card-body">
+            @if (_questions != null && _questions.Any())
+            {
+                foreach (var question in _questions)
+                {
+                    <div class="mb-4">
+                        <h4>@question.Text</h4>
+                        @if (question.Answers != null && question.Answers.Any())
+                        {
+                            <ul class="list-group">
+                                @foreach (var answer in question.Answers)
+                                {
+                                    <li class="list-group-item">
+                                        <p>@answer.Text</p>
+                                        <small class="text-muted">- @answer.AuthorEmail</small>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted">No answers yet.</p>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No questions have been asked yet.</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Text { get; set; }
+    
+    private string[]? _userEmails;
+    private List<Question>? _questions;
+    private string _selectedJobId = "1";
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+    private void SubmitQuestion()
+    {
+    }
+
+    private class Question
+    {
+        public string Text { get; set; } = default!;
+        public List<Answer>? Answers { get; set; }
+    }
+
+    private class Answer
+    {
+        public string Text { get; set; } = default!;
+        public string AuthorEmail { get; set; } = default!;
+    }
+}
