@@ -20,16 +20,4 @@ public static class InterviewExtensions
             return false;
         }
     }
-
-    public static void setDateTimeOff(this Interview interview)
-    {
-        if (interview.isOnGoing())
-        {
-            
-            /*Função para desativar o campo onde se insere o DateTime
-             A entrevista OnGoing (a decorrer) não precisa de ter data e hora
-             por isso quando a entrevista está a decorrer o campo de inserção
-             data e hora não pode estar disponivel*/
-        }
-    }
 }
