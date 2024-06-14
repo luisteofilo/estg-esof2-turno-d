@@ -1,13 +1,13 @@
 ﻿@page "/dashboard"
 @inject IJSRuntime JSRuntime
 @using Frontend.Services.Contracts
-@inherits ProfileBase
-@if (Profile == null)
+
+<!--@if (Profile == null)
 {
 <h2>Loading...</h2>
 }
 else
-{
+{-->
 
     @* Link to the CSS file *@
     <link href="Dashboard/dashboard.css" rel="stylesheet"/>
@@ -123,7 +123,7 @@ else
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var profile in profiles)
+                <!--@foreach (var profile in profiles)
                 {
                 <tr>
                     <td>@profile.FirstName @profile.LastName</td>
@@ -131,25 +131,25 @@ else
                     <td><span class="status in-progress">In Progress</span></td>
                     <td>@DateTime.Now.ToString("MM/dd/yyyy")</td>
                 </tr>
-                }
+                }-->
                 </tbody>
             </table>
         </div>
     </div>
-}
+<!--}-->
 
 <script src="Dashboard/dashboard.js"></script>
 
 @code {
-    private List<ProfileDto> profiles;
+    //private List<ProfileDto> profiles;
     private bool isLoading = true;
     private string errorMessage;
 
-    protected override async Task OnInitializedAsync()
+    /*protected override async Task OnInitializedAsync()
     {
         await FetchProfiles();
         isLoading = false;
-    }
+    }*/ 
 
     private async Task FetchProfiles()
     {
