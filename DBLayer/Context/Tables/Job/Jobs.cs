@@ -10,24 +10,21 @@ public partial class Jobs
         modelBuilder.Entity<Job>()
             .Property(p => p.JobId)
             .HasDefaultValueSql("gen_random_uuid()");
-        /*
+        
         modelBuilder.Entity<Job>()
             .HasOne(j => j.Client)
             .WithMany(c => c.Jobs)
-            .HasForeignKey(c => c.ClientId);
-        */
-        /*
+            .HasForeignKey(j => j.ClientId);
+
         modelBuilder.Entity<Job>()
             .HasMany(j => j.RequiredSkills)
-            .WithOne(s => s.Jobs)           //Change to the many to many table
-            .HasForeignKey(s => s.JobId);
-        */
-        /*
+            .WithOne(js => js.Job)
+            .HasForeignKey(js => js.JobId);
+
         modelBuilder.Entity<Job>()
             .HasMany(j => j.NiceToHaveSkills)
-            .WithOne(s => s.Jobs)           //Change to the many to many table
-            .HasForeignKey(s => s.JobId);
-        */
+            .WithOne(js => js.Job)
+            .HasForeignKey(js => js.JobId);
     }
     
 }

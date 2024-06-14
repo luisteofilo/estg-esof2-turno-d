@@ -53,7 +53,7 @@
 
     <div>
         <label for="date">End Date:</label>
-        <InputDate id="date" @bind-Value="job.Date" />
+        <InputDate id="date" @bind-Value="job.EndDate" />
     </div>
 
     <div>
@@ -116,14 +116,14 @@
 @code {
     private Job job = new Job
     {
-        Date = DateTime.Now
+        EndDate = DateTime.Now
     };
     
     private void HandleSubmit()
     {
          
         Console.WriteLine($"Position: {job.Position}");
-        Console.WriteLine($"Date: {job.Date:dd/MM/yyyy}");
+        Console.WriteLine($"Date: {job.EndDate:dd/MM/yyyy}");
         Console.WriteLine($"Commitment: {job.Commitment}");
         Console.WriteLine($"Remote: {job.Remote}");
         Console.WriteLine($"Localization: {job.Localization}");

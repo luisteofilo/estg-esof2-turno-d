@@ -9,5 +9,5 @@ public class Skill
     public string Name { get; set; }
     public ICollection<ProfileSkill> ProfileSkills { get; set; }
     
-    
+    public ICollection<JobSkill> JobSkills { get; set; }
 }
