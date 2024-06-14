@@ -1,7 +1,7 @@
 ﻿@page "/dashboard"
 @inject IJSRuntime JSRuntime
+@using Frontend.Services.Contracts
 @inherits ProfileBase
-
 @if (Profile == null)
 {
 <h2>Loading...</h2>
@@ -123,37 +123,15 @@ else
                 </tr>
                 </thead>
                 <tbody>
+                @foreach (var profile in profiles)
+                {
                 <tr>
-                    <td>@Profile.FirstName @Profile.LastName</td>
+                    <td>@profile.FirstName @profile.LastName</td>
                     <td>Empresa</td>
-                    <td><span class="status approved">Approved</span></td>
-                    <td>Just now</td>
-                </tr>   
-                <tr>
-                    <td>Ashley Garrett</td>
-                    <td>Empresa</td>
-                    <td><span class="status approved">Approved</span></td>
-                    <td>Just now</td>
+                    <td><span class="status in-progress">In Progress</span></td>
+                    <td>@DateTime.Now.ToString("MM/dd/yyyy")</td>
                 </tr>
-                <tr>
-                    <td>Woodrow Burton</td>
-                    <td>Empresa</td>
-                    <td><span class="status pending">Pending</span></td>
-                    <td>Just now</td>
-                </tr>
-                <tr>
-                    <td>Eric McGee</td>
-                    <td>Empresa</td>
-                    <td><span class="status pending">Pending</span></td>
-                    <td>Nov 09, 3:23 AM</td>
-                </tr>
-
-                <tr>
-                    <td>Barbara Lucas</td>
-                    <td>Empresa</td>
-                    <td><span class="status rejected">Refused</span></td>
-                    <td>Nov 08, 8:53 AM</td>
-                </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -163,11 +141,27 @@ else
 <script src="Dashboard/dashboard.js"></script>
 
 @code {
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-if (firstRender)
-{
-await JSRuntime.InvokeVoidAsync("initCharts");
-}
-}
+    private List<ProfileDto> profiles;
+    private bool isLoading = true;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchProfiles();
+        isLoading = false;
+    }
+
+    private async Task FetchProfiles()
+    {
+        try
+        {
+            
+            //profiles = await ProfileService.GetProfiles();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load profiles: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+    }
 }
