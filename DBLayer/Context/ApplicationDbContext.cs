@@ -50,6 +50,10 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<ProfileSkill> ProfileSkills { get; set; }
     public DbSet<Skill> Skills { get; set; }
 
+    // Job Features
+    
+    public DbSet<Job> Jobs { get; set; }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
