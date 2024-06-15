@@ -9,15 +9,24 @@ namespace ESOF.WebApp.DBLayer.Entities
         public Guid InterviewId { get; set; }
         
         [Required]
-        public DateTime Date { get; set; } 
+        public DateTime DateHour { get; set; } 
         
         [Required]
-        public TimeSpan Hour { get; set; } 
-        
-        [Required]
-        public InterviewState InterviewState { get; set; } 
+        [EnumDataType(typeof(InterviewState))]
+        public string InterviewState { get; set; } 
         
         [Required]
         public string Location { get; set; }
     }
+    public static class InterviewState
+    {
+        public static readonly string[] Values = new string[]
+        {
+            "Scheduled",
+            "OnGoing",
+            "Completed",
+            "Canceled"
+        };
+    }
 }
+

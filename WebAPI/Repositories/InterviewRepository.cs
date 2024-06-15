@@ -19,8 +19,7 @@ namespace ESOF.WebApp.WebAPI.Repositories
             {
                 InterviewId = i.InterviewId,
                 InterviewState = i.InterviewState,
-                Date = i.Date,
-                Hour = i.Hour,
+                DateHour = i.DateHour,
                 Location = i.Location,
             }).ToList();
         }

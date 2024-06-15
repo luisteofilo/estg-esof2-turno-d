@@ -16,20 +16,18 @@ else
         <thead>
         <tr>
             <th>State</th>
-            <th>Hour</th>
-            <th>Date</th>
+            <th>Date & Hour</th>
             <th>Location</th>
         </tr>
         </thead>
         <tbody>
         @foreach (var interview in interviews)
         {
-            <tr>
-                <td>@interview.InterviewState</td>
-                <td>@interview.Hour</td>
-                <td>@interview.Date.ToString("yyyy-MM-dd")</td>
-                <td>@interview.Location</td>
-            </tr>
+        <tr>
+            <td>@interview.InterviewState</td>
+            <td>@interview.DateHour.ToString()</td>
+            <td>@interview.Location</td>
+        </tr>
         }
         </tbody>
     </table>
@@ -46,8 +44,7 @@ else
     public class Interview
     {
         public string InterviewState { get; set; }
-        public DateTime Date { get; set; }
-        public TimeSpan Hour { get; set; }
+        public DateTime DateHour { get; set; }
         public string Location { get; set; }
     }
 }

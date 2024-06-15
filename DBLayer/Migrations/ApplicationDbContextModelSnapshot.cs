@@ -94,38 +94,12 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("DateHour")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<TimeSpan>("Hour")
-                        .HasColumnType("interval");
-
-                    b.Property<int>("InterviewState")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Location")
+                    b.Property<string>("InterviewState")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.HasKey("InterviewId");
-
-                    b.ToTable("Interviews");
-                });
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interview", b =>
-                {
-                    b.Property<Guid>("InterviewId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<TimeSpan>("Hour")
-                        .HasColumnType("interval");
-
-                    b.Property<int>("InterviewState")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Location")
                         .IsRequired()
