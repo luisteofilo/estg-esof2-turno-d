@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240607175110_AddImportAndJobRelation")]
+    [Migration("20240615183530_AddImportAndJobRelation")]
     partial class AddImportAndJobRelation
     {
         /// <inheritdoc />
@@ -47,7 +47,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasKey("ImportId");
 
-                    b.ToTable("Import");
+                    b.ToTable("Imports", (string)null);
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
@@ -56,6 +56,10 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Company")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -70,6 +74,14 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Property<Guid?>("ImportId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OtherDetails")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -81,7 +93,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasIndex("ImportId");
 
-                    b.ToTable("Job");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>

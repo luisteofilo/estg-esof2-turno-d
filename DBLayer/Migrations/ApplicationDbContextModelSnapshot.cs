@@ -22,20 +22,13 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-<<<<<<< HEAD
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
                 {
                     b.Property<Guid>("EducationId")
-=======
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
-                {
-                    b.Property<Guid>("ImportId")
->>>>>>> ef872ce (add: create Job and Import migration)
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-<<<<<<< HEAD
                     b.Property<string>("EndDate")
                         .IsRequired()
                         .HasColumnType("text");
@@ -65,34 +58,10 @@ namespace ESOF.WebApp.DBLayer.Migrations
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
                 {
                     b.Property<Guid>("ExperienceId")
-=======
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("ImportId");
-
-                    b.ToTable("Import");
-                });
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
-                {
-                    b.Property<Guid>("JobId")
->>>>>>> ef872ce (add: create Job and Import migration)
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-<<<<<<< HEAD
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -131,6 +100,14 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Property<Guid?>("ImportId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OtherDetails")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -142,8 +119,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasIndex("ImportId");
 
-                    b.ToTable("Job");
->>>>>>> ef872ce (add: create Job and Import migration)
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
@@ -312,7 +287,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("UserRoles");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Profile", "Profile")
@@ -363,15 +337,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Profile");
 
                     b.Navigation("Skill");
-=======
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Import", "Import")
-                        .WithMany("Jobs")
-                        .HasForeignKey("ImportId");
-
-                    b.Navigation("Import");
->>>>>>> ef872ce (add: create Job and Import migration)
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.RolePermission", b =>

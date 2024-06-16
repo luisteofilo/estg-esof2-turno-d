@@ -1,10 +1,11 @@
 using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Persistence;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.DBLayer.Context;
 
-public partial class ApplicationDbContext : DbContext
+public partial class ApplicationDbContext : DbContext, IUnitOfWork
 {
     private static readonly DbContextOptions DefaultOptions = new Func<DbContextOptions>(() =>
     {
@@ -32,8 +33,8 @@ public partial class ApplicationDbContext : DbContext
     {
     }
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> _)
+        : base(DefaultOptions)
     {
     }
 
@@ -42,6 +43,7 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<Job> Jobs { get; set; }
 
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
@@ -53,8 +55,6 @@ public partial class ApplicationDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

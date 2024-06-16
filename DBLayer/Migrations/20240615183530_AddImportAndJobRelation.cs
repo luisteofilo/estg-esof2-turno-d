@@ -12,7 +12,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Import",
+                name: "Imports",
                 columns: table => new
                 {
                     ImportId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
@@ -23,16 +23,19 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Import", x => x.ImportId);
+                    table.PrimaryKey("PK_Imports", x => x.ImportId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Job",
+                name: "Jobs",
                 columns: table => new
                 {
                     JobId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     Title = table.Column<string>(type: "text", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: false),
                     Content = table.Column<string>(type: "text", nullable: false),
+                    Company = table.Column<string>(type: "text", nullable: false),
+                    OtherDetails = table.Column<string>(type: "text", nullable: false),
                     ImportId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
@@ -40,17 +43,17 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Job", x => x.JobId);
+                    table.PrimaryKey("PK_Jobs", x => x.JobId);
                     table.ForeignKey(
-                        name: "FK_Job_Import_ImportId",
+                        name: "FK_Jobs_Imports_ImportId",
                         column: x => x.ImportId,
-                        principalTable: "Import",
+                        principalTable: "Imports",
                         principalColumn: "ImportId");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Job_ImportId",
-                table: "Job",
+                name: "IX_Jobs_ImportId",
+                table: "Jobs",
                 column: "ImportId");
         }
 
@@ -58,10 +61,10 @@ namespace ESOF.WebApp.DBLayer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Job");
+                name: "Jobs");
 
             migrationBuilder.DropTable(
-                name: "Import");
+                name: "Imports");
         }
     }
 }
