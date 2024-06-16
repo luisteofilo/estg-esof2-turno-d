@@ -1,11 +1,13 @@
-﻿using ESOF.WebApp.DBLayer.Entities;
-
-namespace Common.Dtos.Profile;
+﻿namespace Common.Dtos.Profile;
 
 public class EducationDto
 {
-    public string? Name { get; set; }
-    public string? SchoolName { get; set; }
-    public string? StartDate { get; set; }
-    public string? EndDate { get; set; }
+    public Guid EducationId { get; set; }
+    public Guid ProfileId { get; set; }
+    public string Name { get; set; }
+    public string SchoolName { get; set; }
+    public string StartDate { get; set; }
+    public string EndDate { get; set; }
+    
+    
 }

@@ -11,4 +11,5 @@ public class Experience
     public string Duration { get; set; }
     public string Description { get; set; }
     public Profile Profile { get; set; }
+    
 }

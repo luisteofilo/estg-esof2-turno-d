@@ -11,6 +11,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<EmailTemplateService>();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<ISkillRepository, SkillRepository>();
+builder.Services.AddScoped<IEducationRepository, EducationRepository >();
+builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 
 var app = builder.Build();
 
