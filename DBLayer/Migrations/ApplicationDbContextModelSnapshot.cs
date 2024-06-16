@@ -86,7 +86,44 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("Experiences");
-=======
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
+                {
+                    b.Property<Guid>("ImportId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ImportId");
+
+                    b.ToTable("Imports", (string)null);
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
+                {
+                    b.Property<Guid>("JobId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Company")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("text");
@@ -119,6 +156,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasIndex("ImportId");
 
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
@@ -307,6 +345,15 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
+                {
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Import", "Import")
+                        .WithMany("Jobs")
+                        .HasForeignKey("ImportId");
+
+                    b.Navigation("Import");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>

@@ -1,6 +1,11 @@
 using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+using ESOF.WebApp.DBLayer.Persistence;
+using ESOF.WebApp.DBLayer.Persistence.Interfaces;
+using ESOF.WebApp.DBLayer.Persistence.Repositories;
+using ESOF.WebApp.WebAPI.Services;
+using ESOF.WebApp.Scraper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetService<ApplicationDbContext>()!);
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<ExternalJobService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
-builder.Services.AddScoped<IEducationRepository, EducationRepository >();
+builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+builder.Services.AddScraperDependencyInjection();
 
 
 var app = builder.Build();
@@ -64,3 +74,4 @@ app.Run();
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}

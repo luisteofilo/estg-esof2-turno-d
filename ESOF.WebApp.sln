@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{6467C0E9-02B2-4632-89A4-1465A8020751}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scraper", "Scraper\Scraper.csproj", "{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,7 +48,9 @@ Global
 		{6467C0E9-02B2-4632-89A4-1465A8020751}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6467C0E9-02B2-4632-89A4-1465A8020751}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6467C0E9-02B2-4632-89A4-1465A8020751}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
+		{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
