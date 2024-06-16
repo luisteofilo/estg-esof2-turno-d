@@ -40,4 +40,9 @@
       <Compile Remove="Components\Pages\Dashboard.cshtml.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\Dashboard\dashboard.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\Dashboard\dashboard.js" />
+    </ItemGroup>
+
 </Project>
