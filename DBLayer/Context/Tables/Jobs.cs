@@ -6,8 +6,11 @@ namespace ESOF.WebApp.DBLayer.Context;
 
 public partial class ApplicationDbContext
 {
+    private const string JobTable = "Jobs";
+
     private void BuildJobs(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Job>().ToTable(JobTable);
 
         modelBuilder.Entity<Job>()
             .Property(j => j.JobId)

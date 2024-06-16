@@ -6,8 +6,12 @@ namespace ESOF.WebApp.DBLayer.Context;
 
 public partial class ApplicationDbContext
 {
+    private const string ImportTable = "Imports";
+
     private void BuildImports(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Import>().ToTable(ImportTable);
+
         modelBuilder.Entity<Import>()
             .HasMany(j => j.Jobs)
             .WithOne(j => j.Import)

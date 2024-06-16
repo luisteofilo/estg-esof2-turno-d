@@ -11,7 +11,16 @@ public class Job
     public string Title { get; set; } = null!;
 
     [Required]
+    public string Location { get; set; } = null!;
+
+    [Required]
     public string Content { get; set; } = null!;
+
+    [Required]
+    public string Company { get; set; } = null!;
+
+    [Required]
+    public string OtherDetails { get; set; } = null!;
 
     public Import? Import { get; set; }
     public Guid? ImportId { get; set; }
