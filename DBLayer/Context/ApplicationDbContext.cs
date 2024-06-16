@@ -26,7 +26,7 @@ public partial class ApplicationDbContext : DbContext
         optionsBuilder.UseNpgsql(connectionString);
         return optionsBuilder.Options;
     })();
-    
+
     public ApplicationDbContext()
         : base(DefaultOptions)
     {
@@ -36,13 +36,13 @@ public partial class ApplicationDbContext : DbContext
         : base(options)
     {
     }
-    
+
     public DbSet<User> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
-    
+
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<Education> Educations { get; set; }
@@ -64,14 +64,17 @@ public partial class ApplicationDbContext : DbContext
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
-        
+
         // Profile Features 
         BuildProfiles(modelBuilder);
         BuildExperiences(modelBuilder);
         BuildEducations(modelBuilder);
         BuildProfileSkills(modelBuilder);
         BuildSkills(modelBuilder);
-        
+
+        //Jobs Features
+        BuildImports(modelBuilder);
+        BuildJobs(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 }
