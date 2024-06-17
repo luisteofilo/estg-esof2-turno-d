@@ -7,6 +7,7 @@ public interface IProfileService
 {
     // Profile
     Task<ProfileDto> GetProfile(Guid profileId);
+    Task<IEnumerable<ProfileDto>> GetProfiles();
     Task<ProfileDto> UpdateProfile(Guid profileId, ProfileDto updatedProfileDto);
     // Skill 
     Task<IEnumerable<SkillDto>> GetSkills();
