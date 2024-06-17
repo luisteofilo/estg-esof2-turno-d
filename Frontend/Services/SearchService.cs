@@ -1,9 +1,11 @@
+using Common.Dtos.Profile;
 using Frontend.Services.Contracts;
 
 namespace Frontend.Services;
 
 public class SearchService(HttpClient httpClient) : ISearchService
-{
+{   
+    
     public async Task<ProfileDto> GetResults()
     {
         try

@@ -1,3 +1,4 @@
+using Common.Dtos.Profile;
 using Frontend.Services;
 using Frontend.Services.Contracts;
 using Microsoft.AspNetCore.Components;
@@ -12,7 +13,7 @@ public class SearchBase: ComponentBase
     
      protected override async Task OnInitializedAsync()
     {
-        Profile = await SearchService.GetResults();
+       // Profile = await SearchService.GetResults();
 
     }
 }

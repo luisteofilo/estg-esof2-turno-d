@@ -1,3 +1,4 @@
+using Common.Dtos.Profile;
 using Microsoft.AspNetCore.Mvc;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 
@@ -13,14 +14,14 @@ public class SearchController(IProfileRepository profileRepository) : Controller
     {
         try
         {
-            var profile = await profileRepository.GetProfile();
+            var profile = await profileRepository.GetProfilesAsync();
 
             if (profile == null)
             {
                 return NotFound();
             }
 
-            var eventDto = profile.ToDto();
+            var eventDto = profile.ProfilesConvertToDto();
             return Ok(eventDto);
 
         }
