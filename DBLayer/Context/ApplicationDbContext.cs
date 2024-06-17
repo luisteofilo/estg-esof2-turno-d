@@ -73,6 +73,9 @@ public partial class ApplicationDbContext : DbContext
         
         // Interviews Features
         BuildInterviews(modelBuilder);
+        BuildSlot(modelBuilder);
+        BuildCandidates(modelBuilder);
+        BuildInterviewer(modelBuilder);
         
         // Profile Features 
         BuildProfiles(modelBuilder);
