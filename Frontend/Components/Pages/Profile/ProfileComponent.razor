@@ -1,0 +1,153 @@
+﻿@page "/profile"
+@inherits ProfileBase
+@rendermode InteractiveServer
+
+@if (Profile == null)
+{
+    <h2>Loading...</h2>
+}
+else
+{
+    <div class="container mt-4">
+        <!-- Profile Section -->
+        @if (IsEditingProfile)
+        {
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <img src="..." alt="Profile Image" class="img-fluid rounded-circle">
+                </div>
+                <div class="col-md-9">
+                    <div class="mb-3">
+                        <input type="text" @bind="EditableProfile.FirstName" class="form-control" placeholder="First Name" />
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" @bind="EditableProfile.LastName" class="form-control" placeholder="Last Name" />
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" @bind="EditableProfile.Location" class="form-control" placeholder="Location" />
+                    </div>
+                    <div class="mb-3">
+                        <textarea @bind="EditableProfile.Bio" class="form-control" placeholder="Bio" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        @foreach (var skill in EditableSkills)
+                        {
+                            <span class="badge bg-secondary me-1">
+                                @skill.Name
+                                <span class="ms-1" @onclick="() => RemoveSkill(skill)">X</span>
+                            </span>
+                        }
+                    </div>
+                    <div class="mb-3 d-flex">
+                        <select class="form-select me-2">
+                            <option value="">Select a skill</option>
+                            @foreach (var skill in AllSkills)
+                            {
+                                <option value="@skill.SkillId" @onclick="() => AddSkill(skill)">@skill.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <button class="btn btn-success me-2" @onclick="SaveProfile">Save</button>
+                    <button class="btn btn-secondary" @onclick="() => EditProfile(false)">Cancel</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <img src="..." alt="Profile Image" class="img-fluid rounded-circle">
+                </div>
+                <div class="col-md-9">
+                    <h2>@Profile.FirstName @Profile.LastName</h2>
+                    <p>@Profile.Location</p>
+                    <p>@Profile.Bio</p>  
+                    <div class="mb-3">
+                        @foreach (var skill in Skills)
+                        {
+                            <span class="badge bg-secondary me-1">@skill.Name</span>
+                        }
+                    </div>
+                    <button class="btn btn-primary" @onclick="() => EditProfile(true)">Edit Profile</button>
+                </div>
+            </div>
+        }
+
+        <hr>
+
+        <!-- Experience Section -->
+        @if (IsEditingExperiences)
+        {
+            <div class="mb-4">
+                <h2>Experience</h2>
+                @foreach (var exp in EditableExperiences)
+                {
+                    <div class="mb-3">
+                        <input type="text" @bind="exp.Name" class="form-control mb-2" placeholder="Experience Title" />
+                        <input type="text" @bind="exp.CompanyName" class="form-control mb-2" placeholder="Company Name" />
+                        <input type="text" @bind="exp.Duration" class="form-control mb-2" placeholder="Duration" />
+                        <textarea @bind="exp.Description" class="form-control mb-2" placeholder="Description" rows="3"></textarea>
+                        <button @onclick="() => RemoveExperience(exp)" class="btn btn-danger">Remove</button>
+                    </div>
+                }
+                <button class="btn btn-success me-2" @onclick="SaveExperiences">Save</button>
+                <button class="btn btn-secondary me-2" @onclick="() => EditExperiences(false)">Cancel</button>
+                <button class="btn btn-primary" @onclick="AddExperience">Add Experience</button>
+            </div>
+        }
+        else
+        {
+            <div class="mb-4">
+                <h2>Experience</h2>
+                @foreach (var exp in Experiences)
+                {
+                    <div class="mb-3">
+                        <h3>@exp.Name</h3>
+                        <p>@exp.CompanyName</p>
+                        <p>@exp.Duration</p>
+                        <p>@exp.Description</p>
+                    </div>
+                }
+                <button class="btn btn-primary" @onclick="() => EditExperiences(true)">Edit Experiences</button>
+            </div>
+        }
+
+        <hr>
+
+        <!-- Education Section -->
+        @if (IsEditingEducations)
+        {
+            <div class="mb-4">
+                <h2>Education</h2>
+                @foreach (var edu in EditableEducations)
+                {
+                    <div class="mb-3">
+                        <input type="text" @bind="edu.Name" class="form-control mb-2" placeholder="Education Title" />
+                        <input type="text" @bind="edu.SchoolName" class="form-control mb-2" placeholder="Institution Name" />
+                        <input type="text" @bind="edu.StartDate" class="form-control mb-2" placeholder="Start Date" />
+                        <input type="text" @bind="edu.EndDate" class="form-control mb-2" placeholder="End Date" />
+                        <button @onclick="() => RemoveEducation(edu)" class="btn btn-danger">Remove</button>
+                    </div>
+                }
+                <button class="btn btn-success me-2" @onclick="SaveEducations">Save</button>
+                <button class="btn btn-secondary me-2" @onclick="() => EditEducations(false)">Cancel</button>
+                <button class="btn btn-primary" @onclick="AddEducation">Add Education</button>
+            </div>
+        }
+        else
+        {
+            <div class="mb-4">
+                <h2>Education</h2>
+                @foreach (var edu in Educations)
+                {
+                    <div class="mb-3">
+                        <h3>@edu.Name</h3>
+                        <p>@edu.SchoolName</p>
+                        <p>@edu.StartDate - @edu.EndDate</p>
+                    </div>
+                }
+                <button class="btn btn-primary" @onclick="() => EditEducations(true)">Edit Education</button>
+            </div>
+        }
+    </div>
+}
