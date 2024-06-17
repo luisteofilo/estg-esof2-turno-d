@@ -45,6 +45,9 @@ public partial class ApplicationDbContext : DbContext
 
     // Interview Features
     public DbSet<Interview> Interviews { get; set; }
+    public DbSet<Interviewer> Interviewers { get; set; }
+    public DbSet<Candidate> Candidates { get; set; }
+    public DbSet<Slot> Slots { get; set; }
     
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
