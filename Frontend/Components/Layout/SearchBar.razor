@@ -6,11 +6,14 @@
     <input type="text" @bind="searchText" placeholder="SearchText" name="searchresults?searchText"/>
     <button type="submit">OK</button>
     
+
 </form>
 
 @if (Profile == null)
 {
+
 //<h2>Loading...</h2>
+
 }
 else
 {
@@ -18,6 +21,7 @@ else
 }
 
 @code {
+
 private string searchText { get; set; } = string.Empty;
 
 private async Task HandleSubmitAsync()
@@ -28,5 +32,6 @@ Navigation.NavigateTo($"/searchresults?searchText={searchText}");
 
 await Task.CompletedTask;
 }
+
 
 }
