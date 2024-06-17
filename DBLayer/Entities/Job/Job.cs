@@ -41,16 +41,16 @@ public class Job
     public String Position { get; set; }    // Position of the job
 
     [Required]
-    public CommitmentType Commitment { get; set; }  // Commitment type of the job
+    public CommitmentType? Commitment { get; set; }  // Commitment type of the job
 
     [Required]
-    public RemoteType Remote { get; set; } // Remote type of the Job
+    public RemoteType? Remote { get; set; } // Remote type of the Job
 
     [Required]
     public String Localization { get; set; }    // Localization of the Job
 
     [Required]
-    public EducationLevel Education { get; set; }   // Minimum education required
+    public EducationLevel? Education { get; set; }   // Minimum education required
 
     public ICollection<JobSkill> RequiredSkills { get; set; }
 

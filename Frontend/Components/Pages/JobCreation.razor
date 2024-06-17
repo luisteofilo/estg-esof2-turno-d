@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 
 @using ESOF.WebApp.DBLayer.Entities
+@using Blazored.Typeahead
 
 <PageTitle>Job Creation</PageTitle>
 
@@ -27,14 +28,26 @@
         padding: 5px;
         box-sizing: border-box;
     }
-    .description-label {
+    .description-label, .skills-label, .nice-to-have-skills-label {
         grid-column: 1 / span 2;
         text-align: left;
         height: 20px;
     }
-    .description-input {
+    .description-input, .skills-input, .nice-to-have-skills-input {
         grid-column: 1 / span 2;
         height: auto;
+    }
+    .checkbox-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .checkbox-container label {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+    }
+    .checkbox-container input {
+        margin-right: 10px;
     }
     button {
         grid-column: span 2;
@@ -103,6 +116,38 @@
         </InputSelect>
     </div>
 
+    <!-- Required Skills -->
+    <div class="skills-label">
+        <label for="skills">Required Skills:</label>
+    </div>
+    <div class="skills-input">
+        <div class="checkbox-container">
+            @foreach (var skill in availableSkills)
+            {
+            <label>
+                <input type="checkbox" value="@skill.SkillId" @onchange="e => UpdateSkills(e, skill, true)" />
+                @skill.Name
+            </label>
+            }
+        </div>
+    </div>
+
+    <!-- Nice to Have Skills -->
+    <div class="nice-to-have-skills-label">
+        <label for="niceToHaveSkills">Nice to Have Skills:</label>
+    </div>
+    <div class="nice-to-have-skills-input">
+        <div class="checkbox-container">
+            @foreach (var skill in availableSkills)
+            {
+            <label>
+                <input type="checkbox" value="@skill.SkillId" @onchange="e => UpdateSkills(e, skill, false)" />
+                @skill.Name
+            </label>
+            }
+        </div>
+    </div>
+
     <div class="description-label">
         <label for="description">Description:</label>
     </div>
@@ -114,14 +159,63 @@
 </form>
 
 @code {
+    
     private Job job = new Job
     {
-        EndDate = DateTime.Now
+        EndDate = DateTime.Now,
+        RequiredSkills = new List<JobSkill>(),
+        NiceToHaveSkills = new List<JobSkill>()
     };
+
+    private List<Skill> availableSkills = new List<Skill>
+    {
+        new Skill { SkillId = Guid.NewGuid(), Name = "C#" },
+        new Skill { SkillId = Guid.NewGuid(), Name = "JavaScript" },
+        new Skill { SkillId = Guid.NewGuid(), Name = "SQL" },
+        new Skill { SkillId = Guid.NewGuid(), Name = "Python" },
+        new Skill { SkillId = Guid.NewGuid(), Name = "Java" },
+        new Skill { SkillId = Guid.NewGuid(), Name = "Python" },
+        new Skill { SkillId = Guid.NewGuid(), Name = "Java" },
+        
+        // Add more skills as needed
+    };
+
+    private void UpdateSkills(ChangeEventArgs e, Skill skill, bool isRequired)
+    {
+        if ((bool)e.Value)
+        {
+            if (isRequired)
+            {
+                job.RequiredSkills.Add(new JobSkill { JobId = job.JobId, SkillId = skill.SkillId });
+            }
+            else
+            {
+                job.NiceToHaveSkills.Add(new JobSkill { JobId = job.JobId, SkillId = skill.SkillId });
+            }
+        }
+        else
+        {
+            if (isRequired)
+            {
+                var skillToRemove = job.RequiredSkills.FirstOrDefault(s => s.SkillId == skill.SkillId);
+                if (skillToRemove != null)
+                {
+                    job.RequiredSkills.Remove(skillToRemove);
+                }
+            }
+            else
+            {
+                var skillToRemove = job.NiceToHaveSkills.FirstOrDefault(s => s.SkillId == skill.SkillId);
+                if (skillToRemove != null)
+                {
+                    job.NiceToHaveSkills.Remove(skillToRemove);
+                }
+            }
+        }
+    }
     
     private void HandleSubmit()
     {
-         
         Console.WriteLine($"Position: {job.Position}");
         Console.WriteLine($"Date: {job.EndDate:dd/MM/yyyy}");
         Console.WriteLine($"Commitment: {job.Commitment}");
@@ -129,6 +223,8 @@
         Console.WriteLine($"Localization: {job.Localization}");
         Console.WriteLine($"Education: {job.Education}");
         Console.WriteLine($"Experience: {job.Experience}");
+        Console.WriteLine($"Required Skills: {string.Join(", ", job.RequiredSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
+        Console.WriteLine($"Nice to Have Skills: {string.Join(", ", job.NiceToHaveSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
         Console.WriteLine($"Language: {job.Language}");
         Console.WriteLine($"Description: {job.Description}");
     }

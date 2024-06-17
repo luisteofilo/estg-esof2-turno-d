@@ -14,13 +14,13 @@ public class JobDto
     
     public String Position { get; set; }
     
-    public CommitmentType Commitment { get; set; }
+    public CommitmentType? Commitment { get; set; }
     
-    public RemoteType Remote { get; set; }
+    public RemoteType? Remote { get; set; }
     
     public String Localization { get; set; }
     
-    public EducationLevel Education { get; set; }
+    public EducationLevel? Education { get; set; }
     
     public ICollection<JobSkill> RequiredSkills { get; set; }
     

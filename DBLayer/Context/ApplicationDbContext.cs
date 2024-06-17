@@ -53,6 +53,8 @@ public partial class ApplicationDbContext : DbContext
     // Job Features
     
     public DbSet<Job> Jobs { get; set; }
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<JobSkill> JobSkills { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
