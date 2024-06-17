@@ -1,12 +1,14 @@
 ﻿export class Dashboard {
-    static initCharts() {
+    static initCharts(skillNames) {
         console.log("entrou no init");
+        console.log("Received skill names:", skillNames);
         const target = document.querySelector("#commonSkills");
         var ctx1 = document.getElementById('commonSkills').getContext('2d');
         var commonSkills = new Chart(ctx1, {
             type: 'pie',
             data: {
-                labels: ['Analytics', 'Accounts', 'HR', 'IT', 'Marketing', 'Operations'],
+                labels: skillNames,
+                
                 datasets: [{
                     data: [25, 25, 9, 16, 26, 5],
                     backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
