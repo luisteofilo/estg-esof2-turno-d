@@ -174,7 +174,8 @@ else {
             module = await JSRuntime.InvokeAsync<IJSObjectReference>(
                 "import", "./Components/Pages/Dashboard.razor.js");
 
-            await module.InvokeVoidAsync("Dashboard.initCharts");
+            var skillNames = skills.Select(skill => skill.Name).ToList();
+            await module.InvokeVoidAsync("Dashboard.initCharts", skillNames);
         }
     }
 
