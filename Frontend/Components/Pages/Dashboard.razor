@@ -1,8 +1,12 @@
 ﻿@page "/dashboard"
-@using Common.Dtos.Profile
+@using Common.Dtos.Profile 
+@using Frontend.Helpers
 @using Frontend.Services.Contracts
 @inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
 @inject IProfileService ProfileService
+@inject ApiHelper ApiHelper
+@rendermode InteractiveServer
 
 @if (profiles == null) 
 { 
@@ -20,10 +24,12 @@ else {
         
         <div class="dashboard-stats">
             
+            
             <div class="stat-item">
                 <span class="stat-title">Total Applicants</span>
-                <h1 class="stat-value">122</h1>
+                <h1 class="stat-value">@totalApplicants</h1>
             </div>
+
             <div class="stat-item">
                 <span class="stat-title">Shortlisted Candidates</span>
                 <h1 class="stat-value">77</h1>
@@ -45,11 +51,17 @@ else {
                 <h1 class="stat-value">$175</h1>
             </div>
         </div>
+
+        <div class="dashboard-graph">
+            <h4>Most Common Skills</h4>
+            <canvas id="commonSkills"></canvas>
+        </div>
         
         <div class="dashboard-graph">
             <h4>Open Position by Department</h4>
-            <canvas id="openPositionChart"></canvas>
+            <canvas id="applicationSourceChart"></canvas>
         </div>
+        
         
         <div class="dashboard-graph">
             <h4>Application Received by Source</h4>
@@ -135,7 +147,7 @@ else {
                     <tr>
                         <td>@profile.FirstName @profile.LastName</td>
                         <td>Empresa</td>
-                        <td><span class="status in-progress">In Progress</span></td>
+                        <td><span>In Progress</span></td>
                         <td>@DateTime.Now.ToString("MM/dd/yyyy")</td>
                     </tr> 
                 }
@@ -147,13 +159,53 @@ else {
 
 
 @code {
+    
+    private IJSObjectReference? module;
+    
+    private string[]? _skills;
+    
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine("NotfirstRender!");
+        if (firstRender)
+        {
+            Console.WriteLine("firstRender!");
+            module = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                "import", "./Components/Pages/Dashboard.razor.js");
+
+            await module.InvokeVoidAsync("Dashboard.initCharts");
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        Console.WriteLine("module null");
+        if (module is not null)
+        {
+            Console.WriteLine("module not null");
+            await module.DisposeAsync();
+        }
+    }
+    
     private IEnumerable<ProfileDto>? profiles;
+    private IEnumerable<SkillDto>? skills;
+    private int totalApplicants;
 
     protected override async Task OnInitializedAsync()
     {
+        
+        Console.WriteLine("1");
+        _skills = await ApiHelper.GetFromApiAsync<string[]>("dashboard/skills");
+        
         try
         {
+            Console.WriteLine("GETALLINFOS");
             profiles = await ProfileService.GetProfiles(); // Using GetProfiles method from the service
+            skills = await ProfileService.GetSkills();
+            totalApplicants = profiles.Count();
+            Console.WriteLine(skills.First().Name);
+            Console.WriteLine(_skills.Any());
         }
         catch (Exception ex)
         {
