@@ -62,6 +62,24 @@ app.MapGet("/weatherforecast", () =>
     .WithName("GetWeatherForecast")
     .WithOpenApi();
 
+app.MapGet("/users/emails", () =>
+    {
+        var db = new ApplicationDbContext();
+        return db.Users.Select(u => u.Email);
+    })
+    .WithName("GetUsersNames")
+    .WithOpenApi();
+
+//teste skills
+app.MapGet("/dashboard/skills", () =>
+    {
+        var db = new ApplicationDbContext();
+        return db.Skills.Select(s => s.Name);
+    })
+    .WithName("GetSkillsNames")
+    .WithOpenApi();
+
+
 app.MapControllers();
 
 app.Run();
