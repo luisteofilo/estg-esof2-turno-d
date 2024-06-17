@@ -37,7 +37,7 @@ public partial class ApplicationDbContext : DbContext
         : base(options)
     {
     }
-    
+
     public DbSet<User> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<Permission> Permissions { get; set; }
@@ -45,22 +45,16 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<RolePermission> RolePermissions { get; set; }
     public DbSet<Companies> Companies { get; set; }
 
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-
-
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        // Your model configuration
         BuildUsers(modelBuilder);
         BuildRoles(modelBuilder);
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
         BuildCompanies(modelBuilder);
-        base.OnModelCreating(modelBuilder);
     }
 }
