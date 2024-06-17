@@ -1,7 +1,9 @@
 ﻿export class Dashboard {
-    initCharts() {
-        var ctx1 = document.getElementById('openPositionChart').getContext('2d');
-        var openPositionChart = new Chart(ctx1, {
+    static initCharts() {
+        console.log("entrou no init");
+        const target = document.querySelector("#commonSkills");
+        var ctx1 = document.getElementById('commonSkills').getContext('2d');
+        var commonSkills = new Chart(ctx1, {
             type: 'pie',
             data: {
                 labels: ['Analytics', 'Accounts', 'HR', 'IT', 'Marketing', 'Operations'],
@@ -12,6 +14,7 @@
             }
         });
 
+        const target1 = document.querySelector("#applicationSourceChart");
         var ctx2 = document.getElementById('applicationSourceChart').getContext('2d');
         var applicationSourceChart = new Chart(ctx2, {
             type: 'bar',
@@ -25,6 +28,7 @@
             }
         });
 
+        const target2 = document.querySelector("#recruitmentFunnelChart");
         var ctx3 = document.getElementById('recruitmentFunnelChart').getContext('2d');
         var recruitmentFunnelChart = new Chart(ctx3, {
             type: 'funnel',
@@ -37,7 +41,6 @@
             }
         });
     }
-
 }
 
 window.Dashboard = Dashboard;

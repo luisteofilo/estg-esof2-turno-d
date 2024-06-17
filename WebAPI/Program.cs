@@ -1,20 +1,19 @@
 using ESOF.WebApp.DBLayer.Context;
-using ESOF.WebApp.WebAPI.Services;
-using Microsoft.EntityFrameworkCore;
+using ESOF.WebApp.WebAPI.Repositories;
+using ESOF.WebApp.WebAPI.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-builder.Services.AddScoped<EmailTemplateService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository >();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+
 
 var app = builder.Build();
 
@@ -27,13 +26,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+var summaries = new[]
+{
+    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+};
+
 app.MapGet("/weatherforecast", () =>
     {
-        var summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         var forecast = Enumerable.Range(1, 5).Select(index =>
                 new WeatherForecast
                 (
@@ -46,6 +45,24 @@ app.MapGet("/weatherforecast", () =>
     })
     .WithName("GetWeatherForecast")
     .WithOpenApi();
+
+app.MapGet("/users/emails", () =>
+    {
+        var db = new ApplicationDbContext();
+        return db.Users.Select(u => u.Email);
+    })
+    .WithName("GetUsersNames")
+    .WithOpenApi();
+
+//teste skills
+app.MapGet("/dashboard/skills", () =>
+    {
+        var db = new ApplicationDbContext();
+        return db.Skills.Select(s => s.Name);
+    })
+    .WithName("GetSkillsNames")
+    .WithOpenApi();
+
 
 app.MapControllers();
 
