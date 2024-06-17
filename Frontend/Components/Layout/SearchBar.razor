@@ -3,9 +3,9 @@
 @inherits Frontend.Components.Pages.SearchBase
 
 <form method="get" @onsubmit="HandleSubmitAsync">
-    <input type="text" @bind="SearchText" placeholder="SearchText"/>
+    <input type="text" @bind="searchText" placeholder="SearchText" name="searchresults?searchText"/>
     <button type="submit">OK</button>
-    <a href="/searchresults/@SearchText">awdawdawd</a>
+    
 </form>
 
 @if (Profile == null)
@@ -18,16 +18,15 @@ else
 }
 
 @code {
-private string SearchText { get; set; } = string.Empty;
+private string searchText { get; set; } = string.Empty;
 
 private async Task HandleSubmitAsync()
 {
-Console.WriteLine(SearchText);
-Console.WriteLine("aaaaaaaaaaaaaaaaaaaaa");
+Console.WriteLine(searchText);
 
-// Navigate to the search results page with the search text as a parameter
-Navigation.NavigateTo($"/searchresults/{SearchText}");
+Navigation.NavigateTo($"/searchresults?searchText={searchText}");
 
 await Task.CompletedTask;
 }
+
 }

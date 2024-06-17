@@ -1,4 +1,4 @@
-@page "/searchresults/{SearchText}"
+@page "/searchresults"  
 @using Microsoft.AspNetCore.Components
 
 <h3>Search Resultsss</h3>
@@ -7,7 +7,6 @@
 
 @code {
     [Parameter]
+    [SupplyParameterFromQuery(Name = "searchText")]
     public string SearchText { get; set; }
 }
-
-
