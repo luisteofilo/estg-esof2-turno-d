@@ -2,12 +2,11 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @inherits Frontend.Components.Pages.SearchBase
 
-<form method="get" @onsubmit="HandleSubmitAsync">
-    <input type="text" @bind="searchText" placeholder="SearchText" name="searchresults?searchText"/>
-    <button type="submit">OK</button>
-    
-
-</form>
+<div class="search-container">
+    <form method="get" action="/searchresults" class="search-form">
+        <input type="text" @bind="searchText" placeholder="SearchText" name="searchText" class="search-input"/>
+    </form>
+</div>
 
 @if (Profile == null)
 {
@@ -23,15 +22,5 @@ else
 @code {
 
 private string searchText { get; set; } = string.Empty;
-
-private async Task HandleSubmitAsync()
-{
-Console.WriteLine(searchText);
-
-Navigation.NavigateTo($"/searchresults?searchText={searchText}");
-
-await Task.CompletedTask;
-}
-
 
 }

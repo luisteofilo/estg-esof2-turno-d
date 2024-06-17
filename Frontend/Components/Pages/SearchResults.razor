@@ -1,13 +1,78 @@
 @page "/searchresults"  
 @using Microsoft.AspNetCore.Components
 
+<div class="button-container">
+    <select class="custom-select">
+        <option value="">Jobs</option>
+        <option value="1">Job 1</option>
+        <option value="2">Job 2</option>
+        <option value="3">Job 3</option>
+    </select>
+    <select class="custom-select">
+        <option value="">People</option>
+        <option value="1">People 1</option>
+        <option value="2">PPeople 2</option>
+        <option value="3">People 3</option>
+    </select>
+    <select class="custom-select">
+        <option value="">Companies</option>
+        <option value="1">Company 1</option>
+        <option value="2">Company 2</option>
+        <option value="3">Company 3</option>
+    </select>
+    <select class="custom-select">
+        <option value="">Skills</option>
+        <option value="1">Skill 1</option>
+        <option value="2">Skill 2</option>
+        <option value="3">Skill 3</option>
+    </select>
+    <!--select class="custom-select">
+        <option value="">Produtos</option>
+        <option value="1">Product 1</option>
+        <option value="2">Product 2</option>
+        <option value="3">Product 3</option>
+    </!--select>
+    <select class="custom-select">
+        <option value="">Empresas</option>
+        <option value="1">Company 1</option>
+        <option value="2">Company 2</option>
+        <option value="3">Company 3</option>
+    </select>
+    <select class="custom-select">
+        <option value="">Serviços</option>
+        <option value="1">Service 1</option>
+        <option value="2">Service 2</option>
+        <option value="3">Service 3</option>
+    </select>
+    <select class="custom-select">
+        <option value="">Eventos</option>
+        <option value="1">Event 1</option>
+        <option value="2">Event 2</option>
+        <option value="3">Event 3</option>
+    </select>
+    <select class="custom-select">
+        <option value="">Cursos</option>
+        <option value="1">Course 1</option>
+        <option value="2">Course 2</option>
+        <option value="3">Course 3</option>
+    </select>
+    <select class="custom-select">
+        <option value="">Instituições de ensino</option>
+        <option value="1">Institution 1</option>
+        <option value="2">Institution 2</option>
+        <option value="3">Institution 3</option>
+    </select>!-->
+</div>
+
 <h3>Search Resultsss</h3>
 
-<p>You searched for: @SearchText</p>
+<p>You searched for: @searchText</p>
 
 @code {
     [Parameter]
     [SupplyParameterFromQuery(Name = "searchText")]
     
-    public string SearchText { get; set; }
+    public string selectedValue { get; set; }
+    
+    public string searchText { get; set; }
 }
