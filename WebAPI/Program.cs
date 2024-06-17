@@ -68,9 +68,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapControllers();
 
-app.MapControllers();
-
-app.Run(); 
+app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
