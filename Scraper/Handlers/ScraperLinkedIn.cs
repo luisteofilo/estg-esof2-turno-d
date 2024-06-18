@@ -85,12 +85,6 @@ public class ScraperLinkedIn : IScraper<JobResult>
             otherDetails += $"{descriptionJob}:  {descriptionJobDetail} \n";
         }
 
-        Console.WriteLine("Title: " + title);
-        Console.WriteLine("Location: " + location);
-        Console.WriteLine("Company: " + company);
-        Console.WriteLine("Content: " + content);
-        Console.WriteLine("Other Details: " + otherDetails);
-
         return new JobResult(
             title,
             location,

@@ -91,9 +91,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
                 {
                     b.Property<Guid>("ImportId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -116,9 +114,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
                 {
                     b.Property<Guid>("JobId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Company")
                         .IsRequired()

@@ -18,7 +18,10 @@ public partial class ApplicationDbContext
             .HasForeignKey(j => j.ImportId);
 
         modelBuilder.Entity<Import>()
-            .Property(i => i.ImportId)
-            .HasDefaultValueSql("gen_random_uuid()");
+                .Property(i => i.ImportId)
+                .ValueGeneratedNever();
+
+        modelBuilder.Entity<Import>()
+                .HasKey(key => key.ImportId);
     }
 }

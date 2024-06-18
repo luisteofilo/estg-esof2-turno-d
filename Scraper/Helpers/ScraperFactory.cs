@@ -8,7 +8,7 @@ public class ScraperFactory
     private readonly Dictionary<string, IScraper<JobResult>> _scraper = new()
     {
         { "linkedin.com", new ScraperLinkedIn() },
-        //{ "indeed.com", new ScraperIndeed() }
+        { "wellfound.com", new ScraperWellfound() }
     };
 
     public IScraper<JobResult> CreateScraper(Uri uri)
