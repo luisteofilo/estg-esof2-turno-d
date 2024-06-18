@@ -7,8 +7,35 @@ using ESOF.WebApp.WebAPI.Errors;
 
 namespace ESOF.WebApp.WebAPI.Services;
 
-public class ExternalJobService(IJobRepository _jobRepository, IUnitOfWork _unitOfWork, ScraperFactory _scraper)
+public class ExternalJobService(IJobRepository _jobRepository, IImportRepository _importRepository, IUnitOfWork _unitOfWork, ScraperFactory _scraper)
 {
+    public async Task<Job> CreateExternalJob(string url, JobResult request, CancellationToken cancellationToken)
+    {
+        var import = new Import
+        {
+            Url = url,
+        };
+
+        await _importRepository.Create(import, cancellationToken);
+
+        return import.AddJob(request.Title, request.Location, request.Content, request.Company, request.OtherDetails);
+    }
+
+    public async Task<Job> UpdateExternalJob(Job importedJob, JobResult request, CancellationToken cancellationToken)
+    {
+        importedJob.Title = request.Title;
+        importedJob.Location = request.Location;
+        importedJob.Content = request.Content;
+        importedJob.Company = request.Company;
+        importedJob.OtherDetails = request.OtherDetails;
+        importedJob.UpdatedAt = DateTimeOffset.UtcNow;
+        importedJob.Import!.UpdatedAt = DateTimeOffset.UtcNow;
+
+        await _jobRepository.Update(importedJob, cancellationToken);
+
+        return importedJob;
+    }
+
     public async Task<Job> AddExternalJobAsync(string url, CancellationToken cancellationToken)
     {
         url = url.Trim();
@@ -25,24 +52,24 @@ public class ExternalJobService(IJobRepository _jobRepository, IUnitOfWork _unit
 
         try
         {
+            var importedJob = await _jobRepository.GetJobByUrl(url, cancellationToken);
+
             IScraper<JobResult> scraper = _scraper.CreateScraper(new(url));
 
             var request = await scraper.Handle(url);
 
-            var job = new Job
+            if (importedJob == null)
             {
-                Title = request.Title,
-                Location = request.Location,
-                Content = request.Content,
-                Company = request.Company,
-                OtherDetails = request.OtherDetails,
-            };
-
-            await _jobRepository.Create(job);
+                importedJob = await CreateExternalJob(url, request, cancellationToken);
+            }
+            else
+            {
+                importedJob = await UpdateExternalJob(importedJob, request, cancellationToken);
+            }
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return job;
+            return importedJob;
         }
         catch (Exception e)
         {

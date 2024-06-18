@@ -5,7 +5,7 @@ namespace ESOF.WebApp.DBLayer.Entities;
 public class Job
 {
     [Key]
-    public Guid JobId { get; set; }
+    public Guid JobId { get; init; } = Guid.NewGuid();
 
     [Required]
     public string Title { get; set; } = null!;
@@ -27,7 +27,7 @@ public class Job
 
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
 
-    public DateTimeOffset UpdatedAt { get; init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     public DateTimeOffset? DeletedAt { get; set; }
 }

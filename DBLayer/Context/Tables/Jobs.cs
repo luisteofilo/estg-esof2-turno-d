@@ -14,6 +14,9 @@ public partial class ApplicationDbContext
 
         modelBuilder.Entity<Job>()
             .Property(j => j.JobId)
-            .HasDefaultValueSql("gen_random_uuid()");
+            .ValueGeneratedNever();
+
+        modelBuilder.Entity<Job>()
+            .HasKey(key => key.JobId);
     }
 }

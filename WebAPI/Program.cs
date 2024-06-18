@@ -17,6 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetService<ApplicationDbContext>()!);
 builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IImportRepository, ImportRepository>();
 builder.Services.AddScoped<ExternalJobService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();

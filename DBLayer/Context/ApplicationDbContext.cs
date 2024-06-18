@@ -43,7 +43,10 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+
+    // Job Features
     public DbSet<Job> Jobs { get; set; }
+    public DbSet<Import> Imports { get; set; }
 
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
@@ -75,6 +78,7 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         //Jobs Features
         BuildImports(modelBuilder);
         BuildJobs(modelBuilder);
+
         base.OnModelCreating(modelBuilder);
     }
 }
