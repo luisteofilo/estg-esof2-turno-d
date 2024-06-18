@@ -1,4 +1,4 @@
-@page "/faqs/{text?}"
+@page "/faqs/{text?}/question/{questionId?}"
 @using Frontend.Helpers
 @using ESOF.WebApp.DBLayer.Entities.FAQ
 @using ESOF.WebApp.DBLayer.Entities
@@ -24,7 +24,7 @@
     
     <div>
         <div>
-            <h3>Previously Asked Questions</h3>
+            <h3>Previously Asked Questions @{_questions.Count}</h3>
         </div>
         <hr/>
         <div>
