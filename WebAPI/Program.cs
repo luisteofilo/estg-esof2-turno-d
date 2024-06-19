@@ -6,8 +6,22 @@ using ESOF.WebApp.DBLayer.Persistence.Interfaces;
 using ESOF.WebApp.DBLayer.Persistence.Repositories;
 using ESOF.WebApp.WebAPI.Services;
 using ESOF.WebApp.Scraper;
+using Hangfire;
+using Hangfire.PostgreSql;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var dbContext = new ApplicationDbContext();
+var connectionString = dbContext.Database.GetDbConnection().ConnectionString;
+
+builder.Services.AddHangfire(config => config
+.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+.UseSimpleAssemblyNameTypeSerializer()
+.UseRecommendedSerializerSettings()
+.UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
+
+builder.Services.AddHangfireServer();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -27,6 +41,8 @@ builder.Services.AddScraperDependencyInjection();
 
 
 var app = builder.Build();
+
+app.UseHangfireDashboard("/hangfire");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
