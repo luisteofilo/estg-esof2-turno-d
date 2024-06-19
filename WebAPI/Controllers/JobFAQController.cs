@@ -7,6 +7,13 @@ namespace ESOF.WebApp.WebAPI.Controllers;
 [ApiController]
 public class JobFAQController : ControllerBase
 {
+    private readonly JobFAQService JobFAQService;
+    
+    public JobFAQController(JobFAQService jobFAQService)
+    {
+        JobFAQService = jobFAQService;
+    }
+    
     [HttpGet]
     public IActionResult Get()
     {
@@ -48,6 +55,12 @@ public class JobFAQController : ControllerBase
     
     [HttpDelete("{jobId}/questions/{questionId}")]
     public IActionResult DeleteJobQuestion(Guid jobId, Guid questionId, [FromBody] Guid userId)
+    {
+        return Ok();
+    }
+    
+    [HttpPost("{jobId}/questions/{questionId}/answers")]
+    public IActionResult PostJobQuestionAnswer(Guid jobId, Guid questionId, [FromBody] string answerText)
     {
         return Ok();
     }
