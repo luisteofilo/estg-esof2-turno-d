@@ -1,4 +1,7 @@
-﻿namespace ESOF.WebApp.DBLayer.Entities;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace ESOF.WebApp.DBLayer.Entities;
 
 public class JobSkill
 {
@@ -6,4 +9,7 @@ public class JobSkill
     public Job Job { get; set; }
     public Guid SkillId { get; set; }
     public Skill Skill { get; set; }
+    
+    [Required, DefaultValue(true)]
+    public bool IsRequired { get; set; }
 }

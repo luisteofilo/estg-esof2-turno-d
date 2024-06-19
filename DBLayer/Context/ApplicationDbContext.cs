@@ -78,6 +78,11 @@ public partial class ApplicationDbContext : DbContext
         BuildProfileSkills(modelBuilder);
         BuildSkills(modelBuilder);
         
+        // Job Features
+        BuildJobs(modelBuilder);
+        BuildJobSkills(modelBuilder);
+        BuildClients(modelBuilder);
+        
         base.OnModelCreating(modelBuilder);
     }
 }

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.DBLayer.Context;
 
-public class Clients
+public partial class ApplicationDbContext
 {
-    private void BuildJobs(ModelBuilder modelBuilder)
+    private void BuildClients(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Client>()
             .Property(c => c.ClientId)

@@ -1,8 +1,13 @@
 ﻿@page "/JobCreation"
 @rendermode InteractiveServer
 
+@using Common.Dtos.Job
+@using Common.Dtos.Profile
 @using ESOF.WebApp.DBLayer.Entities
-@using Blazored.Typeahead
+@using Frontend.Services
+@using Frontend.Services.Contracts
+@inject IJobService JobService
+@inject IProfileService ProfileService
 
 <PageTitle>Job Creation</PageTitle>
 
@@ -159,38 +164,45 @@
 </form>
 
 @code {
+
+    private IEnumerable<SkillDto>? skills;
     
-    private Job job = new Job
+    private JobDto job = new JobDto()
     {
+        ClientId =  Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0178D"),     //Hard Code
         EndDate = DateTime.Now,
-        RequiredSkills = new List<JobSkill>(),
-        NiceToHaveSkills = new List<JobSkill>()
+        RequiredSkills = new List<SkillDto>(),
+        NiceToHaveSkills = new List<SkillDto>()
     };
+//
+    private List<SkillDto> availableSkills = new List<SkillDto>();
 
-    private List<Skill> availableSkills = new List<Skill>
+    protected override async Task OnInitializedAsync()
     {
-        new Skill { SkillId = Guid.NewGuid(), Name = "C#" },
-        new Skill { SkillId = Guid.NewGuid(), Name = "JavaScript" },
-        new Skill { SkillId = Guid.NewGuid(), Name = "SQL" },
-        new Skill { SkillId = Guid.NewGuid(), Name = "Python" },
-        new Skill { SkillId = Guid.NewGuid(), Name = "Java" },
-        new Skill { SkillId = Guid.NewGuid(), Name = "Python" },
-        new Skill { SkillId = Guid.NewGuid(), Name = "Java" },
-        
-        // Add more skills as needed
-    };
+        skills = await ProfileService.GetSkills();
+        if (skills != null)
+        {
+            availableSkills = skills.ToList();
+        }
+    }
 
-    private void UpdateSkills(ChangeEventArgs e, Skill skill, bool isRequired)
+    private void UpdateSkills(ChangeEventArgs e, SkillDto skill, bool isRequired)
     {
         if ((bool)e.Value)
         {
             if (isRequired)
             {
-                job.RequiredSkills.Add(new JobSkill { JobId = job.JobId, SkillId = skill.SkillId });
+                if (!job.RequiredSkills.Any(s => s.SkillId == skill.SkillId))
+                {
+                    job.RequiredSkills.Add(skill);
+                }
             }
             else
             {
-                job.NiceToHaveSkills.Add(new JobSkill { JobId = job.JobId, SkillId = skill.SkillId });
+                if (!job.NiceToHaveSkills.Any(s => s.SkillId == skill.SkillId))
+                {
+                    job.NiceToHaveSkills.Add(skill);
+                }
             }
         }
         else
@@ -214,8 +226,10 @@
         }
     }
     
-    private void HandleSubmit()
+    private async Task HandleSubmit()
     {
+        //await JobService.CreateJob(job.JobId, job.ClientId, job);
+        
         Console.WriteLine($"Position: {job.Position}");
         Console.WriteLine($"Date: {job.EndDate:dd/MM/yyyy}");
         Console.WriteLine($"Commitment: {job.Commitment}");

@@ -1,4 +1,5 @@
 ﻿using Common.Dtos.Job;
+using Common.Dtos.Profile;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,14 +7,8 @@ namespace ESOF.WebApp.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class JobController : ControllerBase
+public class JobController(IJobRepository _jobRepository, ISkillRepository _skillRepository): ControllerBase
 { 
-    private readonly IJobRepository _jobRepository;
-
-    public JobController(IJobRepository jobRepository)
-    {
-        _jobRepository = jobRepository;
-    }
 
     [HttpPost] 
     [ProducesResponseType(201, Type = typeof(JobDto))] 
@@ -66,5 +61,21 @@ public class JobController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving job: {ex.Message}");
         }
     }
+    /*
+    [HttpGet("skills")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<SkillDto>))]
+    public async Task<IActionResult> GetSkills()
+    {
+        try
+        {
+            var skills = await _skillRepository.GetSkillsAsync();
+            var skillsDto = skills.SkillsJobConvertToDto();
+            return Ok(skillsDto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving skills: {ex.Message}");
+        }
+    }*/
 }
 

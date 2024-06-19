@@ -52,9 +52,11 @@ public class Job
     [Required]
     public EducationLevel? Education { get; set; }   // Minimum education required
 
-    public ICollection<JobSkill> RequiredSkills { get; set; }
-
-    public ICollection<JobSkill> NiceToHaveSkills { get; set; }
+    public ICollection<JobSkill> JobSkills { get; set; }
+    
+    public IQueryable RequiredSkills => JobSkills.Where(js => js.IsRequired).AsQueryable();
+    
+    public IQueryable NiceToHaveSkills => JobSkills.Where(js => !js.IsRequired).AsQueryable();
 
     [Required]
     public String Experience { get; set; }  // Minimum experience required

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.DBLayer.Context;
 
-public partial class Jobs
+public partial class ApplicationDbContext
 {
     private void BuildJobs(ModelBuilder modelBuilder)
     {
@@ -17,12 +17,7 @@ public partial class Jobs
             .HasForeignKey(j => j.ClientId);
 
         modelBuilder.Entity<Job>()
-            .HasMany(j => j.RequiredSkills)
-            .WithOne(js => js.Job)
-            .HasForeignKey(js => js.JobId);
-
-        modelBuilder.Entity<Job>()
-            .HasMany(j => j.NiceToHaveSkills)
+            .HasMany(j => j.JobSkills)
             .WithOne(js => js.Job)
             .HasForeignKey(js => js.JobId);
     }

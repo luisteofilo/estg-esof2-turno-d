@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.DBLayer.Context;
 
-public class JobSkills
+public partial class ApplicationDbContext
 {
-    private void BuildJobs(ModelBuilder modelBuilder)
+    private void BuildJobSkills(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<JobSkill>()
             .HasKey(js => new { js.JobId, js.SkillId });
