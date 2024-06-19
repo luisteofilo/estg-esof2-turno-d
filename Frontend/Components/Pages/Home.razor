@@ -5,3 +5,29 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>User Actions</h2>
+            <p>Please choose an option below:</p>
+            <button class="btn btn-primary m-2" @onclick="Register">Register</button>
+            <button class="btn btn-secondary m-2" @onclick="Login">Login</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void Register()
+    {
+        NavigationManager.NavigateTo("/register");
+    }
+
+    private void Login()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+}

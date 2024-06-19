@@ -66,7 +66,6 @@ app.MapGet("/users/with_permissions", () =>
     .WithName("GetUsersWithPermissions")
     .WithOpenApi();
 
-
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
