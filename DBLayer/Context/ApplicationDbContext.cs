@@ -1,4 +1,5 @@
 using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Entities.Emails;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,6 +49,8 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Interviewer> Interviewers { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
     public DbSet<Slot> Slots { get; set; }
+
+    public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
     
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
@@ -59,8 +62,6 @@ public partial class ApplicationDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
