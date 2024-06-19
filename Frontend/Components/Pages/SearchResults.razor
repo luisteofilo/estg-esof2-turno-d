@@ -1,5 +1,6 @@
 @page "/searchresults"  
 @using Microsoft.AspNetCore.Components
+@inherits SearchBase
 
 <div class="button-container">
     <select class="custom-select">
@@ -11,7 +12,7 @@
     <select class="custom-select">
         <option value="">People</option>
         <option value="1">People 1</option>
-        <option value="2">PPeople 2</option>
+        <option value="2">People 2</option>
         <option value="3">People 3</option>
     </select>
     <select class="custom-select">
@@ -64,15 +65,14 @@
     </select>!-->
 </div>
 
-<h3>Search Resultsss</h3>
+<h3>Search Results</h3>
 
 <p>You searched for: @searchText</p>
 
 @code {
     [Parameter]
-    [SupplyParameterFromQuery(Name = "searchText")]
+    [SupplyParameterFromQuery(Name= "searchText")]
+    public string searchText { get; set; }
     
     public string selectedValue { get; set; }
-    
-    public string searchText { get; set; }
 }

@@ -1,14 +1,18 @@
 @inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using ESOF.WebApp.DBLayer.Entities
 @inherits Frontend.Components.Pages.SearchBase
 
 <div class="search-container">
     <form method="get" action="/searchresults" class="search-form">
         <input type="text" @bind="searchText" placeholder="SearchText" name="searchText" class="search-input"/>
+        <button type="submit">Ok</button>
     </form>
 </div>
 
-@if (Profile == null)
+
+<!--@if (Profile == null)
 {
 
 //<h2>Loading...</h2>
@@ -17,7 +21,8 @@
 else
 {
 // <h2>@Profile.FirstName</h2>
-}
+}-->
+
 
 @code {
 
