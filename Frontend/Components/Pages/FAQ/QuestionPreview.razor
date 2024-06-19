@@ -22,12 +22,11 @@
     </div>
 @code {
     [Parameter]
-    public Question question { get; set; }
+    public ESOF.WebApp.DBLayer.Entities.FAQ.Question question { get; set; }
     
     void NavigateToQuestionPage()
     {
         Console.Out.WriteLine("Navigating to question page");
-        Navigation.NavigateTo($"/question/{question.QuestionId}");
+        Navigation.NavigateTo($"{Navigation.Uri}/question/{question.QuestionId}");
     }
-    
 }

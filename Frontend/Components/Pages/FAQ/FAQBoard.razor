@@ -1,6 +1,7 @@
 @page "/faqs"
-@using Frontend.Helpers
 @inject NavigationManager Navigation
+@using Frontend.Helpers
+@using Frontend.Components.Pages.FAQ.SearchWindow
 
 <PageTitle>Job FAQs</PageTitle>
 
@@ -21,6 +22,8 @@
     {
         <p>No FAQ topics available.</p>
     }
+    <SearchWindow />
+    
 </div>
 
 @code {
