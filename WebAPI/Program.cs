@@ -1,5 +1,6 @@
 using ESOF.WebApp.DBLayer.Context;
-using Helpers.Models;
+using ESOF.WebApp.WebAPI.Repositories;
+using ESOF.WebApp.WebAPI.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<ISkillRepository, SkillRepository>();
+builder.Services.AddScoped<IEducationRepository, EducationRepository >();
+builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+
 
 var app = builder.Build();
 
@@ -48,23 +55,7 @@ app.MapGet("/users/emails", () =>
     .WithOpenApi();
 
 
-app.MapGet("/users/with_permissions", () =>
-    {
-        var db = new ApplicationDbContext();
-        return db.Users.Select(u => new UserWithPermissionsModel()
-        {
-            Email = u.Email,
-            UserId = u.UserId,
-            Permissions = u.UserRoles
-                .SelectMany(ur => ur.Role.RolePermissions)
-                .Select(rp => new PermissionModel()
-                {
-                    Name = rp.Permission.Name
-                })
-        });
-    })
-    .WithName("GetUsersWithPermissions")
-    .WithOpenApi();
+app.MapControllers();
 
 app.Run();
 

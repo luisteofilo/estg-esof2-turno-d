@@ -13,6 +13,7 @@
 
 ## Migrations ##
 
+ * You need to install (once) the tools for running migrations `dotnet tool install --global dotnet-ef`
  * To create a new migration you can do `dotnet ef migrations add MigrationName`
  * To update the database you can do `dotnet ef database update`
 
