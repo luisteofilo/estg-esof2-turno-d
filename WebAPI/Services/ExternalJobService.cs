@@ -4,6 +4,7 @@ using ESOF.WebApp.DBLayer.Persistence.Interfaces;
 using ESOF.WebApp.Scraper.Contracts;
 using ESOF.WebApp.Scraper.Helpers;
 using ESOF.WebApp.WebAPI.Errors;
+using Hangfire;
 
 namespace ESOF.WebApp.WebAPI.Services;
 
@@ -36,6 +37,7 @@ public class ExternalJobService(IJobRepository _jobRepository, IImportRepository
         return importedJob;
     }
 
+    [AutomaticRetry(Attempts = 3)]
     public async Task<Job> AddExternalJobAsync(string url, CancellationToken cancellationToken)
     {
         url = url.Trim();

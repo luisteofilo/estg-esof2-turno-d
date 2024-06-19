@@ -1,6 +1,7 @@
 using ESOF.WebApp.WebAPI.Contracts.Job;
 using ESOF.WebApp.WebAPI.Errors;
 using ESOF.WebApp.WebAPI.Services;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Controllers;
@@ -11,27 +12,40 @@ public class ExternalJobController(ExternalJobService _externalJobService) : Con
 {
 
     [HttpPost]
-    public async Task<ActionResult<ExternalJobResponse>> AddExternalJob([FromBody] ExternalJobRequest request, CancellationToken cancellationToken = default)
+    public ActionResult<ExternalJobResponse> AddExternalJob([FromBody] ExternalJobRequest request, CancellationToken cancellationToken = default)
     {
         try
         {
-            var job = await _externalJobService.AddExternalJobAsync(request.Url, cancellationToken);
-            return CreatedAtAction(nameof(AddExternalJob), new ExternalJobResponse(job.JobId));
+            var taskId = BackgroundJob.Enqueue(() => _externalJobService.AddExternalJobAsync(request.Url, cancellationToken));
+            return CreatedAtAction(nameof(AddExternalJob), new ExternalJobResponse(taskId));
         }
         catch (NullUrlException)
         {
-            //TODO: Change
             return BadRequest("URL is required.");
         }
         catch (FormatUrlException)
         {
-            //TODO: Change
             return BadRequest("The provided URL format is invalid.");
         }
         catch (Exception)
         {
-            //TODO: Change
             return StatusCode(500, "An internal server error occurred.");
         }
+    }
+
+    [HttpGet("{taskId}/status")]
+    public ActionResult<string> GetJobState(string taskId)
+    {
+        using var connection = JobStorage.Current.GetConnection();
+
+        var jobData = connection.GetJobData(taskId);
+        if (jobData == null)
+        {
+            return NotFound();
+        }
+
+        var stateData = connection.GetStateData(taskId);
+        return stateData.Name;
+
     }
 }
