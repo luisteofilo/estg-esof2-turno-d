@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 namespace ESOF.WebApp.DBLayer.Entities.FAQ;
 
 public class Question
