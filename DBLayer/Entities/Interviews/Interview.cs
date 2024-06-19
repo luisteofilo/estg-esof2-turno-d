@@ -5,9 +5,11 @@ namespace ESOF.WebApp.DBLayer.Entities
 {
     public class Interview
     {
+        [Required]
         public Guid CandidateId { get; set; }
-        
+        [Required]
         public Guid InterviewerId { get; set; }
+        [Required]
         public Guid SlotId { get; set; }
         [Key]
         public Guid InterviewId { get; set; }
