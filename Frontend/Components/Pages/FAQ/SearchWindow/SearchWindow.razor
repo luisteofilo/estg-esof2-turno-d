@@ -1,0 +1,60 @@
+@rendermode InteractiveServer
+
+<div class="position-absolute w-auto bottom-0 end-0 me-2 mb-2">
+    @if (open)
+    {
+        <div class="card" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="..." class="rounded mr-2" alt="...">
+                <strong class="mr-auto">FAQ Search</strong>
+            </div>
+            <div class="toast-body">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="@_faqSuggestion" aria-label="Search" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <hr/>
+
+            </div>
+        </div>
+    }
+    <div
+        class="mt-2 btn btn-primary btn-rounded"
+        @onclick="HandleClick">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+        </svg>
+    </div>
+</div>
+
+
+@code {
+
+    private List<string> _faqSearchSuggestions = new()
+    {
+        "Company Environment",
+        "Progression",
+        "Activities"
+    };
+
+    private string _faqSuggestion;
+    private bool open { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+            _faqSuggestion = _faqSearchSuggestions[new Random().Next(0, _faqSearchSuggestions.Count)];
+            open = true;
+    }
+    
+    private void HandleClick()
+    {
+        open = !open;
+    }
+
+}
