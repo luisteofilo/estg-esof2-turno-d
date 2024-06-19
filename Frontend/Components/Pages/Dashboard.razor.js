@@ -1,10 +1,11 @@
 ﻿export class Dashboard {
-    static initCharts(skillNames) {
+    static initCharts(sel, skillNames) {
+        
         console.log("entrou no init");
         console.log("Received skill names:", skillNames);
-        const target = document.querySelector("#commonSkills");
-        var ctx1 = document.getElementById('commonSkills').getContext('2d');
-        var commonSkills = new Chart(ctx1, {
+        const target = document.querySelector(sel);
+        let ctx1 = target.getContext('2d');
+        let commonSkills = new Chart(ctx1, {
             type: 'pie',
             data: {
                 labels: skillNames,
@@ -17,8 +18,8 @@
         });
 
         const target1 = document.querySelector("#applicationSourceChart");
-        var ctx2 = document.getElementById('applicationSourceChart').getContext('2d');
-        var applicationSourceChart = new Chart(ctx2, {
+        let ctx2 = document.getElementById('applicationSourceChart').getContext('2d');
+        let applicationSourceChart = new Chart(ctx2, {
             type: 'bar',
             data: {
                 labels: ['Source 1', 'Source 2', 'Source 3'],
@@ -31,8 +32,8 @@
         });
 
         const target2 = document.querySelector("#recruitmentFunnelChart");
-        var ctx3 = document.getElementById('recruitmentFunnelChart').getContext('2d');
-        var recruitmentFunnelChart = new Chart(ctx3, {
+        let ctx3 = document.getElementById('recruitmentFunnelChart').getContext('2d');
+        let recruitmentFunnelChart = new Chart(ctx3, {
             type: 'funnel',
             data: {
                 labels: ['Applicants', 'Screening', 'Interview', 'Hired'],
