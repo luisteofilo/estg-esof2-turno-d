@@ -1,3 +1,4 @@
+using DotNetEnv;
 using ESOF.WebApp.DBLayer.Entities;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +50,8 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Experience> Experiences { get; set; }
     public DbSet<ProfileSkill> ProfileSkills { get; set; }
     public DbSet<Skill> Skills { get; set; }
+    public DbSet<Job> Jobs { get; set; }
+    public DbSet<InterviewFeedback> InterviewFeedbacks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -64,6 +67,7 @@ public partial class ApplicationDbContext : DbContext
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
+        BuildInterviewFeedback(modelBuilder);
         
         // Profile Features 
         BuildProfiles(modelBuilder);
