@@ -88,6 +88,58 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Experience");
                 });
 
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Answer", b =>
+                {
+                    b.Property<Guid>("AnswerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("AnswerText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("AuthorUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("QuestionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AnswerId");
+
+                    b.HasIndex("AuthorUserId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("FAQAnswers");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Question", b =>
+                {
+                    b.Property<Guid>("QuestionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("VerifiedAnswerAnswerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("VerifierUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("QuestionId");
+
+                    b.HasIndex("VerifiedAnswerAnswerId");
+
+                    b.HasIndex("VerifierUserId");
+
+                    b.ToTable("FAQQuestions");
+                });
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
                 {
                     b.Property<Guid>("PermissionId")
@@ -269,6 +321,40 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Profile");
                 });
 
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Answer", b =>
+                {
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.FAQ.Question", null)
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId");
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Question", b =>
+                {
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.FAQ.Answer", "VerifiedAnswer")
+                        .WithMany()
+                        .HasForeignKey("VerifiedAnswerAnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "Verifier")
+                        .WithMany()
+                        .HasForeignKey("VerifierUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("VerifiedAnswer");
+
+                    b.Navigation("Verifier");
+                });
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
@@ -335,6 +421,11 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Question", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>

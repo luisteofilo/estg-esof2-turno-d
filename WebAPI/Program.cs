@@ -1,6 +1,8 @@
 using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+using ESOF.WebApp.WebAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<JobFAQService>();
 
 var app = builder.Build();
 
@@ -50,8 +53,15 @@ app.MapGet("/users/emails", () =>
     .WithName("GetUsersNames")
     .WithOpenApi();
 
-
 app.MapControllers();
+
+app.MapGet("/FAQ/questions", async () =>
+    {
+        var db = new ApplicationDbContext();
+        return await db.FAQQuestions.ToListAsync();
+    })
+    .WithName("GetFAQQuestions")
+    .WithOpenApi();
 
 app.Run();
 
