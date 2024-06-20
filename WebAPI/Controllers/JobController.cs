@@ -38,8 +38,25 @@ public class JobController(
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error creating job: {ex.Message}");
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Error creating job: {ex.Message}");
+            // Log the full exception including the inner exception
+            Console.WriteLine($"Error creating job: {ex}");
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error creating job: {ex.Message} {ex.InnerException?.Message}");
+        }
+    }
+    
+    [HttpGet]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<JobDto>))]
+    public async Task<IActionResult> GetJobs()
+    {
+        try
+        {
+            var jobs = await _jobRepository.GetJobsAsync();
+            var jobsDto = jobs.JobsConvertToDto();
+            return Ok(jobsDto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving jobs: {ex.Message}");
         }
     }
     

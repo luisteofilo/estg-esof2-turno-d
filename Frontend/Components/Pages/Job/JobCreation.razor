@@ -60,13 +60,51 @@
         padding: 10px 30px;
         cursor: pointer;
     }
+
+    .modal {
+        display: block;
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: fit-content;
+        min-width: 300px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
 </style>
 
 <form @onsubmit="HandleSubmit">
 
     <div>
-        <label for="salary">Job Position:</label>
-        <InputText id="salary" @bind-Value="job.Position" />    
+        <label for="position">Position:</label>
+        <InputText id="position" @bind-Value="job.Position" />    
     </div>
 
     <div>
@@ -75,7 +113,7 @@
     </div>
 
     <div>
-        <label for="experience">Experience Required:</label>
+        <label for="experience">Experience:</label>
         <InputText id="experience" @bind-Value="job.Experience" />
     </div>
     
@@ -90,7 +128,7 @@
     </div>
 
     <div>
-        <label for="localization">Job Localization:</label>
+        <label for="localization">Localization:</label>
         <InputText id="localization" @bind-Value="job.Localization" />
     </div>
     
@@ -105,7 +143,7 @@
     </div>
     
     <div>
-        <label for="education">Education Required:</label>
+        <label for="education">Education:</label>
         <InputSelect id="education" @bind-Value="job.Education">
             <option value="">--- Select Education Level ---</option>
             <option value="@EducationLevel.PrimaryEducation">Primary Education</option>
@@ -125,7 +163,7 @@
             @foreach (var skill in availableSkills)
             {
             <label>
-                <input type="checkbox" value="@skill.SkillId" @onchange="e => UpdateSkills(e, skill, true)" />
+                <input type="checkbox" checked="@job.RequiredSkills.Any(s => s.SkillId == skill.SkillId)" value="@skill.SkillId" @onchange="e => UpdateSkills(e, skill, true)" />
                 @skill.Name
             </label>
             }
@@ -141,7 +179,7 @@
             @foreach (var skill in availableSkills)
             {
             <label>
-                <input type="checkbox" value="@skill.SkillId" @onchange="e => UpdateSkills(e, skill, false)" />
+                <input type="checkbox" checked="@job.NiceToHaveSkills.Any(s => s.SkillId == skill.SkillId)" value="@skill.SkillId" @onchange="e => UpdateSkills(e, skill, false)" />
                 @skill.Name
             </label>
             }
@@ -149,7 +187,7 @@
     </div>
 
     <div class="description-label">
-        <label for="description">Description (Optional):</label>
+        <label for="description">Description:</label>
     </div>
     <div class="description-input">
         <InputTextArea id="description" @bind-Value="job.Description"></InputTextArea>
@@ -158,7 +196,19 @@
     <button type="submit">Submit</button>
 </form>
 
+@if (showModal)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <span class="close" @onclick="CloseModal">&times;</span>
+            <p>Job was created successfully!</p>
+            <button @onclick="CloseModal">Ok</button>
+        </div>
+    </div>
+}
+
 @code {
+    private bool showModal = false;
 
     private IEnumerable<SkillDto>? skills;
     
@@ -169,7 +219,7 @@
         RequiredSkills = new List<SkillDto>(),
         NiceToHaveSkills = new List<SkillDto>()
     };
-//
+
     private List<SkillDto> availableSkills = new List<SkillDto>();
 
     protected override async Task OnInitializedAsync()
@@ -226,17 +276,8 @@
         try
         {
             await JobService.CreateJob(job.JobId, job.ClientId, job);
-
-            Console.WriteLine($"Position: {job.Position}");
-            Console.WriteLine($"Date: {job.EndDate:dd/MM/yyyy}");
-            Console.WriteLine($"Commitment: {job.Commitment}");
-            Console.WriteLine($"Remote: {job.Remote}");
-            Console.WriteLine($"Localization: {job.Localization}");
-            Console.WriteLine($"Education: {job.Education}");
-            Console.WriteLine($"Experience: {job.Experience}");
-            Console.WriteLine($"Required Skills: {string.Join(", ", job.RequiredSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
-            Console.WriteLine($"Nice to Have Skills: {string.Join(", ", job.NiceToHaveSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
-            Console.WriteLine($"Description: {job.Description}");
+            showModal = true;
+            StateHasChanged();
         }
         catch (HttpRequestException ex)
         {
@@ -244,5 +285,22 @@
             Console.WriteLine($"Error creating job: {ex.Message}");
         }
     }
-    
+
+    private void CloseModal()
+    {
+        showModal = false;
+        ClearForm();
+    }
+
+    private void ClearForm()
+    {
+        job = new JobDto()
+        {
+            ClientId =  Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0178D"),
+            EndDate = DateTime.Now,
+            RequiredSkills = new List<SkillDto>(),
+            NiceToHaveSkills = new List<SkillDto>()
+        };
+        StateHasChanged();
+    }
 }
