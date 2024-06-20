@@ -3,19 +3,28 @@
         
         console.log("entrou no init");
         console.log("Received skill names:", skillNames);
-        const target = document.querySelector(sel);
-        let ctx1 = target.getContext('2d');
-        let commonSkills = new Chart(ctx1, {
-            type: 'pie',
-            data: {
-                labels: skillNames,
-                
-                datasets: [{
-                    data: [25, 25, 9, 16, 26, 5],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
-                }]
-            }
-        });
+        
+            // Conta as ocorrências de cada nome de habilidade
+            const skillCounts = skillNames.reduce((acc, skill) => {
+                acc[skill] = (acc[skill] || 0) + 1;
+                return acc;
+            }, {});
+
+            const labels = Object.keys(skillCounts);
+            const counts = Object.values(skillCounts);
+
+            const target = document.querySelector(sel);
+            let ctx1 = target.getContext('2d');
+            let commonSkills = new Chart(ctx1, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                    }]
+                }
+            });
 
         const target1 = document.querySelector("#applicationSourceChart");
         let ctx2 = document.getElementById('applicationSourceChart').getContext('2d');
