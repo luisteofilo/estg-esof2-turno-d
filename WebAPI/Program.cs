@@ -1,4 +1,5 @@
 using ESOF.WebApp.DBLayer.Context;
+using Helpers.Models;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 
@@ -55,7 +56,26 @@ app.MapGet("/users/emails", () =>
     .WithOpenApi();
 
 
+
+app.MapGet("/users/with_permissions", () =>
+    {
+        var db = new ApplicationDbContext();
+        return db.Users.Select(u => new UserWithPermissionsModel()
+        {
+            Email = u.Email,
+            UserId = u.UserId,
+            Permissions = u.UserRoles
+                .SelectMany(ur => ur.Role.RolePermissions)
+                .Select(rp => new PermissionModel()
+                {
+                    Name = rp.Permission.Name
+                })
+        });
+    })
+    .WithName("GetUsersWithPermissions")
+    .WithOpenApi();
 app.MapControllers();
+
 
 app.Run();
 
