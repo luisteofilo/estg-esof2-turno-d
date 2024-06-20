@@ -8,14 +8,16 @@ namespace Frontend.Components.Pages;
 
 public class SearchBase : ComponentBase
 {
-    [Inject] public ISearchService SearchService { get; set; }
+    [Inject] public IProfileService ProfileService { get; set; }
 
-    public ProfileDto Profile { get; set; }
+    public IEnumerable<ProfileDto> Profiles { get; set; }
+    protected IEnumerable<SkillDto> Skills { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
 
-        // Profile = await SearchService.GetResults();
+         Profiles = await ProfileService.GetProfiles();
+         Skills = await ProfileService.GetSkills();
 
     }
 }
