@@ -23,8 +23,6 @@ public class JobDto
     
     public String Experience { get; set; }
     
-    public String Language { get; set; }
-    
     public String? Description { get; set; }
     
     public List<SkillDto> RequiredSkills { get; set; } = new List<SkillDto>();

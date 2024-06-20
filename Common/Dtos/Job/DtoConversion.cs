@@ -22,7 +22,6 @@ public static class DtoConversion
             Localization = job.Localization,
             Education = job.Education,
             Experience = job.Experience,
-            Language = job.Language,
             Description = job.Description
         };
     }
@@ -40,7 +39,6 @@ public static class DtoConversion
             Localization = job.Localization,
             Education = job.Education,
             Experience = job.Experience,
-            Language = job.Language,
             Description = job.Description
         };
     }
@@ -60,7 +58,6 @@ public static class DtoConversion
             Localization = jobDto.Localization,
             Education = jobDto.Education,
             Experience = jobDto.Experience,
-            Language = jobDto.Language,
             Description = jobDto.Description
         };
     }

@@ -61,8 +61,5 @@ public class Job
     [Required]
     public String Experience { get; set; }  // Minimum experience required
 
-    [Required]
-    public String Language { get; set; } // Speaking language required
-
     public String? Description { get; set; } // Additional information about the Job
 }

@@ -65,7 +65,7 @@
 <form @onsubmit="HandleSubmit">
 
     <div>
-        <label for="salary">Position:</label>
+        <label for="salary">Job Position:</label>
         <InputText id="salary" @bind-Value="job.Position" />    
     </div>
 
@@ -75,7 +75,7 @@
     </div>
 
     <div>
-        <label for="experience">Experience:</label>
+        <label for="experience">Experience Required:</label>
         <InputText id="experience" @bind-Value="job.Experience" />
     </div>
     
@@ -90,7 +90,7 @@
     </div>
 
     <div>
-        <label for="localization">Localization:</label>
+        <label for="localization">Job Localization:</label>
         <InputText id="localization" @bind-Value="job.Localization" />
     </div>
     
@@ -103,14 +103,9 @@
             <option value="@RemoteType.Office">Office</option>
         </InputSelect>
     </div>
-
-    <div>
-        <label for="language">Language:</label>
-        <InputText id="language" @bind-Value="job.Language" />
-    </div>
     
     <div>
-        <label for="education">Education:</label>
+        <label for="education">Education Required:</label>
         <InputSelect id="education" @bind-Value="job.Education">
             <option value="">--- Select Education Level ---</option>
             <option value="@EducationLevel.PrimaryEducation">Primary Education</option>
@@ -154,7 +149,7 @@
     </div>
 
     <div class="description-label">
-        <label for="description">Description:</label>
+        <label for="description">Description (Optional):</label>
     </div>
     <div class="description-input">
         <InputTextArea id="description" @bind-Value="job.Description"></InputTextArea>
@@ -241,7 +236,6 @@
             Console.WriteLine($"Experience: {job.Experience}");
             Console.WriteLine($"Required Skills: {string.Join(", ", job.RequiredSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
             Console.WriteLine($"Nice to Have Skills: {string.Join(", ", job.NiceToHaveSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
-            Console.WriteLine($"Language: {job.Language}");
             Console.WriteLine($"Description: {job.Description}");
         }
         catch (HttpRequestException ex)
