@@ -123,22 +123,23 @@ else {
                 <thead>
                 <tr>
                     <th>Candidate</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Time</th>
+                    <th>Location</th>
+   
+                    <th>See profile</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var profile in profiles) 
-                { 
+                <!--Mostra até 10 perfis-->
+                @foreach (var profile in profiles.Take(10))
+                {
                     <tr>
                         <td>@profile.FirstName @profile.LastName</td>
-                        <td>Empresa</td>
-                        <td><span>In Progress</span></td>
-                        <td>@DateTime.Now.ToString("MM/dd/yyyy")</td>
-                    </tr> 
+                        <td>@profile.Location</td>
+                        <td><a href="@profile.UrlProfile">More</a></td>
+                    </tr>
                 }
                 </tbody>
+
             </table>
         </div>
     </div> 
@@ -158,18 +159,21 @@ else {
                 module = await JSRuntime.InvokeAsync<IJSObjectReference>(
                     "import", "./Components/Pages/Dashboard.razor.js");
 
-                if (skills != null)
+                if (skills != null )
                 {
+                    Console.WriteLine();
                     var skillNames = skills.Select(skill => skill.Name).ToList();
-                    await module.InvokeVoidAsync("Dashboard.initCharts","#commonSkills",skillNames);
-                }
+                    
+                  
+                    await module.InvokeVoidAsync("Dashboard.initCharts", "#commonSkills", skillNames);
+                   }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error initializing charts: {ex.Message}");
             } 
     }
-
+    
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
         if (module is not null)
