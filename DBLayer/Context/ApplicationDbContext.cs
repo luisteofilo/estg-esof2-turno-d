@@ -67,7 +67,6 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        BuildInterviews(modelBuilder);
         BuildUsers(modelBuilder);
         BuildRoles(modelBuilder);
         BuildPermissions(modelBuilder);
@@ -82,7 +81,6 @@ public partial class ApplicationDbContext : DbContext
         
         // Profile Features 
         BuildProfiles(modelBuilder);
-        BuildProfileSkills(modelBuilder);
         BuildExperiences(modelBuilder);
         BuildEducations(modelBuilder);
         BuildProfileSkills(modelBuilder);
