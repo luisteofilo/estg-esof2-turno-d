@@ -113,6 +113,36 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 {
                     table.PrimaryKey("PK_Companies", x => x.CompanieId);
                 });
+            migrationBuilder.CreateTable(
+                name: "UserCompanies",
+                columns: table => new
+                {
+                    UserCompanyId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uuid", nullable: false),
+                    YearsWorked = table.Column<int>(type: "integer", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IsCurrentlyEmployed = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserCompanies", x => x.UserCompanyId);
+                    table.ForeignKey(
+                        name: "FK_UserCompanies_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserCompanies_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "CompanieId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+            
+            
 
             migrationBuilder.CreateIndex(
                 name: "IX_Companies_Name",
@@ -135,6 +165,11 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 name: "IX_Users_Email",
                 table: "Users",
                 column: "Email",
+                unique: true);
+            migrationBuilder.CreateIndex(
+                name: "IX_UserCompanies_UserId_CompanyId",
+                table: "UserCompanies",
+                columns: new[] { "UserId", "CompanyId" },
                 unique: true);
         }
         
@@ -160,6 +195,9 @@ namespace ESOF.WebApp.DBLayer.Migrations
             
             migrationBuilder.DropTable(
                 name: "Companies");
+            
+            migrationBuilder.DropTable(
+                name: "UserCompany");
         }
     }
 }

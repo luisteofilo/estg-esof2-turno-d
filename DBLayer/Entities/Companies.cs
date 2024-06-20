@@ -23,4 +23,7 @@ public class Companies
     public string Site { get; set; }
     
     public string UrlImage { get; set; }
+    
+    public ICollection<UserCompany> UserCompany { get; set; }
+
 }

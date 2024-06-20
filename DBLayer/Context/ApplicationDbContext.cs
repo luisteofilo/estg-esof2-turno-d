@@ -44,6 +44,7 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
     public DbSet<Companies> Companies { get; set; }
+    public DbSet<UserCompany> UserCompanies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,5 +57,6 @@ public partial class ApplicationDbContext : DbContext
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
         BuildCompanies(modelBuilder);
+        BuildUserCompanies(modelBuilder);
     }
 }
