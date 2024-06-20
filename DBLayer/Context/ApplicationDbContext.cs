@@ -43,6 +43,14 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+
+    // Interview Features
+    public DbSet<Interview> Interviews { get; set; }
+    public DbSet<Interviewer> Interviewers { get; set; }
+    public DbSet<Candidate> Candidates { get; set; }
+    public DbSet<Slot> Slots { get; set; }
+    
+    //EmailTemplate
     public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
     
     // Profile Features
@@ -59,14 +67,22 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        BuildInterviews(modelBuilder);
         BuildUsers(modelBuilder);
         BuildRoles(modelBuilder);
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
         
+        // Interviews Features
+        BuildInterviews(modelBuilder);
+        BuildSlot(modelBuilder);
+        BuildCandidates(modelBuilder);
+        BuildInterviewer(modelBuilder);
+        
         // Profile Features 
         BuildProfiles(modelBuilder);
+        BuildProfileSkills(modelBuilder);
         BuildExperiences(modelBuilder);
         BuildEducations(modelBuilder);
         BuildProfileSkills(modelBuilder);

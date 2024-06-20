@@ -1,12 +1,12 @@
 using ESOF.WebApp.DBLayer.Context;
+using ESOF.WebApp.WebAPI.Repositories;
+using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using ESOF.WebApp.WebAPI.Services;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
@@ -15,6 +15,7 @@ builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository >();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+
 
 var app = builder.Build();
 
