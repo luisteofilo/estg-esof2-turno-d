@@ -22,4 +22,9 @@
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\20240609154849_EmailTemplateSnapshot.cs" />
+      <Compile Remove="Migrations\20240609154849_EmailTemplateSnapshot.Designer.cs" />
+    </ItemGroup>
+
 </Project>
