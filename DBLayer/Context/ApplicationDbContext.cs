@@ -50,6 +50,10 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<Experience> Experiences { get; set; }
     public DbSet<ProfileSkill> ProfileSkills { get; set; }
     public DbSet<Skill> Skills { get; set; }
+    
+    public DbSet<Job> Jobs { get; set; }
+    public DbSet<Position> Positions { get; set; }
+    public DbSet<Timesheet> Timesheets { get; set; }
 
     // Interview Features
     public DbSet<Interview> Interviews { get; set; }
