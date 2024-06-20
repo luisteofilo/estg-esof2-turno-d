@@ -1,6 +1,5 @@
-﻿
-namespace Common.Dtos.Interview;
-using ESOF.WebApp.DBLayer.Entities;
+﻿namespace Common.Dtos.Interview;
+using ESOF.WebApp.DBLayer.Entities.Interviews;
 
 public static class DtoConversion
 {

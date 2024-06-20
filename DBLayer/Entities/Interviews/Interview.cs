@@ -1,13 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ESOF.WebApp.DBLayer.Entities
+namespace ESOF.WebApp.DBLayer.Entities.Interviews
 {
     public class Interview
     {
+        [Required]
         public Guid CandidateId { get; set; }
-        
+        [Required]
         public Guid InterviewerId { get; set; }
+
         public Guid SlotId { get; set; }
         [Key]
         public Guid InterviewId { get; set; }

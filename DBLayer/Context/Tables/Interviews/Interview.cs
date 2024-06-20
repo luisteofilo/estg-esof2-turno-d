@@ -1,4 +1,5 @@
 ﻿using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Entities.Interviews;
 using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.DBLayer.Context;

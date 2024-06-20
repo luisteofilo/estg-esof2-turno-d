@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ESOF.WebApp.DBLayer.Entities;
+namespace ESOF.WebApp.DBLayer.Entities.Interviews;
 
 public class Interviewer
 {

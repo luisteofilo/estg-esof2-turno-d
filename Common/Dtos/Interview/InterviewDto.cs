@@ -1,5 +1,6 @@
 ﻿
 using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Entities.Interviews;
 
 namespace Common.Dtos.Interview;
 public class InterviewDto
