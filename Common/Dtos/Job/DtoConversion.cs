@@ -9,6 +9,24 @@ public static class DtoConversion
         return jobs.Select(job => job.JobConvertToDto()).ToList();
     }
     
+    public static JobDto CopyJobDto(this Job job)
+    {
+        return new JobDto
+        {
+            JobId = job.JobId,
+            ClientId = job.ClientId,
+            EndDate = job.EndDate,
+            Position = job.Position,
+            Commitment = job.Commitment,
+            Remote = job.Remote,
+            Localization = job.Localization,
+            Education = job.Education,
+            Experience = job.Experience,
+            Language = job.Language,
+            Description = job.Description
+        };
+    }
+    
     public static JobDto JobConvertToDto(this Job job)
     {
         return new JobDto
@@ -23,20 +41,14 @@ public static class DtoConversion
             Education = job.Education,
             Experience = job.Experience,
             Language = job.Language,
-            Description = job.Description,
-            RequiredSkills = job.JobSkills
-                .Where(js => js.IsRequired)
-                .Select(js => js.Skill.SkillConvertToDto())
-                .ToList(),
-            NiceToHaveSkills = job.JobSkills
-                .Where(js => !js.IsRequired)
-                .Select(js => js.Skill.SkillConvertToDto())
-                .ToList()
+            Description = job.Description
         };
     }
 
     public static Job DtoConvertToJob(this JobDto jobDto)
     {
+        jobDto.EndDate = DateTime.SpecifyKind(jobDto.EndDate, DateTimeKind.Utc);
+        
         return new Job
         {
             JobId = jobDto.JobId,
@@ -49,22 +61,7 @@ public static class DtoConversion
             Education = jobDto.Education,
             Experience = jobDto.Experience,
             Language = jobDto.Language,
-            Description = jobDto.Description,
-            JobSkills = jobDto.RequiredSkills
-                .Select(skillDto => new JobSkill
-                {
-                    JobId = jobDto.JobId,
-                    SkillId = skillDto.SkillId,
-                    IsRequired = true
-                })
-                .Concat(jobDto.NiceToHaveSkills
-                    .Select(skillDto => new JobSkill
-                    {
-                        JobId = jobDto.JobId,
-                        SkillId = skillDto.SkillId,
-                        IsRequired = false
-                    }))
-                .ToList()
+            Description = jobDto.Description
         };
     }
     

@@ -9,6 +9,12 @@ public class JobRepository : IJobRepository
 {
     private readonly ApplicationDbContext _context;
     
+    public JobRepository()
+    { 
+        _context = new ApplicationDbContext();
+    }
+
+    
     public JobRepository(ApplicationDbContext context)
     { 
         _context = context;

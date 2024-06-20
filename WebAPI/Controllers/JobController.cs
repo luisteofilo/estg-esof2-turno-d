@@ -7,7 +7,9 @@ namespace ESOF.WebApp.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class JobController(IJobRepository _jobRepository, ISkillRepository _skillRepository): ControllerBase
+public class JobController(
+    IJobRepository _jobRepository,
+    ISkillRepository _skillRepository): ControllerBase
 { 
 
     [HttpPost] 
@@ -36,6 +38,7 @@ public class JobController(IJobRepository _jobRepository, ISkillRepository _skil
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"Error creating job: {ex.Message}");
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error creating job: {ex.Message}");
         }
     }

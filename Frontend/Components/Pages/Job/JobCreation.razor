@@ -169,7 +169,7 @@
     
     private JobDto job = new JobDto()
     {
-        ClientId =  Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0178D"),     //Hard Code
+        ClientId =  Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0178D"),     //Hard Coded
         EndDate = DateTime.Now,
         RequiredSkills = new List<SkillDto>(),
         NiceToHaveSkills = new List<SkillDto>()
@@ -228,19 +228,27 @@
     
     private async Task HandleSubmit()
     {
-        //await JobService.CreateJob(job.JobId, job.ClientId, job);
-        
-        Console.WriteLine($"Position: {job.Position}");
-        Console.WriteLine($"Date: {job.EndDate:dd/MM/yyyy}");
-        Console.WriteLine($"Commitment: {job.Commitment}");
-        Console.WriteLine($"Remote: {job.Remote}");
-        Console.WriteLine($"Localization: {job.Localization}");
-        Console.WriteLine($"Education: {job.Education}");
-        Console.WriteLine($"Experience: {job.Experience}");
-        Console.WriteLine($"Required Skills: {string.Join(", ", job.RequiredSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
-        Console.WriteLine($"Nice to Have Skills: {string.Join(", ", job.NiceToHaveSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
-        Console.WriteLine($"Language: {job.Language}");
-        Console.WriteLine($"Description: {job.Description}");
+        try
+        {
+            await JobService.CreateJob(job.JobId, job.ClientId, job);
+
+            Console.WriteLine($"Position: {job.Position}");
+            Console.WriteLine($"Date: {job.EndDate:dd/MM/yyyy}");
+            Console.WriteLine($"Commitment: {job.Commitment}");
+            Console.WriteLine($"Remote: {job.Remote}");
+            Console.WriteLine($"Localization: {job.Localization}");
+            Console.WriteLine($"Education: {job.Education}");
+            Console.WriteLine($"Experience: {job.Experience}");
+            Console.WriteLine($"Required Skills: {string.Join(", ", job.RequiredSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
+            Console.WriteLine($"Nice to Have Skills: {string.Join(", ", job.NiceToHaveSkills.Select(js => availableSkills.FirstOrDefault(s => s.SkillId == js.SkillId)?.Name))}");
+            Console.WriteLine($"Language: {job.Language}");
+            Console.WriteLine($"Description: {job.Description}");
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log the exception
+            Console.WriteLine($"Error creating job: {ex.Message}");
+        }
     }
     
 }
