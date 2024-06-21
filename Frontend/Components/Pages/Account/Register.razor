@@ -1,4 +1,7 @@
+@layout LoginLayout
+
 @page "/register"
+@using Frontend.Components.Layout
 
 <PageTitle>Register</PageTitle>
 
@@ -54,7 +57,7 @@
     private string talentProfession;
     private string talentPassword;
 
-    private void ShowClientForm()
+    private void ShowClientForm(EventArgs mouseEventArgs)
     {
         showClientForm = true;
         showTalentForm = false;
@@ -76,3 +79,4 @@
         // Lógica para registrar talento
     }
 }
+
