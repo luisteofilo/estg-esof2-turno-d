@@ -16,6 +16,16 @@ public class ExternalJobController(ExternalJobService _externalJobService) : Con
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(request.Url))
+            {
+                throw new NullUrlException();
+            }
+
+            if (!Uri.IsWellFormedUriString(request.Url, UriKind.Absolute))
+            {
+                throw new FormatUrlException();
+            }
+
             var taskId = BackgroundJob.Enqueue(() => _externalJobService.AddExternalJobAsync(request.Url, cancellationToken));
             return CreatedAtAction(nameof(AddExternalJob), new ExternalJobResponse(taskId));
         }

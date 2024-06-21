@@ -42,16 +42,6 @@ public class ExternalJobService(IJobRepository _jobRepository, IImportRepository
     {
         url = url.Trim();
 
-        if (string.IsNullOrWhiteSpace(url))
-        {
-            throw new NullUrlException();
-        }
-
-        if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
-        {
-            throw new FormatUrlException();
-        }
-
         try
         {
             var importedJob = await _jobRepository.GetJobByUrl(url, cancellationToken);
