@@ -43,7 +43,6 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
-    public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
     
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
