@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240620132427_EmailTemplate")]
-    partial class EmailTemplate
+    [Migration("20240621131559_CreateEmailTemplate")]
+    partial class CreateEmailTemplate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
