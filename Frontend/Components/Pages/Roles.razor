@@ -1,0 +1,165 @@
+@page "/roles"
+@layout MainLayout
+@using ESOF.WebApp.DBLayer.Entities
+@using Frontend.Components.Layout
+@using Frontend.Services.Contracts
+@inject IRoleService RoleService
+
+<PageTitle>Roles</PageTitle>
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <h3>Manage Roles</h3>
+
+        <EditForm Model="@_newRole" OnValidSubmit="HandleCreateRole" Context="_">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="roleName">Role Name:</label>
+                <InputText id="roleName" class="form-control" @bind-Value="_newRole.Name" />
+            </div>
+            <button type="submit" class="btn btn-primary">Create Role</button>
+        </EditForm>
+
+        @if (_roles == null)
+        {
+        <p>Loading roles...</p>
+        }
+        else
+        {
+            <table class="table table-bordered table-striped mt-4">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Role Name</th>
+                    <th>Permissions</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var role in _roles)
+                {
+                    <tr>
+                        <td>@role.Name</td>
+                        <td>
+                            @if (role.Permissions == null)
+                            {
+                                <p>Loading permissions...</p>
+                            }
+                            else if (role.Permissions.Count == 0)
+                            {
+                                <p>No permissions assigned</p>
+                            }
+                            else
+                            {
+                                <ul>
+                                    @foreach (var permission in role.Permissions)
+                                    {
+                                        <li>@permission.Name</li>
+                                    }
+                                </ul>
+                            }
+                        </td>
+                        <td>
+                            <button @onclick="() => DeleteRole(role.RoleId)" class="btn btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </Authorized>
+    <NotAuthorized>
+            <p>You are not authorized to view this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private RoleWithPermissionsModel _newRole = new();
+    private List<RoleWithPermissionsModel>? _roles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRolesWithPermissions();
+    }
+
+    private async Task LoadRolesWithPermissions()
+    {
+        try
+        {
+            var roles = await RoleService.GetRolesAsync();
+            _roles = new List<RoleWithPermissionsModel>();
+
+            foreach (var role in roles)
+            {
+                var permissions = await RoleService.GetRolePermissionsAsync(role.RoleId);
+
+                if (permissions != null)
+                {
+                    var roleModel = new RoleWithPermissionsModel
+                    {
+                        RoleId = role.RoleId,
+                        Name = role.Name,
+                        Permissions = permissions
+                    };
+
+                    _roles.Add(roleModel);
+                }
+                else
+                {
+                    // Handle case where permissions are not available or error occurred
+                    Console.WriteLine($"Permissions not found for role {role.RoleId}");
+                }
+            }
+
+            Console.WriteLine("Roles with permissions fetched successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching roles with permissions: {ex.Message}");
+            // Optionally handle or log the exception
+        }
+    }
+
+    private async Task HandleCreateRole()
+    {
+        try
+        {
+            var role = new Role
+            {
+                RoleId = Guid.NewGuid(),
+                Name = _newRole.Name
+            };
+
+            await RoleService.CreateRoleAsync(role);
+            _newRole = new RoleWithPermissionsModel();
+            await LoadRolesWithPermissions();
+            Console.WriteLine("Role created successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating role: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteRole(Guid roleId)
+    {
+        try
+        {
+            await RoleService.DeleteRoleAsync(roleId);
+            await LoadRolesWithPermissions();
+            Console.WriteLine("Role deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting role: {ex.Message}");
+        }
+    }
+
+    public class RoleWithPermissionsModel
+    {
+        public Guid RoleId { get; set; }
+        public string? Name { get; set; }
+        public List<Permission>? Permissions { get; set; }
+    }
+}

@@ -10,73 +10,19 @@
         <div class="col-md-12 text-center">
             <h2 class="welcome-text">Escolha seu tipo de registro</h2>
             <div class="choice-buttons">
-                <button class="btn choice-btn" @onclick="ShowClientForm">Cliente</button>
-                <button class="btn choice-btn" @onclick="ShowTalentForm">Talento</button>
+                <NavLink href="/register-client">
+                    <button class="btn choice-btn">Cliente</button>
+                </NavLink>
+
+                <NavLink href="register-talent">
+                    <button class="btn choice-btn">Talento</button>
+                </NavLink>
             </div>
-        </div>
-    </div>
-    <div class="row mt-5">
-        <div class="col-md-12">
-            @if (showClientForm)
-            {
-                <div class="registration-form">
-                    <h2 class="form-title">Registro de Cliente</h2>
-                    <input placeholder="Nome" @bind="clientName" type="text">
-                    <input placeholder="Email" @bind="clientEmail" type="email">
-                    <input placeholder="Empresa" @bind="clientCompany" type="text">
-                    <input placeholder="Senha" @bind="clientPassword" type="password">
-                    <input value="Registrar" class="btn submit-btn" @onclick="RegisterClient" type="submit">
-                </div>
-            }
-            else if (showTalentForm)
-            {
-                <div class="registration-form">
-                    <h2 class="form-title">Registro de Talento</h2>
-                    <input placeholder="Nome" @bind="talentName" type="text">
-                    <input placeholder="Email" @bind="talentEmail" type="email">
-                    <input placeholder="Profissão" @bind="talentProfession" type="text">
-                    <input placeholder="Senha" @bind="talentPassword" type="password">
-                    <input value="Registrar" class="btn submit-btn" @onclick="RegisterTalent" type="submit">
-                </div>
-            }
         </div>
     </div>
 </div>
 
 @code {
-    private bool showClientForm = false;
-    private bool showTalentForm = false;
-
-    private string clientName;
-    private string clientEmail;
-    private string clientCompany;
-    private string clientPassword;
-
-    private string talentName;
-    private string talentEmail;
-    private string talentProfession;
-    private string talentPassword;
-
-    private void ShowClientForm(EventArgs mouseEventArgs)
-    {
-        showClientForm = true;
-        showTalentForm = false;
-    }
-
-    private void ShowTalentForm()
-    {
-        showClientForm = false;
-        showTalentForm = true;
-    }
-
-    private void RegisterClient()
-    {
-        // Lógica para registrar cliente
-    }
-
-    private void RegisterTalent()
-    {
-        // Lógica para registrar talento
-    }
+    
 }
 

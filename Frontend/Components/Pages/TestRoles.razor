@@ -1,0 +1,37 @@
+@page "/test-roles"
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>User Roles</h3>
+
+@if (_roles == null)
+{
+<p>Loading...</p>
+}
+else
+{
+<ul>
+    @foreach (var role in _roles)
+    {
+    <li>@role</li>
+    }
+</ul>
+}
+
+@code {
+    private List<string>? _roles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is { IsAuthenticated: true })
+        {
+            _roles = user.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value)
+                .ToList();
+        }
+    }
+}

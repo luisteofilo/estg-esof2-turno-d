@@ -43,6 +43,9 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+    
+    public DbSet<Client> Clients { get; set; } // DbSet para armazenar clientes
+    
     public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
     
     // Profile Features
@@ -64,6 +67,7 @@ public partial class ApplicationDbContext : DbContext
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
+        BuildClients(modelBuilder);
         
         // Profile Features 
         BuildProfiles(modelBuilder);
