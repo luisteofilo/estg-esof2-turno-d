@@ -33,11 +33,45 @@ public class SearchController(ISearchRepository searchRepository) : ControllerBa
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
         }
     }
-
-
-    [HttpGet("{firstName}&{skill}")]
+    
+    [HttpGet("skills/{skill}")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<ProfileDto>))]
-    public async Task<IActionResult> GetResultsSkills(string firstName, string skill)
+    public async Task<IActionResult> GetResultsSkills(string skill)
+    {
+        try
+        {
+            
+            var result = await searchRepository.GetResultsSkillsAsync(skill);
+            var profileDto = result.ProfilesConvertToDto();
+            
+            return Ok(profileDto);
+        } catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("locations/{location}")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<ProfileDto>))]
+    public async Task<IActionResult> GetResultsLocation(string location)
+    {
+        try
+        {
+            
+            var result = await searchRepository.GetResultsLocationAsync(location);
+            var profileDto = result.ProfilesConvertToDto();
+            
+            return Ok(profileDto);
+        } catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
+
+
+    [HttpGet("{firstName}/{skill}")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<ProfileDto>))]
+    public async Task<IActionResult> GetSearchResultsSkills(string firstName, string skill)
     {
         try
         {
