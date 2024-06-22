@@ -48,6 +48,7 @@ builder.Services.AddScraperDependencyInjection();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
 builder.Services.AddScoped<IExternalJobRepository, ExternalJobRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 //Interview Repository
 builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
@@ -101,14 +102,6 @@ app.MapGet("/users/emails", () =>
     .WithName("GetUsersNames")
     .WithOpenApi();
 
-//teste skills
-app.MapGet("/dashboard/skills", () =>
-    {
-        var db = new ApplicationDbContext();
-        return db.Skills.Select(s => s.Name);
-    })
-    .WithName("GetSkillsNames")
-    .WithOpenApi();
 
 
 app.MapControllers();
