@@ -2,10 +2,14 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @using ESOF.WebApp.DBLayer.Entities
+@using Frontend.Components.Pages
+@using Frontend.Services
 @inherits Frontend.Components.Pages.SearchBase
+@using Frontend.Services.Contracts
+
 
 <div class="search-container">
-    <form method="get" action="/searchresults" class="search-form">
+    <form method="get"  action="/searchresults" class="search-form">
         <input type="text" @bind="searchText" placeholder="SearchText" name="searchText" class="search-input"/>
         <button type="submit">Ok</button>
     </form>
@@ -27,5 +31,9 @@ else
 @code {
 
 private string searchText { get; set; } = string.Empty;
+
+
+[Inject] public ISearchService SearchService { get; set; }
+
 
 }

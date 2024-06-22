@@ -1,41 +1,58 @@
-
+using System.Runtime.InteropServices;
 using Common.Dtos.Profile;
-
-using Microsoft.AspNetCore.Mvc;
+using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+using Microsoft.AspNetCore.Mvc; 
 
 namespace ESOF.WebApp.WebAPI.Controllers;
 
 [Route("api/[Controller]")]
 [ApiController]
-public class SearchController(IProfileRepository profileRepository) : ControllerBase
+public class SearchController(ISearchRepository searchRepository) : ControllerBase
 {
 
-    [HttpGet]
-    public async Task<ActionResult<ProfileDto>> GetResults()
+    [HttpGet("{firstName}")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<ProfileDto>))]
+    public async Task<IActionResult> GetSearchResults(string firstName)
     {
         try
         {
-
-            var profile = await profileRepository.GetProfilesAsync();
-
-
-
-            if (profile == null)
+            if (!await searchRepository.ProfileExistsAsync(firstName))
             {
                 return NotFound();
             }
-            
-            var eventDto = profile.ProfilesConvertToDto();
 
-            return Ok(eventDto);
+            var result = await searchRepository.GetSearchResultsAsync(firstName);
+            var profileDto = result.ProfilesConvertToDto();
 
+            return Ok(profileDto);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error retrieving data from the database.");
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
         }
+    }
 
+
+    [HttpGet("{firstName}&{skill}")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<ProfileDto>))]
+    public async Task<IActionResult> GetResultsSkills(string firstName, string skill)
+    {
+        try
+        {
+            if (!await searchRepository.ProfileExistsAsync(firstName))
+            {
+                return NotFound();
+            }
+
+            var result = await searchRepository.GetSearchResultsSkillsAsync(firstName, skill);
+            var profileDto = result.ProfilesConvertToDto();
+            
+            return Ok(profileDto);
+        } catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
     }
 }

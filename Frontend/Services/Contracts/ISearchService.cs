@@ -4,5 +4,6 @@ namespace Frontend.Services.Contracts;
 
 public interface ISearchService
 {
-    Task<ProfileDto> GetResults();
+    void SetName(string name);
+    Task<ProfileDto> GetResults(string firstName);
 }
