@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+.page{
+    background-color: #150B23;
+}
+
+.top-row{
+    visibility: hidden;
+}
+
+.paginaInterviewInvitation {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #150B23;
+    justify-content: center;
+    align-items: center;
+}
+
+.contentRetanguloInvitation{
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 470px;
+    background-color: #1F1136;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.containerImagem {
+    height: 190px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+.imagemGatoAborrecido{
+    height: 100%;
+    width: auto;
+}
+
+.containerTextoTitulo{
+    margin-top: 80px;
+}
+
+.textoTitulo{
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+    letter-spacing: 2px;
+    color: #F6F2FF;
+    font-size: 31px ;
+}
+
+
+.containerTextoSubtitulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 115px;
+    padding-left: 115px;
+    margin-top: 10px;
+}
+
+.textoSubtitulo {
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 1.5px;
+    color: #F6F2FF;
+    font-size: 15px ;;
+    line-height: 27px;
+    text-align: center;
+}
+
+.containerButoes{
+    display: flex;
+    align-items: center;
+    justify-content: stretch;
+    margin-top: 20px;
+}
+
+.containerButaoDecline {
+    border-color: #F6F2FF;
+    border-radius: 20px;
+    border-width: 2px;
+    border-style: solid;
+    width: 175px;
+    height: 50px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    transition: background-color 1s ease;
+    cursor: pointer;
+}
+
+.containerButaoDecline:hover {
+    background-color: #F6F2FF;
+}
+
+.textoButoes {
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;  
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 0.5px;
+    color: #F6F2FF;
+    font-size: 17px;
+    margin-top: 13px;
+    transition: color 0.3s ease;
+}
+
+.containerButaoDecline:hover .textoButoes {
+    color: #150B23;
+}
+
+.containerButaoAccept{
+    background-color: #6929C4;
+    border-radius: 20px;
+    width: 175px;
+    height:50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 1s ease;
+    cursor: pointer;
+}
+
+.containerButaoAccept:hover {
+    background-color: #8A3FFC;
+}
+
+.textoButoes{
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 2px;
+    color: #F6F2FF;
+    font-size: 17px ;
+    margin-top: 5px;
+    cursor: pointer;
+}

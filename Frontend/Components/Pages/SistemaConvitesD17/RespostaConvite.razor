@@ -1,0 +1,66 @@
+﻿@page "/RespostaConvite"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Sections
+
+<link href="CssD17/RespostaConvite.css" rel="stylesheet"/>
+
+<PageTitle>Interview Invitation</PageTitle>
+
+<div class="paginaInterviewInvitation">
+    <div id="contentRetanguloInvitation" class="@contentRetanguloInvitationClass">
+        <div class="containerImagem">
+            <img src="images/homemLupa.png" alt="Job Image" class="imagemHomemLupa"/>
+        </div>
+        <div class="containerTextoTitulo">
+            <h1 class="textoTitulo">Invitation</h1>
+        </div>
+        <div class="containerTextoSubtitulo">
+            <h1 class="textoSubtitulo">Would you like to participate in an interview?</h1>
+        </div>
+        <div class="containerButoes">
+            <NavLink class="nav-link" href="RespostaConviteDecline">
+                <div class="containerButaoDecline">
+                    <h1 class="textoButoes">Decline</h1>
+                </div>
+            </NavLink>
+            <div @onclick="AcceptInvitation" class="containerButaoAccept">
+                <h1 class="textoButoes">Accept</h1>
+            </div>
+        </div>
+    </div>
+    @if (showFormGroup)
+    {
+        <div @onclick="voltaAtras" class="containerSeta">
+            <svg width="30" height="30" viewBox="0 0 16 16" fill="#8F43AD" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M5.854 4.146a.5.5 0 0 1 0 .708L2.707 8H14.5a.5.5 0 0 1 0 1H2.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </div>
+        <div class="containerTextoAlmostThere">
+            <h1 class="textoAlmostThere">Almost There!</h1>
+        </div>
+        <div class="form__group field">
+            <input type="input" class="form__field" placeholder="Please indicate your desired monthly salary" name="salario" id='salario' required/>
+            <label for="name" class="form__label">Monthly Salary €</label>
+        </div>
+        <NavLink class="containerButaoSubmit" href="RespostaConviteAccepted">
+            <h1 class="textoButoes">Submit</h1>
+        </NavLink>
+    }
+</div>
+
+@code {
+    private string contentRetanguloInvitationClass = "contentRetanguloInvitation";
+    private bool showFormGroup = false;
+    
+    private void AcceptInvitation()
+    {
+        contentRetanguloInvitationClass = "contentRetanguloInvitation transparent";
+        showFormGroup = true;
+    }
+
+    private void voltaAtras()
+    {
+        contentRetanguloInvitationClass = "contentRetanguloInvitation";
+        showFormGroup = false;
+    }
+}

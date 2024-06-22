@@ -1,0 +1,110 @@
+@page "/SearchJob"
+@rendermode InteractiveServer
+
+<PageTitle>Search Job</PageTitle>
+
+<link href="CssD17/SearchJob.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="containerSelectJob">
+    <div class="containerTitulo">
+        <h1 class="textoTitulo">Search Job</h1>
+    </div>
+    <div class="containerBarraPesquisa">
+        <div class="barraPesquisa">
+            <input @bind="searchText" @bind:event="oninput" placeholder="Any Job Property ..." class="inputBarraPesquisa" />
+        </div>
+        <div class="containerIconeLupa">
+            <i @onclick="SearchJobs" class="fas fa-search"></i>
+        </div>
+    </div>
+    @if (!isSearchPerformed)
+    {
+        <div class="containerImagem">
+            <img src="images/ursoFolhas.png" alt="Job Image" class="imagemJob"/>
+        </div>
+    }
+    else if (isSearchPerformed && filteredJobs.Count == 0)
+    {
+        <div class="containerImagem">
+            <img src="images/ursoCanaPesca.png" alt="No Results Image" class="imagemJob"/>
+        </div>
+        <div class="containerTextoEmpty">
+            <div class="textoEmpty">Empty</div>
+        </div>
+    }
+    else
+    {
+        <div class="containerResultNumber">
+            <div class="textoResultNumber">Results @filteredJobs.Count</div>
+        </div>
+        <div class="containerTabela">
+            <div class="containerRowTituloTabela">
+                <div class="containerTextoTabelas">
+                    <h1 class="textoRowTituloTabela">Job</h1>
+                </div>
+                <div class="containerTextoTabelas">
+                    <h1 class="textoRowTituloTabela">Company</h1>
+                </div>
+                <div class="containerTextoTabelas">
+                    <h1 class="textoRowTituloTabela">Location</h1>
+                </div>
+                <div class="containerTextoTabelas">
+                    <h1 class="textoRowTituloTabela">Email</h1>
+                </div>
+            </div>
+            <div class="linha"></div>
+            @foreach (var job in filteredJobs)
+            {
+            var rowClass = (filteredJobs.IndexOf(job) % 2 == 0) ? "corLinhaPar" : "corLinhaImpar";
+            <div class="containerRowDadosTabela @rowClass">
+                <div class="containerTextoTabelas">
+                    <h1 class="textoRowDadosTabelaColuna1">@job[0]</h1>
+                </div>
+                <div class="containerTextoTabelas">
+                    <h1 class="textoRowDadosTabela">@job[1]</h1>
+                </div>
+                <div class="containerTextoTabelas">
+                    <h1 class="textoRowDadosTabela">@job[2]</h1>
+                </div>
+                <div class="containerTextoTabelas">
+                    <h1 class="textoRowDadosTabela">@job[3]</h1>
+                </div>
+            </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private string searchText = string.Empty;
+    private List<string[]> filteredJobs;
+    private bool isSearchPerformed = false;
+
+    string[][] jobs = new string[][]
+    {
+        new string[] { "Software Developer", "Google", "New York City", "john.doe@example.com" },
+        new string[] { "Product Manager", "Facebook", "San Francisco dhawihdwaihiuwahiu dhawi", "jane.smith@facebook.com" },
+        new string[] { "UX Designer", "Amazon", "Seattle", "mike.jones@amazon.com" },
+        new string[] { "Data Scientist", "Microsoft", "Redmond", "emily.davis@microsoft.com" },
+        new string[] { "DevOps Engineer", "Netflix", "Los Gatos", "chris.wilson@netflix.com" }
+    };
+
+    protected override void OnInitialized()
+    {
+        filteredJobs = jobs.ToList();
+    }
+
+    private void SearchJobs()
+    {
+        isSearchPerformed = true;
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            filteredJobs = jobs.ToList();
+        }
+        else
+        {
+            filteredJobs = jobs.Where(job => job.Any(field => field.Contains(searchText, StringComparison.OrdinalIgnoreCase))).ToList();
+        }
+    }
+}

@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+.page{
+    background-color: #150B23;
+}
+
+.top-row{
+    visibility: hidden;
+}   
+
+.paginaInterviewInvitation {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #150B23;
+    justify-content: center;
+    align-items: center;
+}
+
+.contentRetanguloInvitation {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 470px;
+    background-color: #1F1136;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.containerImagem {
+    height: 285px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.imagemHomemLupa{
+    height: 100%;
+    width: auto;
+}
+
+.containerTextoTitulo{
+    margin-top: 50px;
+}
+
+.textoTitulo{
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+    letter-spacing: 2px;
+    color: #F6F2FF;
+    font-size: 31px ;
+}
+
+
+.containerTextoSubtitulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 115px;
+    padding-left: 115px;
+    margin-top: 10px;
+}
+
+.textoSubtitulo {
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 1.5px;
+    color: #F6F2FF;
+    font-size: 15px ;;
+    line-height: 27px;
+    text-align: center;
+}
+
+.containerButoes{
+    display: flex;
+    align-items: center;
+    justify-content: stretch;
+    margin-top: 20px;
+}
+
+.containerButaoDecline {
+    border-color: #F6F2FF;
+    border-radius: 20px;
+    border-width: 3px;
+    border-style: solid;
+    width: 175px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    transition: background-color 1s ease;
+    cursor: pointer;
+}
+
+.containerButaoDecline:hover {
+    background-color: #F6F2FF;
+    border-color: #1E0F33;
+    border-width: 3px;
+}
+
+.textoButoes {
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;  
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 0.5px;
+    color: #F6F2FF;
+    font-size: 17px;
+    margin-top: 13px;
+    transition: color 0.3s ease;
+}
+
+.containerButaoDecline:hover .textoButoes {
+    color: #1E0F33;
+}
+
+.containerButaoAccept{
+    background-color: #6929C4;
+    border-radius: 20px;
+    width: 175px;
+    height:50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 1s ease;
+    cursor: pointer;
+}
+
+.containerButaoAccept:hover {
+    background-color: #8A3FFC;
+}
+
+.textoButoes{
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 2px;
+    color: #F6F2FF;
+    font-size: 17px ;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.transparent {
+    opacity: 0.01;
+}
+
+.containerSeta{
+    cursor: pointer;
+    position: absolute;
+    margin-top: -450px;
+    margin-right: 275px;
+}
+
+.containerTextoAlmostThere{
+    position: absolute;
+    margin-top: -300px;
+}
+
+.textoAlmostThere{
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 1.5px;
+    color: #8e44ad;
+    font-size: 31px ;
+}
+
+.form__group {
+    position: absolute;
+    padding: 15px 0 0;
+    margin-top: -100px;
+    width: 300px;
+}
+
+.form__field {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid #F6F2FF    ;
+    outline: 0;
+    font-size: 1.3rem;
+    color: #FFFFFF;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+
+    &::placeholder {
+        color: transparent;
+    }
+
+    &:placeholder-shown ~ .form__label {
+        font-size: 1.3rem;
+        letter-spacing: 1.5px;
+        cursor: text;
+        top: 20px;
+    }
+}
+
+.form__label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: #F6F2FF;
+}
+
+.form__field:focus {
+    ~ .form__label {
+        position: absolute;
+        top: 0;
+        display: block;
+        transition: 0.2s;
+        font-size: 1rem;
+        color: #8e44ad;
+        font-weight:700;
+    }
+    padding-bottom: 6px;
+    font-weight: 300;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 1.5px;
+    border-width: 3px;
+    border-image: linear-gradient(to right, #8e44ad, #3498db);
+    border-image-slice: 1;
+}
+/* reset input */
+.form__field{
+    &:required,&:invalid { box-shadow:none; }
+}
+
+.containerButaoSubmit{
+    position: absolute;
+    margin-top: 150px;
+    border-color: #F6F2FF;
+    border-radius: 20px;
+    border-width: 2px;
+    border-style: solid;
+    width: 175px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #150B23;
+    transition: background-color 1s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.containerButaoSubmit:hover {
+    background-color: #6D3384;
+    border-color: #6D3384;
+}
