@@ -72,14 +72,6 @@ app.MapGet("/users/emails", () =>
     .WithName("GetUsersNames")
     .WithOpenApi();
 
-//teste skills
-app.MapGet("/dashboard/skills", () =>
-    {
-        var db = new ApplicationDbContext();
-        return db.Skills.Select(s => s.Name);
-    })
-    .WithName("GetSkillsNames")
-    .WithOpenApi();
 
 
 app.MapControllers();
