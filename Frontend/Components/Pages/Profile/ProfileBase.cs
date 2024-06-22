@@ -28,7 +28,7 @@ public class ProfileBase : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         // TODO : HARD CODED PROFILE 
-        var profileId = Guid.Parse("e69a1fad-6acd-4566-9de9-e95ac88d118a");
+        var profileId = Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0155f");
         
         Profile = await ProfileService.GetProfile(profileId);
         Skills = await ProfileService.GetSkillsForProfile(profileId);

@@ -13,7 +13,7 @@ builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository >();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
-
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 var app = builder.Build();
 
@@ -54,14 +54,6 @@ app.MapGet("/users/emails", () =>
     .WithName("GetUsersNames")
     .WithOpenApi();
 
-//teste skills
-app.MapGet("/dashboard/skills", () =>
-    {
-        var db = new ApplicationDbContext();
-        return db.Skills.Select(s => s.Name);
-    })
-    .WithName("GetSkillsNames")
-    .WithOpenApi();
 
 
 app.MapControllers();
