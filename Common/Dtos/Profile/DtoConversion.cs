@@ -41,6 +41,14 @@ public static class DtoConversion
             UserId = profile.UserId
         };
     }
+    public static ProfileSkillDto ProfileConvertToDto(this ProfileSkill profileSkill)
+    {
+        return new ProfileSkillDto
+        {
+            ProfileId = profileSkill.ProfileId,
+            SkillId = profileSkill.SkillId
+        };
+    }
 
     public static Profile DtoConvertToProfile(this ProfileDto profileDto)
     {
