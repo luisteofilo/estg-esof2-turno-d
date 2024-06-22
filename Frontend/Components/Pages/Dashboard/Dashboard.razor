@@ -3,7 +3,9 @@
 @using Frontend.Services.Contracts
 @inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
+
 @inject IProfileService ProfileService
+@inject IDashboardService DashboardService
 @rendermode InteractiveServer
 
 @if (profiles == null) 
@@ -19,28 +21,28 @@ else {
     <div class="dashboard-container">
         <div class="dashboard-stats">
             <div class="stat-item">
-                <span class="stat-title">Total Applicants</span>
-                <h1 class="stat-value">@totalApplicants</h1>
+                <span class="stat-title">Total Profiles</span>
+                <h1 class="stat-value">@totalProfiles</h1>
             </div>
             <div class="stat-item">
                 <span class="stat-title">Shortlisted Candidates</span>
-                <h1 class="stat-value">77</h1>
+                <h1 class="stat-value">None</h1>
             </div>
             <div class="stat-item">
                 <span class="stat-title">Hired Candidates</span>
-                <h1 class="stat-value">16</h1>
+                <h1 class="stat-value">None</h1>
             </div>
             <div class="stat-item">
                 <span class="stat-title">Rejected Candidates</span>
-                <h1 class="stat-value">13</h1>
+                <h1 class="stat-value">None</h1>
             </div>
             <div class="stat-item">
                 <span class="stat-title">Time to Hire (Days)</span>
-                <h1 class="stat-value">16</h1>
+                <h1 class="stat-value">None</h1>
             </div>
             <div class="stat-item">
                 <span class="stat-title">Cost to Hire</span>
-                <h1 class="stat-value">$175</h1>
+                <h1 class="stat-value">None</h1>
             </div>
         </div>
 
@@ -50,7 +52,7 @@ else {
         </div>
         
         <div class="dashboard-graph">
-            <h4>Open Position by Department</h4>
+            <h4>Most common <job></job> position</h4>
             <canvas id="openPositionChart"></canvas>
         </div>
         
@@ -124,7 +126,6 @@ else {
                 <tr>
                     <th>Candidate</th>
                     <th>Location</th>
-   
                     <th>See profile</th>
                 </tr>
                 </thead>
@@ -139,7 +140,6 @@ else {
                     </tr>
                 }
                 </tbody>
-
             </table>
         </div>
     </div> 
@@ -148,32 +148,40 @@ else {
 @code {
     private IJSObjectReference? module;
     private IEnumerable<ProfileDto>? profiles;
-    private IEnumerable<SkillDto>? skills;
-    private int totalApplicants;
+    private IEnumerable<string>? skillNames;
+    private int totalProfiles;
+
+    
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         
-        try
+            try
             {
                 module = await JSRuntime.InvokeAsync<IJSObjectReference>(
-                    "import", "./Components/Pages/Dashboard.razor.js");
+                    "import", "./Components/Pages/Dashboard/Dashboard.razor.js");
+                Console.WriteLine("JS module loaded");
 
-                if (skills != null )
+                
+                if (module != null && skillNames != null)
                 {
-                    Console.WriteLine();
-                    var skillNames = skills.Select(skill => skill.Name).ToList();
-                    
-                  
-                    await module.InvokeVoidAsync("Dashboard.initCharts", "#commonSkills", skillNames);
-                   }
+                    await InitializeCharts();
+                }
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error initializing charts: {ex.Message}");
-            } 
+            }
+        
     }
-    
+    private async Task InitializeCharts()
+    {
+        if (module != null && skillNames != null)
+        {
+            await module.InvokeVoidAsync("Dashboard.initCharts", "#commonSkills", skillNames);
+        }
+    }
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
         if (module is not null)
@@ -181,18 +189,28 @@ else {
             await module.DisposeAsync();
         }
     }
-
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            Console.WriteLine("OnInitializedAsync started");
+
             profiles = await ProfileService.GetProfiles();
-            skills = await ProfileService.GetSkills();
-            totalApplicants = profiles.Count();
+
+            
+            var profileSkills = await DashboardService.GetProfileSkills();
+            skillNames = profileSkills.Select(ps => ps.SkillName).ToList();  
+
+            totalProfiles = profiles.Count();
+
+            Console.WriteLine($"Profiles loaded: {totalProfiles}");
+            Console.WriteLine($"Skill names loaded: {string.Join(", ", skillNames)}");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading profiles: {ex.Message}");
         }
     }
+
+    
 }
