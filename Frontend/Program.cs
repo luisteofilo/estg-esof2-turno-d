@@ -20,6 +20,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/access-denied";
     });
 
+builder.Services.AddAntiforgery(options =>
+    {
+        options.Cookie.Expiration = TimeSpan.Zero;
+    });
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddRazorPages();
 
@@ -47,6 +51,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorComponents<App>()
+    .DisableAntiforgery()
     .AddInteractiveServerRenderMode();
 
 app.Run();

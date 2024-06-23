@@ -59,7 +59,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
             return CreatedAtAction(nameof(GetRole), new { id = createdRoleDto.RoleId }, createdRoleDto);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateRole(Guid id, RoleDto roleDto)
         {
             if (id != roleDto.RoleId)
@@ -72,13 +72,15 @@ namespace ESOF.WebApp.WebAPI.Controllers
             {
                 return NotFound();
             }
+            
+            existingRole.Name = roleDto.Name;
+            
+            await _roleRepository.UpdateRoleAsync(existingRole);
 
-            var roleToUpdate = roleDto.DtoConvertToRole();
-            await _roleRepository.UpdateRoleAsync(roleToUpdate);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteRole(Guid id)
         {
             var role = await _roleRepository.GetRoleByIdAsync(id);

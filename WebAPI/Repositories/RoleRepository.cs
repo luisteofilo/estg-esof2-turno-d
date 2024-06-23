@@ -1,6 +1,7 @@
 using ESOF.WebApp.DBLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using ESOF.WebApp.DBLayer.Context;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Repositories
 {
@@ -38,7 +39,7 @@ namespace ESOF.WebApp.WebAPI.Repositories
                 await _dbContext.SaveChangesAsync();
             }
         }
-
+        
         public async Task<Role> CreateRoleAsync(Role role)
         {
             var entityEntry = await _dbContext.Roles.AddAsync(role);

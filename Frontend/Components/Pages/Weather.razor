@@ -1,11 +1,10 @@
 ﻿@page "/weather"
 @attribute [StreamRendering]
-@inject NavigationManager NavManager
 
 <PageTitle>Weather</PageTitle>
 
 <h1>Weather</h1>
-<AuthorizeView Roles="Admin">
+<AuthorizeView Roles="Admin, Cliente">
     <Authorized>
         <p>This component demonstrates showing data.</p>
 
@@ -69,12 +68,6 @@
         }
     </Authorized>
     <NotAuthorized>
-        @code
-        {
-            protected override void OnInitialized()
-            {
-                NavManager.NavigateTo("/access-denied");
-            }
-        }
+        <p>You are not authorized to view this page.</p>
 </NotAuthorized>
 </AuthorizeView>

@@ -4,14 +4,15 @@
 @using Frontend.Components.Layout
 @using Frontend.Services.Contracts
 @inject IRoleService RoleService
+@rendermode InteractiveServer
 
 <PageTitle>Roles</PageTitle>
 
 <AuthorizeView Roles="Admin">
-    <Authorized>
+    <Authorized Context="_">
         <h3>Manage Roles</h3>
 
-        <EditForm Model="@_newRole" OnValidSubmit="HandleCreateRole" Context="_">
+        <EditForm Model="_newRole" OnValidSubmit="HandleCreateRole" FormName="_newRole" OnInvalidSubmit="HandleInvalidSubmit">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
@@ -24,59 +25,96 @@
 
         @if (_roles == null)
         {
-        <p>Loading roles...</p>
+            <p>Loading roles...</p>
         }
         else
         {
             <table class="table table-bordered table-striped mt-4">
                 <thead class="thead-dark">
-                <tr>
-                    <th>Role Name</th>
-                    <th>Permissions</th>
-                    <th>Actions</th>
-                </tr>
+                    <tr>
+                        <th>Role Name</th>
+                        <th>Permissions</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @foreach (var role in _roles)
-                {
-                    <tr>
-                        <td>@role.Name</td>
-                        <td>
-                            @if (role.Permissions == null)
-                            {
-                                <p>Loading permissions...</p>
-                            }
-                            else if (role.Permissions.Count == 0)
-                            {
-                                <p>No permissions assigned</p>
-                            }
-                            else
-                            {
-                                <ul>
-                                    @foreach (var permission in role.Permissions)
-                                    {
-                                        <li>@permission.Name</li>
-                                    }
-                                </ul>
-                            }
-                        </td>
-                        <td>
-                            <button @onclick="() => DeleteRole(role.RoleId)" class="btn btn-danger">Delete</button>
-                        </td>
-                    </tr>
-                }
+                    @foreach (var role in _roles)
+                    {
+                        <tr>
+                            <td>
+                                @if (role.IsEditingName)
+                                {
+                                    <InputText class="form-control" @bind-Value="role.UpdatedName" />
+                                    <button class="btn btn-primary mt-1" @onclick="() => UpdateRoleName(role)">Save</button>
+                                    <button class="btn btn-secondary mt-1 ml-1" @onclick="() => CancelEditRoleName(role)">Cancel</button>
+                                }
+                                else
+                                {
+                                    <span>@role.Name</span>
+                                }
+                            </td>
+                            <td>
+                                @if (role.Permissions == null)
+                                {
+                                    <p>Loading permissions...</p>
+                                }
+                                else if (role.Permissions.Count == 0)
+                                {
+                                    <p>No permissions assigned</p>
+                                }
+                                else
+                                {
+                                    <ul>
+                                        @foreach (var permission in role.Permissions)
+                                        {
+                                            <li>@permission.Name</li>
+                                        }
+                                    </ul>
+                                }
+                            </td>
+                            <td>
+                                <button class="btn btn-warning" @onclick="() => StartEditRoleName(role)">
+                                    Edit
+                                </button>
+                                <button @onclick="() => ShowConfirmationModal(role.RoleId)" class="btn btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         }
     </Authorized>
     <NotAuthorized>
-            <p>You are not authorized to view this page.</p>
+        <p>You are not authorized to view this page.</p>
     </NotAuthorized>
 </AuthorizeView>
+
+<!-- Modal de Confirmação -->
+<div class="modal" tabindex="-1" role="dialog" style="display: @_displayConfirmationModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete Role</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="CloseConfirmationModal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this role?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseConfirmationModal">Cancel</button>
+                <button type="button" class="btn btn-danger" @onclick="DeleteConfirmed">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     private RoleWithPermissionsModel _newRole = new();
     private List<RoleWithPermissionsModel>? _roles;
+    private string _displayConfirmationModal = "none";
+    private Guid _roleIdToDelete;
 
     protected override async Task OnInitializedAsync()
     {
@@ -100,14 +138,14 @@
                     {
                         RoleId = role.RoleId,
                         Name = role.Name,
-                        Permissions = permissions
+                        Permissions = permissions,
+                        UpdatedName = role.Name 
                     };
 
                     _roles.Add(roleModel);
                 }
                 else
                 {
-                    // Handle case where permissions are not available or error occurred
                     Console.WriteLine($"Permissions not found for role {role.RoleId}");
                 }
             }
@@ -117,19 +155,30 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error fetching roles with permissions: {ex.Message}");
-            // Optionally handle or log the exception
         }
+    }
+
+    private static Task HandleInvalidSubmit()
+    {
+        Console.WriteLine("Invalid form submission.");
+        return Task.CompletedTask;
     }
 
     private async Task HandleCreateRole()
     {
         try
         {
+            StateHasChanged();
+            Console.WriteLine($"Role Name before creating: {_newRole.Name}");
             var role = new Role
             {
                 RoleId = Guid.NewGuid(),
                 Name = _newRole.Name
             };
+
+            Console.WriteLine("Creating role...");
+            Console.WriteLine($"Role Name: {role.Name}");
+            Console.WriteLine($"Role ID: {role.RoleId}");
 
             await RoleService.CreateRoleAsync(role);
             _newRole = new RoleWithPermissionsModel();
@@ -146,6 +195,7 @@
     {
         try
         {
+            Console.WriteLine($"Attempting to delete role with ID: {roleId}");
             await RoleService.DeleteRoleAsync(roleId);
             await LoadRolesWithPermissions();
             Console.WriteLine("Role deleted successfully.");
@@ -156,10 +206,62 @@
         }
     }
 
+    private void StartEditRoleName(RoleWithPermissionsModel role)
+    {
+        role.IsEditingName = true;
+    }
+
+    private async Task UpdateRoleName(RoleWithPermissionsModel role)
+    {
+        try
+        {
+            var roleUpd = new Role
+            {
+                RoleId = role.RoleId,
+                Name = role.UpdatedName
+            };
+            
+            Console.WriteLine($"Updating role name for role ID: {role.RoleId} to {role.UpdatedName}");
+
+            await RoleService.UpdateRoleAsync(role.RoleId, roleUpd);
+            role.IsEditingName = false;
+            await LoadRolesWithPermissions();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating role name: {ex.Message}");
+        }
+    }
+
+    private void CancelEditRoleName(RoleWithPermissionsModel role)
+    {
+        role.UpdatedName = role.Name;
+        role.IsEditingName = false;
+    }
+
+    private void ShowConfirmationModal(Guid roleId)
+    {
+        _roleIdToDelete = roleId;
+        _displayConfirmationModal = "block";
+    }
+
+    private void CloseConfirmationModal()
+    {
+        _displayConfirmationModal = "none";
+    }
+
+    private async Task DeleteConfirmed()
+    {
+        await DeleteRole(_roleIdToDelete);
+        CloseConfirmationModal();
+    }
+
     public class RoleWithPermissionsModel
     {
         public Guid RoleId { get; set; }
-        public string? Name { get; set; }
+        public string Name { get; set; }
+        public string UpdatedName { get; set; } 
         public List<Permission>? Permissions { get; set; }
+        public bool IsEditingName { get; set; } 
     }
 }

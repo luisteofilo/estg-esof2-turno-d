@@ -1,37 +1,26 @@
-@page "/test-roles"
-@using System.Security.Claims
-@inject AuthenticationStateProvider AuthenticationStateProvider
+<!--  
+@page "/test"
+@using Frontend.Components.Layout
+@layout MainLayout
 
-<h3>User Roles</h3>
-
-@if (_roles == null)
-{
-<p>Loading...</p>
-}
-else
-{
-<ul>
-    @foreach (var role in _roles)
-    {
-    <li>@role</li>
-    }
-</ul>
-}
+<EditForm Model="@_formModel" OnValidSubmit="HandleSubmit" FormName="testForm">
+    <div class="mb-3 text-center flex-column">
+        <label for="roleName">Role Name:</label>
+        <input id="roleName" class="form-control" @bind:event="oninput" @bind-Value="_formModel.RoleName" placeholder="test" />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
 
 @code {
-    private List<string>? _roles;
+    private FormModel _formModel = new();
 
-    protected override async Task OnInitializedAsync()
+    private void HandleSubmit()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity is { IsAuthenticated: true })
-        {
-            _roles = user.Claims
-                .Where(c => c.Type == ClaimTypes.Role)
-                .Select(c => c.Value)
-                .ToList();
-        }
+        Console.WriteLine("Role name: " + _formModel.RoleName);
     }
-}
+
+    public class FormModel
+    {
+        public string RoleName { get; set; }
+    }
+}  -->
