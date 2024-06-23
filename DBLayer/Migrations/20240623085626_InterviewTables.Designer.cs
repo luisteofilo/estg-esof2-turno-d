@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240623002045_InterviewTablesAndSampleData")]
-    partial class InterviewTablesAndSampleData
+    [Migration("20240623085626_InterviewTables")]
+    partial class InterviewTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

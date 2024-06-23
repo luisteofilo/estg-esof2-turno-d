@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class InterviewTablesAndSampleData : Migration
+    public partial class InterviewTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,8 +74,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 name: "IX_Interviews_InterviewerId",
                 table: "Interviews",
                 column: "InterviewerId");
-            
-            
         }
 
         /// <inheritdoc />
