@@ -1,0 +1,62 @@
+﻿@page "/InterviewList"
+@using Common.Dtos.Interview
+@using ESOF.WebApp.DBLayer.Entities.Interviews
+@inherits InterviewListBase
+@rendermode InteractiveServer
+
+<PageTitle>Interview List</PageTitle>
+
+<h3>Interview List</h3>
+
+@if (interviews == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <button @onclick="RefreshDate">Refresh</button>
+    <p>Current DateTime: @currentDateTime</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Candidate</th>
+                <th>Interviewer</th>
+                <th>Date Start</th>
+                <th>Date End</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Actions</th>
+                <th>Presence</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var interview in interviews)
+            {
+                <tr>
+                    <td>@candidateNames[interview.CandidateId]</td>
+                    <td>@interviewerNames[interview.InterviewerId]</td>
+                    <td>@interview.DateHourStart</td>
+                    <td>@interview.DateHourEnd</td>
+                    <td>@interview.Location</td>
+                    <td>@GetInterviewState(interview.InterviewState)</td>
+                    <td>
+                        @if (interview.InterviewState == InterviewState.OnGoing && !presenceMarked[interview.InterviewId])
+                        {
+                            <button @onclick="() => MarkPresence(interview.InterviewId)">Mark Presence</button>
+                        }
+                        else if (interview.InterviewState == InterviewState.Scheduled)
+                        {
+                            <button @onclick="() => CancelInterview(interview.InterviewId)">Cancel</button>
+                        }
+                    </td>
+                    <td>
+                        @if (lightOn[interview.InterviewId])
+                        {
+                            <span style="color: green;">&#x25CF;</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
