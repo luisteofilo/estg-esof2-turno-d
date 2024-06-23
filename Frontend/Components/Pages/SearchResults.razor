@@ -1,6 +1,7 @@
-@page "/searchresults"  
+@page "/searchresults"
 @using Microsoft.AspNetCore.Components
 @inherits SearchBase
+@inject NavigationManager Navigation
 
 <div class="button-container">
     <select class="custom-select">
@@ -22,15 +23,10 @@
         <option value="3">Company 3</option>
     </select>
     <select class="custom-select">
-        <option value="">Skills</option>
-        @if (Skills != null && Skills.Any())
-        {
-            @foreach (var skill in Skills)
-            {
-                <option value="@skill.Name">@skill.Name</option>
-            } 
-        }
-       
+        <option value="">Location</option>
+        <option value="1">Location 1</option>
+        <option value="2">Location 2</option>
+        <option value="3">Location 3</option>
     </select>
 </div>
 
@@ -43,7 +39,21 @@
     {
     @foreach (var profile in Profiles)
     {
-            <p> @profile.FirstName @profile.LastName </p>
+    <p> @profile.FirstName @profile.LastName </p>
+    }
+    }
+    else
+    {
+    <p>No profiles found.</p>
+    }
+</div>
+
+<div class="mb-3">
+    @if (ProfilesSkill != null && ProfilesSkill.Any())
+    {
+    @foreach (var profile in ProfilesSkill)
+    {
+    <p> @profile.FirstName @profile.LastName </p>
     }
     }
     else
@@ -57,5 +67,7 @@
     [SupplyParameterFromQuery(Name= "searchText")]
     public string searchText { get; set; }
     
-    public string selectedValue { get; set; }
+    [SupplyParameterFromQuery(Name= "skill")]
+    public string SkillSelected { get; set; }
+    
 }

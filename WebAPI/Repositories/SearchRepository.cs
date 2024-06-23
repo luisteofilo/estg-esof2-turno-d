@@ -1,0 +1,37 @@
+using Common.Dtos.Profile;
+using ESOF.WebApp.DBLayer.Context;
+using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.WebAPI.Repositories.Contracts;
+using Microsoft.EntityFrameworkCore;
+
+namespace ESOF.WebApp.WebAPI.Repositories;
+
+public class SearchRepository : ISearchRepository
+{
+    private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
+
+    public async Task<IEnumerable<Profile>> GetSearchResultsAsync(string firstName)
+    {
+        return await _dbContext.Profiles.Where(p => p.FirstName.Contains(firstName)).ToListAsync();
+    }
+    
+    public async Task<bool> ProfileExistsAsync(string firstName)
+    {
+        return await _dbContext.Profiles.AnyAsync(p => p.FirstName == firstName);
+    }
+    
+    public async Task<IEnumerable<Profile>> GetSearchResultsSkillsAsync(string firstName, string skill)
+    {
+        return await _dbContext.Profiles.Where(p => p.FirstName.Contains(firstName) && p.ProfileSkills.Any(ps => ps.Skill.Name.Contains(skill))).ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Profile>> GetResultsSkillsAsync(string skill)
+    {
+        return await _dbContext.Profiles.Where(p =>p.ProfileSkills.Any(ps => ps.Skill.Name.Contains(skill))).ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Profile>> GetResultsLocationAsync(string location)
+    {
+        return await _dbContext.Profiles.Where(p => p.Location.Contains(location)).ToListAsync();
+    }
+}

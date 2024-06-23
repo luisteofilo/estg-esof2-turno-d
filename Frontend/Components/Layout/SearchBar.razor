@@ -4,15 +4,29 @@
 @using ESOF.WebApp.DBLayer.Entities
 @using Frontend.Components.Pages
 @using Frontend.Services
-@inherits Frontend.Components.Pages.SearchBase
 @using Frontend.Services.Contracts
+@inherits SearchBase
 
 
 <div class="search-container">
-    <form method="get"  action="/searchresults" class="search-form">
-        <input type="text" @bind="searchText" placeholder="SearchText" name="searchText" class="search-input"/>
-        <button type="submit">Ok</button>
+    <form method="get" action="/searchresults" class="search-form">
+        <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input"/>
+        <div class="button-container">
+            <select name="skill" @bind="skill" class="custom-select">
+                <option value="">Skills</option>
+                @if (Skills != null && Skills.Any())
+                {
+                @foreach (var skill in Skills)
+                {
+                <option value="@skill.Name">@skill.Name</option>
+                }
+                }
+            </select>
+        </div>
+        <button type="submit" >Ok</button>
     </form>
+
+   
 </div>
 
 
@@ -31,9 +45,14 @@ else
 @code {
 
 private string searchText { get; set; } = string.Empty;
-
+private string skill { get; set; } = string.Empty;
+private bool searchPerformed = false;
 
 [Inject] public ISearchService SearchService { get; set; }
 
+protected async Task PerformSearch()
+{
+    searchPerformed = true;
+}
 
 }

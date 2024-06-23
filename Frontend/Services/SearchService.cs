@@ -1,7 +1,6 @@
 
 using Common.Dtos.Profile;
 
-
 using Frontend.Services.Contracts;
 
 namespace Frontend.Services;
@@ -10,29 +9,19 @@ public class SearchService(HttpClient httpClient) : ISearchService
 {   
     public string firstName { get; set; }
     
-    public async Task<ProfileDto> GetResults(string firstName)
+    public async Task<IEnumerable<ProfileDto>> GetResults(string firstName)
     {
-        try
-        {
-            var response = await httpClient.GetAsync("api/Search/{firstName}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                {
-                    return new ProfileDto();
-                }
-
-                return await response.Content.ReadFromJsonAsync<ProfileDto>();
-            }
-
-            var message = await response.Content.ReadAsStringAsync();
-            throw new Exception(message);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"An error occurred while fetching profile: {ex.Message}", ex);
-        }      
+            var response = await httpClient.GetAsync($"api/Search/{firstName}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileDto>>();
+            
+    }
+    
+    public async Task<IEnumerable<ProfileDto>> GetResultsBySkill(string skill)
+    {
+        var response = await httpClient.GetAsync($"api/Search/skills/{skill}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileDto>>();
     }
 
     public void SetName(string name)
