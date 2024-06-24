@@ -93,7 +93,7 @@ else {
             @foreach (var skill in AvailableSkills)
             {
             <label>
-                <input type="checkbox" @onchange="e => UpdateSkills(e, skill, true)"/>
+                <input type="checkbox" @onchange="e => UpdateSkills(e, skill, false)"/>
                 @skill.Name
             </label>
             }

@@ -27,16 +27,19 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 name: "Jobs",
                 columns: table => new
                 {
-                    JobId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    JobId = table.Column<Guid>(type: "uuid", nullable: false),
                     ClientId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Position = table.Column<string>(type: "text", nullable: false),
-                    Commitment = table.Column<int>(type: "integer", nullable: false),
-                    Remote = table.Column<int>(type: "integer", nullable: false),
+                    Commitment = table.Column<int>(type: "integer", nullable: true),
+                    Remote = table.Column<int>(type: "integer", nullable: true),
                     Localization = table.Column<string>(type: "text", nullable: false),
-                    Education = table.Column<int>(type: "integer", nullable: false),
-                    Experience = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Education = table.Column<int>(type: "integer", nullable: true),
+                    Experience = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    DeletedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
