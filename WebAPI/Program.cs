@@ -4,6 +4,8 @@ using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using ESOF.WebApp.WebAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Repositories;
+using WebAPI.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,11 @@ builder.Services.AddScoped<IEducationRepository, EducationRepository >();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 builder.Services.AddScoped<RoleRepository>();
 builder.Services.AddScoped<RegisterRepository>();
+
+//Interview Repository
+builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
+builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
+builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 
 
 var app = builder.Build();

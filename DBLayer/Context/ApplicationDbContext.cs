@@ -1,5 +1,6 @@
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.DBLayer.Entities.Emails;
+using ESOF.WebApp.DBLayer.Entities.Interviews;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,10 +56,17 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Experience> Experiences { get; set; }
     public DbSet<ProfileSkill> ProfileSkills { get; set; }
     public DbSet<Skill> Skills { get; set; }
+    
+    // Interview Features
+    public DbSet<Interview> Interviews { get; set; }
+    public DbSet<Interviewer> Interviewers { get; set; }
+    public DbSet<Candidate> Candidates { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
+
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,6 +85,11 @@ public partial class ApplicationDbContext : DbContext
         BuildEducations(modelBuilder);
         BuildProfileSkills(modelBuilder);
         BuildSkills(modelBuilder);
+        
+        // Interview Features 
+        BuildInterviews(modelBuilder);
+        BuildInterviewer(modelBuilder);
+        BuildCandidates(modelBuilder);
         
         base.OnModelCreating(modelBuilder);
     }

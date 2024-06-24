@@ -3,6 +3,7 @@ using System;
 using ESOF.WebApp.DBLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240623085626_InterviewTables")]
+    partial class InterviewTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,53 +24,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Client", b =>
-                {
-                    b.Property<Guid>("ClientId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CompanyDescription")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
-
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("ClientId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Clients");
-                });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
                 {
@@ -100,27 +56,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("Educations");
-                });
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Emails.EmailTemplate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmailTemplates");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
@@ -348,53 +283,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Skills");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Talent", b =>
-                {
-                    b.Property<Guid>("TalentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("AreaOfInterest")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
-
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("TalentId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Talents");
-                });
-
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -435,17 +323,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
-                });
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Client", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
-                        .WithOne("Client")
-                        .HasForeignKey("ESOF.WebApp.DBLayer.Entities.Client", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
@@ -538,17 +415,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Talent", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
-                        .WithOne("Talent")
-                        .HasForeignKey("ESOF.WebApp.DBLayer.Entities.Talent", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserRole", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Role", "Role")
@@ -606,12 +472,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>
                 {
-                    b.Navigation("Client")
-                        .IsRequired();
-
-                    b.Navigation("Talent")
-                        .IsRequired();
-
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
