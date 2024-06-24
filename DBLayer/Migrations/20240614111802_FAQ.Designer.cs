@@ -3,6 +3,7 @@ using System;
 using ESOF.WebApp.DBLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240614111802_FAQ")]
+    partial class FAQ
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("Educations");
+                    b.ToTable("Education");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
@@ -85,7 +88,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("Experiences");
+                    b.ToTable("Experience");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Answer", b =>
@@ -164,31 +167,24 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Bio")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UrlBackground")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UrlProfile")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
@@ -214,7 +210,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("ProfileSkills");
+                    b.ToTable("ProfileSkill");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Role", b =>
@@ -261,7 +257,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasKey("SkillId");
 
-                    b.ToTable("Skills");
+                    b.ToTable("Skill");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>
