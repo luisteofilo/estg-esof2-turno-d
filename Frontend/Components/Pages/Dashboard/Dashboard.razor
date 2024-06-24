@@ -17,7 +17,7 @@ else if (!profiles.Any())
     <h2>No profiles found.</h2>
 }
 else { 
-    <h3 class="dashboard-title">HR Recruitment Dashboard to Monitor Job Interview Status</h3> 
+    <h3 class="dashboard-title">HR Recruitment Dashboard </h3> 
     <div class="dashboard-container">
         <div class="dashboard-stats">
             <div class="stat-item">
@@ -25,45 +25,27 @@ else {
                 <h1 class="stat-value">@totalProfiles</h1>
             </div>
             <div class="stat-item">
-                <span class="stat-title">Shortlisted Candidates</span>
+                <span class="stat-title">Total jobs</span>
                 <h1 class="stat-value">None</h1>
             </div>
             <div class="stat-item">
-                <span class="stat-title">Hired Candidates</span>
+                <span class="stat-title">Total Jobs open</span>
                 <h1 class="stat-value">None</h1>
             </div>
-            <div class="stat-item">
-                <span class="stat-title">Rejected Candidates</span>
-                <h1 class="stat-value">None</h1>
-            </div>
-            <div class="stat-item">
-                <span class="stat-title">Time to Hire (Days)</span>
-                <h1 class="stat-value">None</h1>
-            </div>
-            <div class="stat-item">
-                <span class="stat-title">Cost to Hire</span>
-                <h1 class="stat-value">None</h1>
-            </div>
+            
         </div>
 
         <div class="dashboard-graph">
             <h4>Most Common Skills</h4>
             <canvas id="commonSkills"></canvas>
-        </div>
-        
-        <div class="dashboard-graph">
-            <h4>Most common <job></job> position</h4>
-            <canvas id="openPositionChart"></canvas>
+            
+            <h4>Most Common Skills on Jobs</h4>
+            
         </div>
         
         <div class="dashboard-graph">
             <h4>Application Received by Source</h4>
             <canvas id="applicationSourceChart"></canvas>
-        </div>
-
-        <div class="dashboard-graph">
-            <h4>Recruitment Funnel</h4>
-            <canvas id="recruitmentFunnelChart"></canvas>
         </div>
 
         <div class="dashboard-stats">
@@ -80,44 +62,7 @@ else {
                 <h1 class="stat-value">24</h1>
             </div>
         </div>
-        
-        <div class="weekly-summary">
-            <h4>Application Received by Department</h4>
-            <table>
-                <thead>
-                <tr>
-                    <th>Department</th>
-                    <th>Applications</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Accounts</td>
-                    <td>24</td>
-                </tr>
-                <tr>
-                    <td>Analytics</td>
-                    <td>10</td>
-                </tr>
-                <tr>
-                    <td>HR</td>
-                    <td>17</td>
-                </tr>
-                <tr>
-                    <td>IT</td>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <td>Marketing</td>
-                    <td>18</td>
-                </tr>
-                <tr>
-                    <td>Operations</td>
-                    <td>16</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+
         
         <div class="applicant-table">
             <h4>Applicants</h4>
@@ -130,13 +75,13 @@ else {
                 </tr>
                 </thead>
                 <tbody>
-                <!--Mostra até 10 perfis-->
+                <!--Mostra até 10 perfis - onclick vai para o perfil (trocar para candidatos quando tiver funcionalidade)-->
                 @foreach (var profile in profiles.Take(10))
                 {
                     <tr>
                         <td>@profile.FirstName @profile.LastName</td>
                         <td>@profile.Location</td>
-                        <td><a href="@profile.UrlProfile">More</a></td>
+                        <td><a href="profile/@profile.ProfileId">More</a></td>
                     </tr>
                 }
                 </tbody>
