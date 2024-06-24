@@ -40,8 +40,8 @@ public class JobCreationBase : ComponentBase
     {
         try
         {
-            await JobService.GetClient(Guid.Parse(ClientId));
-            var JobDto = await JobService.CreateJob(Guid.Parse(ClientId), JobNew);
+            //Hard Coded ClientId
+            var JobDto = await JobService.CreateJob(Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0153a"), JobNew);
             
             await createSkillsForJob(JobDto.JobId);
             showModal = true;

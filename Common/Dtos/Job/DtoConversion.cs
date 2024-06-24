@@ -54,7 +54,6 @@ public static class DtoConversion
         
         return new Job
         {
-            JobId = jobDto.JobId,
             ClientId = jobDto.ClientId,
             EndDate = jobDto.EndDate,
             Position = jobDto.Position,
