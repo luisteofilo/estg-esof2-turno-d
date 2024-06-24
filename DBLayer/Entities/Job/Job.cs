@@ -5,7 +5,7 @@ namespace ESOF.WebApp.DBLayer.Entities;
 public class Job
 {
     [Key]
-    public Guid JobId { get; set; }
+    public Guid JobId { get; set; } = Guid.NewGuid();
 
     [Required]
     public Guid ClientId { get; set; }
@@ -16,16 +16,13 @@ public class Job
     [Required]
     public String Position { get; set; }    // Position of the job
 
-    [Required]
     public CommitmentType? Commitment { get; set; }  // Commitment type of the job
 
-    [Required]
     public RemoteType? Remote { get; set; } // Remote type of the Job
 
     [Required]
     public String Localization { get; set; }    // Localization of the Job
 
-    [Required]
     public EducationLevel? Education { get; set; }   // Minimum education required
 
     public ICollection<JobSkill> JobSkills { get; set; }

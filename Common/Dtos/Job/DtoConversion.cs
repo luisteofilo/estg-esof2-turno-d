@@ -22,10 +22,7 @@ public static class DtoConversion
             Localization = job.Localization,
             Education = job.Education,
             Experience = job.Experience,
-            Description = job.Description,
-            CreatedAt = job.CreatedAt,
-            UpdatedAt = job.UpdatedAt,
-            DeletedAt = job.DeletedAt
+            Description = job.Description
         };
     }
     
@@ -42,10 +39,7 @@ public static class DtoConversion
             Localization = job.Localization,
             Education = job.Education,
             Experience = job.Experience,
-            Description = job.Description,
-            CreatedAt = job.CreatedAt,
-            UpdatedAt = job.UpdatedAt,
-            DeletedAt = job.DeletedAt
+            Description = job.Description
         };
     }
 
@@ -69,10 +63,7 @@ public static class DtoConversion
             Localization = jobDto.Localization,
             Education = jobDto.Education,
             Experience = jobDto.Experience,
-            Description = jobDto.Description,
-            CreatedAt = jobDto.CreatedAt,
-            UpdatedAt = jobDto.UpdatedAt,
-            DeletedAt = jobDto.DeletedAt
+            Description = jobDto.Description
         };
     }
     

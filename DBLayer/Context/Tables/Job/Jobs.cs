@@ -9,7 +9,7 @@ public partial class ApplicationDbContext
     {
         modelBuilder.Entity<Job>()
             .Property(p => p.JobId)
-            .HasDefaultValueSql("gen_random_uuid()");
+            .ValueGeneratedNever();
         
         modelBuilder.Entity<Job>()
             .HasOne(j => j.Client)

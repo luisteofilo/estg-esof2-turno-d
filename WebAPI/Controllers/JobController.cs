@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]")]    
 [ApiController]
 public class JobController(
     IJobRepository _jobRepository,
