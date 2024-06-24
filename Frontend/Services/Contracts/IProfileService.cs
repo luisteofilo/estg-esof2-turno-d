@@ -27,5 +27,5 @@ public interface IProfileService
         
         
         
-        Task<ProfileDto> GetProfiles();
+        
 }
