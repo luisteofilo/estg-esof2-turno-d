@@ -20,33 +20,57 @@ namespace Frontend.Components.Pages
         protected IEnumerable<ProfileDto> ProfilesSkill { get; set; }
         protected IEnumerable<SkillDto> Skills { get; set; }
         
+        protected IEnumerable<string> Locations { get; set; }
+        
+        [SupplyParameterFromQuery(Name= "location")]
+        public string location { get; set; }
         
         [SupplyParameterFromQuery(Name= "skill")]
         public string Skill { get; set; }
-
+        
+        
         
 
         protected override async Task OnInitializedAsync()
         {
-            
-            if (!string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(Skill))
+            var searchMethods = new Dictionary<Func<bool>, Func<Task>>()
             {
-                SearchService.searchPerformed = true;
-                Profiles = await SearchService.GetResults(firstName);
-            }
-            if (!string.IsNullOrEmpty(Skill) && string.IsNullOrEmpty(firstName))
+                { () => !string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(Skill) && string.IsNullOrEmpty(location), 
+                    async () => Profiles = await SearchService.GetResults(firstName) },
+
+                { () => !string.IsNullOrEmpty(Skill) && string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(location), 
+                    async () => Profiles = await SearchService.GetResultsBySkill(Skill) },
+
+                { () => !string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(Skill) && string.IsNullOrEmpty(location), 
+                    async () => Profiles = await SearchService.GetResultsBySkill_Name(Skill, firstName) },
+
+                { () => !string.IsNullOrEmpty(location) && string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(Skill), 
+                    async () => Profiles = await SearchService.GetResultByLocation(location) },
+
+                { () => !string.IsNullOrEmpty(location) && !string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(Skill), 
+                    async () => Profiles = await SearchService.GetResultsBySkill_Name_Location( Skill, firstName, location) },
+
+               { () => !string.IsNullOrEmpty(location) && !string.IsNullOrEmpty(firstName), 
+                    async () => Profiles = await SearchService.GetResultsByLocation_Name(location, firstName) },
+
+                { () => !string.IsNullOrEmpty(location) && !string.IsNullOrEmpty(Skill), 
+                    async () => Profiles = await SearchService.GetResultsByLocation_Skill(location, Skill) }
+            };
+
+            foreach (var method in searchMethods)
             {
-                SearchService.searchPerformed = true;
-                Profiles = await SearchService.GetResultsBySkill(Skill);
+                if (method.Key())
+                {
+                    SearchService.searchPerformed = true;
+                    await method.Value();
+                    break;
+                }
             }
 
-            if (!string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(Skill))
-            {
-                SearchService.searchPerformed = true;
-                Profiles = await SearchService.GetResultsBySkill_Name(Skill, firstName);
-            }
-            Skills = await ProfileService.GetSkills();
             
+            Skills = await ProfileService.GetSkills();
+            Locations = await SearchService.GetLocations();
+
         }
         
         public async ValueTask DisposeAsync()

@@ -25,6 +25,20 @@ public class SearchRepository : ISearchRepository
         return await _dbContext.Profiles.Where(p => p.FirstName.Contains(firstName) && p.ProfileSkills.Any(ps => ps.Skill.Name.Contains(skill))).ToListAsync();
     }
     
+    public async Task<IEnumerable<Profile>> GetSearchResultsLocationAsync(string firstName, string location)
+    {
+        return await _dbContext.Profiles.Where(p => p.FirstName.Contains(firstName) && p.Location.Contains(location)).ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Profile>> GetSearchResultsSkillsLocationAsync(string firstName, string skill, string location)
+    {
+        return await _dbContext.Profiles
+            .Where(p => p.FirstName.Contains(firstName) 
+                        && p.ProfileSkills.Any(ps => ps.Skill.Name.Contains(skill)) 
+                        && p.Location.Contains(location)) 
+            .ToListAsync();
+    }
+    
     public async Task<IEnumerable<Profile>> GetResultsSkillsAsync(string skill)
     {
         return await _dbContext.Profiles.Where(p =>p.ProfileSkills.Any(ps => ps.Skill.Name.Contains(skill))).ToListAsync();
@@ -35,5 +49,13 @@ public class SearchRepository : ISearchRepository
         return await _dbContext.Profiles.Where(p => p.Location.Contains(location)).ToListAsync();
     }
     
+    public async Task<IEnumerable<Profile>> GetResultsLocationSkillAsync(string location, string skill)
+    {
+        return await _dbContext.Profiles.Where(p => p.Location.Contains(location) && p.ProfileSkills.Any(ps => ps.Skill.Name.Contains(skill))).ToListAsync();
+    }
     
+    public async Task<IEnumerable<string>> GetLocationsAsync()
+    {
+        return await _dbContext.Profiles.Select(p => p.Location).Distinct().ToListAsync();
+    }
 }

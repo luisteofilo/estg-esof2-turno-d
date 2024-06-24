@@ -14,9 +14,15 @@ public interface ISearchRepository
 
     Task<IEnumerable<Profile>> GetSearchResultsSkillsAsync(string firstName, string skill);
 
+    Task<IEnumerable<Profile>> GetSearchResultsLocationAsync(string firstName, string location);
+
+    Task<IEnumerable<Profile>> GetSearchResultsSkillsLocationAsync(string firstName, string skill, string location);
+
     Task<IEnumerable<Profile>> GetResultsSkillsAsync(string skill);
 
     Task<IEnumerable<Profile>> GetResultsLocationAsync(string location);
 
-    
+    Task<IEnumerable<Profile>> GetResultsLocationSkillAsync(string location, string skill);
+
+    Task<IEnumerable<string>> GetLocationsAsync();
 }
