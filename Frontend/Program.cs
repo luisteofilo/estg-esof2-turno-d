@@ -14,6 +14,12 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(EnvFileH
 builder.Services.AddScoped<ApiHelper>();
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
+
+//Interview Services
+builder.Services.AddScoped<IInterviewService, InterviewService>();
+builder.Services.AddScoped<IInterviewerService, InterviewerService>();
+builder.Services.AddScoped<ICandidateService, CandidateService>();
+
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 var app = builder.Build();
 
