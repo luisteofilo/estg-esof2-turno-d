@@ -23,11 +23,11 @@
                 <FluentValidationValidator/>
 
                 <div class="row mb-4">
-                    <div class="col-md-3">
-                        <img src="@($"{ApiUrl}{EditableProfile.Avatar}")" alt="Profile Image" class="img-fluid rounded form-control">
-                        <InputFile OnChange="AvatarSelected" class="form-control mt-2"/>
+                    <div class="col-md-4">
+                        <img src="@($"{ApiUrl}{EditableProfile.Avatar}")" alt="Profile Image" class="img-fluid rounded">
+                        <InputFile OnChange="AvatarSelected" accept="image/*" class="form-control mt-3 text-sm"/>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <div class="mb-3">
                             <label class="form-label fw-bold">First Name</label>
                             <InputText @bind-Value="@EditableProfile.FirstName" class="form-control" placeholder="First Name"/>
