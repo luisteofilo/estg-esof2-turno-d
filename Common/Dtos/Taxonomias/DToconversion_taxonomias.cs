@@ -1,23 +1,61 @@
-namespace Common.Dtos.Taxonomias;
 using ESOF.WebApp.DBLayer.Entities;
+using System.Linq;
 
-public static class DToconversion_taxonomias {
-    
-    public static verticalDto ToDto(this Vertical pro)
+namespace Common.Dtos.Taxonomias
+{
+    public static class DtoConversionTaxonomias
     {
-        return new verticalDto()
+        public static VerticalDto ToDto(this Vertical vertical)
         {
-            VerticalName = pro.VerticalName,
-            Roles_verticals = pro.Roles_verticals.Select(exp => new Roles_verticalsDto()
+            if (vertical == null)
+                return null;
+
+            return new VerticalDto
             {
-                Role_verticalsName = exp.Role_verticalsName,
-                Skills_verticals = exp.Skills_verticals.Select(edu => new skills_verticalsDto()
+                VerticalId = vertical.VerticalId,
+                VerticalName = vertical.VerticalName,
+                RolesVerticals = vertical.Roles_verticals?.Select(role => new RolesVerticalsDto
                 {
-                    skil_veticalsName= edu.skil_veticalsName,
-                    skil_veticalsExperiencia = edu.skil_veticalsExperiencia
+                    RoleVerticalsName = role.Role_verticalsName,
+                    SkillsVerticals = role.Skills_verticals?.Select(skill => new SkillsVerticalsDto
+                    {
+                        SkillVerticalsName = skill.skil_veticalsName,
+                        SkillVerticalsExperiencia = skill.skil_veticalsExperiencia
+                    }).ToList()
+                }).ToList(),
+                VerticalsUsers = vertical.VerticalsUsers?.Select(vu => new verticalsUserDto
+                {
+                    UserId = vu.UserId,
+                    
                 }).ToList()
-            }).ToList(),
-         
-        };
+                // Add other properties as needed
+            };
+        }
+    }
+
+    public class VerticalDto
+    {
+        public Guid VerticalId { get; set; }
+        public string VerticalName { get; set; }
+        public List<RolesVerticalsDto> RolesVerticals { get; set; }
+        public List<verticalsUserDto> VerticalsUsers { get; set; }
+    }
+
+    public class RolesVerticalsDto
+    {
+        public string RoleVerticalsName { get; set; }
+        public List<SkillsVerticalsDto> SkillsVerticals { get; set; }
+    }
+
+    public class SkillsVerticalsDto
+    {
+        public string SkillVerticalsName { get; set; }
+        public int SkillVerticalsExperiencia { get; set; }
+    }
+
+
+    public class verticalsUserDto
+    {
+        public Guid UserId { get; set; }
     }
 }
