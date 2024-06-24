@@ -41,7 +41,8 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmailTemplates");
-                    
+                });
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
                 {
                     b.Property<Guid>("EducationId")
