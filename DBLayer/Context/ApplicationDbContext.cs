@@ -51,7 +51,6 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Experience> Experiences { get; set; }
     public DbSet<ProfileSkill> ProfileSkills { get; set; }
     public DbSet<Skill> Skills { get; set; }
-    public DbSet<Job> Jobs { get; set; }
     public DbSet<InterviewFeedback> InterviewFeedbacks { get; set; }
     
     // Interview Features
@@ -59,6 +58,11 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Interviewer> Interviewers { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
 
+    // Job Features
+    public DbSet<Job> Jobs { get; set; }
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<JobSkill> JobSkills { get; set; }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -84,6 +88,11 @@ public partial class ApplicationDbContext : DbContext
         BuildInterviews(modelBuilder);
         BuildInterviewer(modelBuilder);
         BuildCandidates(modelBuilder);
+        
+        // Job Features
+        BuildJobs(modelBuilder);
+        BuildJobSkills(modelBuilder);
+        BuildClients(modelBuilder);
         
         base.OnModelCreating(modelBuilder);
     }

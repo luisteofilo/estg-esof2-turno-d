@@ -1,0 +1,124 @@
+﻿@page "/JobCreation"
+@page "/JobCreation/{ClientId}"
+@rendermode InteractiveServer
+@using global::Helpers.Job
+@inherits JobCreationBase
+
+<PageTitle>Job Creation</PageTitle>
+
+
+
+@if (ErrorMessage != null)
+{
+<DisplayError ErrorMessage="@ErrorMessage"/>
+}
+else {
+<h3>Job Creation</h3>
+<form @onsubmit="CreateJob">
+
+    <div>
+        <label for="position">Position:</label>
+        <input type="text"  id="position" @bind="JobNew.Position"/>
+    </div>
+
+    <div>
+        <label for="date">End Date:</label>
+        <input type="date" id="date" @bind="JobNew.EndDate"/>
+    </div>
+
+    <div>
+        <label for="experience">Experience:</label>
+        <input type="text"  id="experience" @bind="JobNew.Experience"/>
+    </div>
+
+    <div>
+        <label for="commitment">Commitment:</label>
+        <InputSelect id="commitment" @bind-Value="JobNew.Commitment">
+            <option value="">--- Select Commitment Type ---</option>
+            <option value="@CommitmentType.Hourly">Hourly</option>
+            <option value="@CommitmentType.PartTime">Part Time</option>
+            <option value="@CommitmentType.FullTime">Full Time</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label for="localization">Localization:</label>
+        <input type="text"  id="localization" @bind="JobNew.Localization"/>
+    </div>
+
+    <div>
+        <label for="remote">Remote:</label>
+        <InputSelect id="remote" @bind-Value="JobNew.Remote">
+            <option value="">--- Select Remote Type ---</option>
+            <option value="@RemoteType.Hybrid">Hybrid</option>
+            <option value="@RemoteType.Home">Home</option>
+            <option value="@RemoteType.Office">Office</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label for="education">Education:</label>
+        <InputSelect id="education" @bind-Value="JobNew.Education">
+            <option value="">--- Select Education Level ---</option>
+            <option value="@EducationLevel.PrimaryEducation">Primary Education</option>
+            <option value="@EducationLevel.SecondaryEducation">Secondary Education</option>
+            <option value="@EducationLevel.Bachelors">Bachelors</option>
+            <option value="@EducationLevel.Masters">Masters</option>
+            <option value="@EducationLevel.Doctoral">Doctoral</option>
+        </InputSelect>
+    </div>
+
+    <!-- Required Skills -->
+    <div class="skills-label">
+        <label for="skills">Required Skills:</label>
+    </div>
+    <div class="skills-input">
+        <div class="checkbox-container">
+            @foreach (var skill in AvailableSkills)
+            {
+            <label>
+                <input type="checkbox" @onchange="e => UpdateSkills(e, skill, true)"/>
+                @skill.Name
+            </label>
+            }
+        </div>
+    </div>
+
+    <!-- Nice to Have Skills -->
+    <div class="nice-to-have-skills-label">
+        <label for="niceToHaveSkills">Nice to Have Skills:</label>
+    </div>
+    <div class="nice-to-have-skills-input">
+        <div class="checkbox-container">
+            @foreach (var skill in AvailableSkills)
+            {
+            <label>
+                <input type="checkbox" @onchange="e => UpdateSkills(e, skill, false)"/>
+                @skill.Name
+            </label>
+            }
+        </div>
+    </div>
+
+    <div class="description-label">
+        <label for="description">Description:</label>
+    </div>
+    <div class="description-input">
+        <input type="text" Area id="description" @bind="JobNew.Description"/>
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+}
+
+@if (showModal)
+{
+<div class="modal">
+    <div class="modal-content">
+        <span class="close" @onclick="CloseModal">&times;</span>
+        <p>Job was created successfully!</p>
+        <button @onclick="CloseModal">Ok</button>
+    </div>
+</div>
+}
+

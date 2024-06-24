@@ -21,6 +21,9 @@ builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 
+// Job Repository
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
 
 var app = builder.Build();
 
