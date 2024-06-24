@@ -63,6 +63,15 @@ else {
             </div>
         </div>
 
+        <div>
+            <label for="statusSelector">Select Status:</label>
+            <select id="statusSelector" @onchange="OnStatusChanged">
+                <option value="Approved">Approved</option>
+                <option value="Pending">Pending</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+        </div>
+
         
         <div class="applicant-table">
             <h4>Applicants</h4>
@@ -71,6 +80,7 @@ else {
                 <tr>
                     <th>Candidate</th>
                     <th>Location</th>
+                    <th>Interview State</th>
                     <th>See profile</th>
                 </tr>
                 </thead>
@@ -81,6 +91,7 @@ else {
                     <tr>
                         <td>@profile.FirstName @profile.LastName</td>
                         <td>@profile.Location</td>
+                        <td><span class="status approved">Approved</span></td>
                         <td><a href="profile/@profile.ProfileId">More</a></td>
                     </tr>
                 }
@@ -91,12 +102,17 @@ else {
 }
 
 @code {
+    
     private IJSObjectReference? module;
     private IEnumerable<ProfileDto>? profiles;
     private IEnumerable<string>? skillNames;
     private int totalProfiles;
-
+    private string selectedStatus = "Approved";
     
+    private void OnStatusChanged(ChangeEventArgs e)
+    {
+        selectedStatus = e.Value.ToString();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
