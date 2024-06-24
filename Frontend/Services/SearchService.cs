@@ -7,7 +7,7 @@ namespace Frontend.Services;
 
 public class SearchService(HttpClient httpClient) : ISearchService
 {   
-    public string firstName { get; set; }
+    public bool searchPerformed { get; set; } = false;
     
     public async Task<IEnumerable<ProfileDto>> GetResults(string firstName)
     {
@@ -23,9 +23,12 @@ public class SearchService(HttpClient httpClient) : ISearchService
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileDto>>();
     }
-
-    public void SetName(string name)
+    
+    public async Task<IEnumerable<ProfileDto>> GetResultsBySkill_Name(string skill, string firstName)
     {
-        firstName = name;
+        var response = await httpClient.GetAsync($"api/Search/{firstName}/{skill}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileDto>>();
     }
+   
 }

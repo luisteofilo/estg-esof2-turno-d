@@ -4,8 +4,10 @@ namespace Frontend.Services.Contracts;
 
 public interface ISearchService
 {
-    void SetName(string name);
+    bool searchPerformed { get; set; }
     Task<IEnumerable<ProfileDto>> GetResults(string firstName);
 
     Task<IEnumerable<ProfileDto>> GetResultsBySkill(string skill);
+
+    Task<IEnumerable<ProfileDto>> GetResultsBySkill_Name(string skill, string firstName);
 }

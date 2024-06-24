@@ -7,11 +7,15 @@
 @using Frontend.Services.Contracts
 @inherits SearchBase
 
-
 <div class="search-container">
-    <form method="get" action="/searchresults" class="search-form">
-        <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input"/>
-        <div class="button-container">
+    <form method="get" action="/searchresults" class="search-form" >
+        <div class="input-row">
+            <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input" />
+            <button type="submit" class="submit-button">Ok</button>
+        </div>
+        @if (SearchService.searchPerformed)
+        {
+        <div class="select-row">
             <select name="skill" @bind="skill" class="custom-select">
                 <option value="">Skills</option>
                 @if (Skills != null && Skills.Any())
@@ -22,37 +26,39 @@
                 }
                 }
             </select>
+                <select class="custom-select">
+                    <option value="">Jobs</option>
+                    <option value="1">Job 1</option>
+                    <option value="2">Job 2</option>
+                    <option value="3">Job 3</option>
+                </select>
+                <select class="custom-select">
+                    <option value="">People</option>
+                    <option value="1">People 1</option>
+                    <option value="2">People 2</option>
+                    <option value="3">People 3</option>
+                </select>
+                <select class="custom-select">
+                    <option value="">Companies</option>
+                    <option value="1">Company 1</option>
+                    <option value="2">Company 2</option>
+                    <option value="3">Company 3</option>
+                </select>
+                <select class="custom-select">
+                    <option value="">Location</option>
+                    <option value="1">Location 1</option>
+                    <option value="2">Location 2</option>
+                    <option value="3">Location 3</option>
+                </select>
         </div>
-        <button type="submit" >Ok</button>
+        }
     </form>
-
-   
 </div>
 
 
-<!--@if (Profile == null)
-{
-
-//<h2>Loading...</h2>
-
-}
-else
-{
-// <h2>@Profile.FirstName</h2>
-}-->
-
-
 @code {
-
 private string searchText { get; set; } = string.Empty;
 private string skill { get; set; } = string.Empty;
-private bool searchPerformed = false;
 
 [Inject] public ISearchService SearchService { get; set; }
-
-protected async Task PerformSearch()
-{
-    searchPerformed = true;
-}
-
 }

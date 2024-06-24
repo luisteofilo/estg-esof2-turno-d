@@ -4,30 +4,7 @@
 @inject NavigationManager Navigation
 
 <div class="button-container">
-    <select class="custom-select">
-        <option value="">Jobs</option>
-        <option value="1">Job 1</option>
-        <option value="2">Job 2</option>
-        <option value="3">Job 3</option>
-    </select>
-    <select class="custom-select">
-        <option value="">People</option>
-        <option value="1">People 1</option>
-        <option value="2">People 2</option>
-        <option value="3">People 3</option>
-    </select>
-    <select class="custom-select">
-        <option value="">Companies</option>
-        <option value="1">Company 1</option>
-        <option value="2">Company 2</option>
-        <option value="3">Company 3</option>
-    </select>
-    <select class="custom-select">
-        <option value="">Location</option>
-        <option value="1">Location 1</option>
-        <option value="2">Location 2</option>
-        <option value="3">Location 3</option>
-    </select>
+   
 </div>
 
 <h3>Search Results</h3>
@@ -48,19 +25,7 @@
     }
 </div>
 
-<div class="mb-3">
-    @if (ProfilesSkill != null && ProfilesSkill.Any())
-    {
-    @foreach (var profile in ProfilesSkill)
-    {
-    <p> @profile.FirstName @profile.LastName </p>
-    }
-    }
-    else
-    {
-    <p>No profiles found.</p>
-    }
-</div>
+
 
 @code {
     [Parameter]

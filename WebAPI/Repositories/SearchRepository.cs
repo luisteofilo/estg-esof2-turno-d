@@ -17,7 +17,7 @@ public class SearchRepository : ISearchRepository
     
     public async Task<bool> ProfileExistsAsync(string firstName)
     {
-        return await _dbContext.Profiles.AnyAsync(p => p.FirstName == firstName);
+        return await _dbContext.Profiles.AnyAsync(p => p.FirstName.Contains(firstName));
     }
     
     public async Task<IEnumerable<Profile>> GetSearchResultsSkillsAsync(string firstName, string skill)
@@ -34,4 +34,6 @@ public class SearchRepository : ISearchRepository
     {
         return await _dbContext.Profiles.Where(p => p.Location.Contains(location)).ToListAsync();
     }
+    
+    
 }

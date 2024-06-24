@@ -1,12 +1,22 @@
 .search-container {
     width: 100%;
     display: flex;
-    justify-content: flex-start; 
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .search-form {
+    width: 40%;
     display: flex;
+    flex-direction: column;
+}
+
+.input-row {
+    display: flex;
+    flex-direction: row;
     align-items: center;
+    width: 70%;
+    margin-bottom: 10px; 
 }
 
 .search-input {
@@ -14,13 +24,41 @@
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-right: 10px;
+    margin-right: 10px; 
+}
+
+.submit-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.submit-button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.select-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px; 
+    width: 100%;
 }
 
 .custom-select {
     border: 1px solid #ccc;
-    border-radius: 20px;
-    padding: 10px 20px;
+    border-radius: 5px;
+    padding: 10px;
     background-color: #fff;
     color: #000;
     cursor: pointer;
@@ -32,6 +70,7 @@
     background-repeat: no-repeat;
     background-position: right 0.75rem center;
     background-size: 8px 10px;
+    flex-grow: 1; 
 }
 
 .custom-select:hover {
@@ -42,12 +81,4 @@
 .custom-select:focus {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-.button-container {
-    display: flow;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px;
-
 }

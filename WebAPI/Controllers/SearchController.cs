@@ -89,4 +89,6 @@ public class SearchController(ISearchRepository searchRepository) : ControllerBa
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
         }
     }
+    
+    
 }
