@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Common.Dtos.Profile;
-using ESOF.WebApp.DBLayer.Entities;
-using ESOF.WebApp.WebAPI.Repositories;
+﻿using Common.Dtos.Profile;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -86,7 +83,7 @@ public class ProfileController(
     }
 
     [HttpPut("{profileId:guid}")]
-    [ProducesResponseType(204)]
+    [ProducesResponseType(204, Type = typeof(ProfileDto))]
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     public async Task<IActionResult> UpdateProfile(Guid profileId, [FromBody] ProfileDto updatedProfileDto)
@@ -135,11 +132,78 @@ public class ProfileController(
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error deleting profile: {ex.Message}");
         }
     }
+    
+    [HttpPost("upload-image"), DisableRequestSizeLimit]
+    [ProducesResponseType(200, Type = typeof(string))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> UploadImage([FromForm] AvatarFormDto form)
+    {
+        try
+        {
+            if (form.File == null || form.File.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var folderName = Path.Combine("Resources", "Avatars");
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+            if (!Directory.Exists(pathToSave))
+            {
+                Directory.CreateDirectory(pathToSave);
+            }
+            
+            var fileExtension = Path.GetExtension(form.File.FileName);
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");
+            var fileName = $"{form.ProfileId}_{timestamp}{fileExtension}";
+            var fullPath = Path.Combine(pathToSave, fileName);
+            var accessPath = Path.Combine(folderName, fileName);
+            
+            var profile = await _profileRepository.GetProfileAsync(form.ProfileId);
+            if (!string.IsNullOrEmpty(profile.Avatar))
+            {
+                var previousAvatarFullPath = Path.Combine(Directory.GetCurrentDirectory(), profile.Avatar);
+                if (System.IO.File.Exists(previousAvatarFullPath))
+                {
+                    System.IO.File.Delete(previousAvatarFullPath);
+                }
+            }
+            
+            await using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                await form.File.CopyToAsync(stream);
+            }
+            
+            await _profileRepository.UpdateProfileAvatarAsync(form.ProfileId, accessPath);
+            return Ok(accessPath);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error storing profile avatar: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("url/{profileUrl}")]
+    [ProducesResponseType(200, Type = typeof(ProfileDto))]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetProfileByUrl(string profileUrl)
+    {
+        try
+        {
+            var profile = await _profileRepository.GetProfileByUrlAsync(profileUrl);
+            var profileDto = profile.ProfileConvertToDto();
+
+            return Ok(profileDto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
 
     // Endpoints para Skill
-
     
-
     [HttpGet("skills")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<SkillDto>))]
     public async Task<IActionResult> GetSkills()
@@ -215,6 +279,7 @@ public class ProfileController(
             }
 
             var existingSkill = await _skillRepository.GetSkillByIdAsync(skillId);
+            
             if (existingSkill == null)
             {
                 return NotFound();
@@ -290,7 +355,6 @@ public class ProfileController(
             }
 
             await _skillRepository.AddSkillToProfileAsync(skillId, profileId);
-
             return NoContent();
         }
         catch (Exception ex)
@@ -315,7 +379,6 @@ public class ProfileController(
             }
 
             await _skillRepository.RemoveSkillFromProfileAsync(skillId, profileId);
-
             return NoContent();
         }
         catch (Exception ex)
@@ -335,6 +398,7 @@ public class ProfileController(
         try
         {
             var existProfile = await _profileRepository.ProfileExistsAsync(profileId);
+            
             if (!existProfile)
             {
                 return NotFound();
@@ -342,7 +406,7 @@ public class ProfileController(
 
             var educations = await _educationRepository.GetProfileEducationsAsync(profileId);
             var educationsDto = educations.EducationsConvertToDto();
-
+            
             return Ok(educationsDto);
         }
         catch (Exception ex)
@@ -380,10 +444,9 @@ public class ProfileController(
             education.ProfileId = profileId;
             
             await _educationRepository.AddEducationAsync(education);
-            
             var createdEducationDto = education.EducationConvertToDto();
 
-            return CreatedAtAction(nameof(CreateProfileExperience), new { profileId = profileId, educationId = createdEducationDto.EducationId }, createdEducationDto);
+            return Ok(createdEducationDto);
         }
         catch (Exception ex)
         {
@@ -419,7 +482,7 @@ public class ProfileController(
             var updatedEducation = updatedEducationDto.DtoToEducation();
             await _educationRepository.UpdateEducationAsync(updatedEducation);
 
-            return NoContent();
+            return Ok(updatedEducationDto);
         }
         catch (Exception ex)
         {
@@ -438,6 +501,7 @@ public class ProfileController(
         {
             var profile = await _profileRepository.GetProfileAsync(profileId);
             var education = await _educationRepository.GetEducationAsync(educationId);
+            
             if (profile == null || education == null)
             {
                 return NotFound();
@@ -449,7 +513,6 @@ public class ProfileController(
             }
             
             await _educationRepository.DeleteProfileEducationAsync(educationId);
-
             return NoContent();
         }
         catch (Exception ex)
@@ -485,7 +548,7 @@ public class ProfileController(
     }
 
     [HttpPost("{profileId:guid}/experiences")]
-    [ProducesResponseType(201, Type = typeof(ExperienceDto))]
+    [ProducesResponseType(200, Type = typeof(ExperienceDto))]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
     [ProducesResponseType(404)]
@@ -508,18 +571,18 @@ public class ProfileController(
             {
                 return NotFound("Profile not found.");
             }
-            
+
             var experience = experienceDto.DtoToExperience();
             experience.ProfileId = profileId;
             
             await _experienceRepository.AddExperienceAsync(experience);
-
             var createdExperienceDto = experience.ExperienceConvertToDto();
 
-            return CreatedAtAction(nameof(GetProfileExperiences), new { profileId = profileId, experienceId = createdExperienceDto.ExperienceId }, createdExperienceDto);
+            return Ok(createdExperienceDto);
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error creating profile experience: {ex.Message}");
         }
     }
@@ -551,8 +614,7 @@ public class ProfileController(
 
             var updatedExperience = updatedExperienceDto.DtoToExperience();
             await _experienceRepository.UpdateExperienceAsync(updatedExperience);
-
-            return NoContent();
+            return Ok(updatedExperienceDto);
         }
         catch (Exception ex)
         {
@@ -571,6 +633,7 @@ public class ProfileController(
         {
             var profile = await _profileRepository.GetProfileAsync(profileId);
             var experience = await _experienceRepository.GetExperienceAsync(experienceId);
+            
             if (profile == null || experience == null)
             {
                 return NotFound();
@@ -582,7 +645,6 @@ public class ProfileController(
             }
             
             await _experienceRepository.DeleteExperienceAsync(experienceId);
-
             return NoContent();
         }
         catch (Exception ex)

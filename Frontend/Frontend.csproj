@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Blazored.FluentValidation" Version="2.2.0" />
       <PackageReference Include="DotNetEnv" Version="3.0.0" />
     </ItemGroup>
 

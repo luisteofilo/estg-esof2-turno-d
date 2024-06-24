@@ -1,5 +1,4 @@
-﻿using Common.Dtos.Profile;
-using ESOF.WebApp.DBLayer.Context;
+﻿using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +17,11 @@ public class ProfileRepository : IProfileRepository
     public async Task<Profile> GetProfileAsync(Guid profileId)
     {
         return await _dbContext.Profiles.FirstOrDefaultAsync(p => p.ProfileId == profileId);
+    }
+
+    public async Task<Profile> GetProfileByUrlAsync(string profileUrl)
+    {
+        return await _dbContext.Profiles.FirstOrDefaultAsync(p => p.UrlProfile == profileUrl);
     }
 
     public async Task<bool> ProfileExistsAsync(Guid profileId)
@@ -45,5 +49,19 @@ public class ProfileRepository : IProfileRepository
             _dbContext.Profiles.Remove(profile);
             await _dbContext.SaveChangesAsync();
         }
+    }
+
+    public async Task<Profile> UpdateProfileAvatarAsync(Guid profileId, string avatarUrl)
+    {
+        var profile = await _dbContext.Profiles.FindAsync(profileId);
+        if (profile == null)
+        {
+            throw new Exception("Profile not found");
+        }
+
+        profile.Avatar = avatarUrl;
+        _dbContext.Profiles.Update(profile);
+        await _dbContext.SaveChangesAsync();
+        return profile;
     }
 }
