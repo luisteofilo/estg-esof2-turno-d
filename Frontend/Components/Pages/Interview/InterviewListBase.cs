@@ -19,10 +19,12 @@ namespace Frontend.Components.Pages.Interview
         protected DateTime currentDateTime;
         protected Dictionary<Guid, bool> presenceMarked = new Dictionary<Guid, bool>();
         protected Dictionary<Guid, bool> lightOn = new Dictionary<Guid, bool>();
+        private bool _shouldContinuePolling = true;
 
         protected override async Task OnInitializedAsync()
         {
             await LoadDataAsync();
+            _ = StartPollingAsync();
         }
 
         //Aqui Carregamos os dados para atualizar a lista
@@ -81,6 +83,18 @@ namespace Frontend.Components.Pages.Interview
             };
         }
 
+        //Metodo para atualizar a data e hora ao segundo
+        private async Task StartPollingAsync()
+        {
+            while (_shouldContinuePolling)
+            {
+                await RefreshDate();
+                StateHasChanged();
+                await Task.Delay(1000); // Aguarde 1 seg.
+            }
+        }  
+        
+        
         //Metodo para o botão de Refresh da DataHora de hoje
         protected async Task RefreshDate()
         {
