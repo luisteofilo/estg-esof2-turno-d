@@ -11,17 +11,21 @@
 
 <p>You searched for: @searchText</p>
 
-<div class="mb-3">
+<div class="search-results-container">
     @if (Profiles != null && Profiles.Any())
     {
-    @foreach (var profile in Profiles)
-    {
-    <p> @profile.FirstName @profile.LastName </p>
-    }
-    }
-    else
-    {
-    <p>No profiles found.</p>
+        @foreach (var profile in Profiles)
+        {
+            <div class="person-entry">
+                <img src="@profile.UrlProfile" alt="Profile Image" class="profile-image"/>
+                <div class="text-container">
+                    <p class="person-name">@profile.FirstName @profile.LastName</p>
+                    <p class="person-details">@profile.Bio - @profile.Location</p>
+
+                </div>
+
+            </div>
+        }
     }
 </div>
 
