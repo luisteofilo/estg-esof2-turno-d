@@ -43,7 +43,7 @@ public class JobCreationBase : ComponentBase
             await JobService.GetClient(Guid.Parse(ClientId));
             var JobDto = await JobService.CreateJob(Guid.Parse(ClientId), JobNew);
             
-            // await createSkillsForJob(JobDto.JobId);
+            await createSkillsForJob(JobDto.JobId);
             showModal = true;
             StateHasChanged();
         }
@@ -101,6 +101,15 @@ public class JobCreationBase : ComponentBase
     {
         try
         {
+            foreach (SkillDto RSkill in RequiredSkills)
+            {
+                var SkillDto = JobService.CreateJobSkill(JobNew.JobId, RSkill.SkillId, true, new JobSkillDto());
+            }
+            foreach (SkillDto NtHSkill in NiceToHaveSkills)
+            {
+                var SkillDto = JobService.CreateJobSkill(JobNew.JobId, NtHSkill.SkillId, false, new JobSkillDto());
+            }
+            
             Console.WriteLine("Metodo para atualizar tabela de muitos para muitos" +
                               "fazer a logica e chamar os servicos de acordo com o endpoint");
         }

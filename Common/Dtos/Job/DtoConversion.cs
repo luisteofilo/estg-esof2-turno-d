@@ -89,4 +89,29 @@ public static class DtoConversion
             Name = skillDto.Name
         };
     }
+    
+    public static IEnumerable<JobSkillDto> JobSkillsConvertToDto(this IEnumerable<JobSkill> jobSkills)
+    {
+        return jobSkills.Select(jobSkill => jobSkill.JobSkillConvertToDto()).ToList();
+    }
+    
+    public static JobSkillDto JobSkillConvertToDto(this JobSkill jobSkill)
+    {
+        return new JobSkillDto()
+        {
+            JobId = jobSkill.JobId,
+            SkillId = jobSkill.SkillId,
+            IsRequired = jobSkill.IsRequired
+        };
+    }
+    
+    public static JobSkill DtoConvertTOJobSkill(this JobSkillDto jobSkillDto)
+    {
+        return new JobSkill
+        {
+            JobId = jobSkillDto.JobId,
+            SkillId = jobSkillDto.SkillId,
+            IsRequired = jobSkillDto.IsRequired
+        };
+    }
 }

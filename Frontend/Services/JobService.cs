@@ -28,4 +28,15 @@ public class JobService(HttpClient _httpClient) : IJobService
             throw;
         }
     }
+
+    public async Task<JobSkillDto> CreateJobSkill(Guid JobId, Guid SkillId, bool isRequired, JobSkillDto jobSkillDto)
+    {
+        jobSkillDto.JobId = JobId;
+        jobSkillDto.SkillId = SkillId;
+        jobSkillDto.IsRequired = isRequired;
+        
+        var response = await _httpClient.PostAsJsonAsync($"api/JobSkill", jobSkillDto);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<JobSkillDto>();
+    }
 }
