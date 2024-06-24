@@ -1,125 +1,39 @@
 ﻿@page "/JobCreation"
+@page "/JobCreation/{ClientId}"
 @rendermode InteractiveServer
-
-@using Common.Dtos.Job
-@using Common.Dtos.Profile
-@using ESOF.WebApp.DBLayer.Entities
-@using Frontend.Services
-@using Frontend.Services.Contracts
-@inject IJobService JobService
-@inject IProfileService ProfileService
+@using global::Helpers.Job
+@inherits JobCreationBase
 
 <PageTitle>Job Creation</PageTitle>
 
+
+
+@if (ErrorMessage != null)
+{
+<DisplayError ErrorMessage="@ErrorMessage"/>
+}
+else {
 <h3>Job Creation</h3>
-
-<style>
-    form {
-        display: grid;
-        grid-template-columns: max-content 1fr;
-        gap: 20px;
-        max-width: 600px;
-        margin-left: 300px;
-        margin-right: auto;
-    }
-    label {
-        text-align: right;
-        padding-right: 20px;
-        height: 40px;
-        line-height: 40px;
-    }
-    input, textarea, select {
-        width: 100%;
-        padding: 5px;
-        box-sizing: border-box;
-    }
-    .description-label, .skills-label, .nice-to-have-skills-label {
-        grid-column: 1 / span 2;
-        text-align: left;
-        height: 20px;
-    }
-    .description-input, .skills-input, .nice-to-have-skills-input {
-        grid-column: 1 / span 2;
-        height: auto;
-    }
-    .checkbox-container {
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .checkbox-container label {
-        display: flex;
-        align-items: center;
-        margin-right: 20px;
-    }
-    .checkbox-container input {
-        margin-right: 10px;
-    }
-    button {
-        grid-column: span 2;
-        justify-self: center;
-        padding: 10px 30px;
-        cursor: pointer;
-    }
-
-    .modal {
-        display: block;
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0, 0, 0);
-        background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-content {
-        position: relative;
-        background-color: #fefefe;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: fit-content;
-        min-width: 300px;
-    }
-
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-</style>
-
-<form @onsubmit="HandleSubmit">
+<form @onsubmit="CreateJob">
 
     <div>
         <label for="position">Position:</label>
-        <InputText id="position" @bind-Value="job.Position" />    
+        <input type="text"  id="position" @bind="JobNew.Position"/>
     </div>
 
     <div>
         <label for="date">End Date:</label>
-        <InputDate id="date" @bind-Value="job.EndDate" />
+        <input type="date" id="date" @bind="JobNew.EndDate"/>
     </div>
 
     <div>
         <label for="experience">Experience:</label>
-        <InputText id="experience" @bind-Value="job.Experience" />
+        <input type="text"  id="experience" @bind="JobNew.Experience"/>
     </div>
-    
+
     <div>
         <label for="commitment">Commitment:</label>
-        <InputSelect id="commitment" @bind-Value="job.Commitment">
+        <InputSelect id="commitment" @bind-Value="JobNew.Commitment">
             <option value="">--- Select Commitment Type ---</option>
             <option value="@CommitmentType.Hourly">Hourly</option>
             <option value="@CommitmentType.PartTime">Part Time</option>
@@ -129,22 +43,22 @@
 
     <div>
         <label for="localization">Localization:</label>
-        <InputText id="localization" @bind-Value="job.Localization" />
+        <input type="text"  id="localization" @bind="JobNew.Localization"/>
     </div>
-    
+
     <div>
         <label for="remote">Remote:</label>
-        <InputSelect id="remote" @bind-Value="job.Remote">
+        <InputSelect id="remote" @bind-Value="JobNew.Remote">
             <option value="">--- Select Remote Type ---</option>
             <option value="@RemoteType.Hybrid">Hybrid</option>
             <option value="@RemoteType.Home">Home</option>
             <option value="@RemoteType.Office">Office</option>
         </InputSelect>
     </div>
-    
+
     <div>
         <label for="education">Education:</label>
-        <InputSelect id="education" @bind-Value="job.Education">
+        <InputSelect id="education" @bind-Value="JobNew.Education">
             <option value="">--- Select Education Level ---</option>
             <option value="@EducationLevel.PrimaryEducation">Primary Education</option>
             <option value="@EducationLevel.SecondaryEducation">Secondary Education</option>
@@ -160,10 +74,10 @@
     </div>
     <div class="skills-input">
         <div class="checkbox-container">
-            @foreach (var skill in availableSkills)
+            @foreach (var skill in AvailableSkills)
             {
             <label>
-                <input type="checkbox" checked="@job.RequiredSkills.Any(s => s.SkillId == skill.SkillId)" value="@skill.SkillId" @onchange="e => UpdateSkills(e, skill, true)" />
+                <input type="checkbox" @onchange="e => UpdateSkills(e, skill, true)"/>
                 @skill.Name
             </label>
             }
@@ -176,10 +90,10 @@
     </div>
     <div class="nice-to-have-skills-input">
         <div class="checkbox-container">
-            @foreach (var skill in availableSkills)
+            @foreach (var skill in AvailableSkills)
             {
             <label>
-                <input type="checkbox" checked="@job.NiceToHaveSkills.Any(s => s.SkillId == skill.SkillId)" value="@skill.SkillId" @onchange="e => UpdateSkills(e, skill, false)" />
+                <input type="checkbox" @onchange="e => UpdateSkills(e, skill, true)"/>
                 @skill.Name
             </label>
             }
@@ -190,117 +104,21 @@
         <label for="description">Description:</label>
     </div>
     <div class="description-input">
-        <InputTextArea id="description" @bind-Value="job.Description"></InputTextArea>
+        <input type="text" Area id="description" @bind="JobNew.Description"/>
     </div>
 
     <button type="submit">Submit</button>
 </form>
+}
 
 @if (showModal)
 {
-    <div class="modal">
-        <div class="modal-content">
-            <span class="close" @onclick="CloseModal">&times;</span>
-            <p>Job was created successfully!</p>
-            <button @onclick="CloseModal">Ok</button>
-        </div>
+<div class="modal">
+    <div class="modal-content">
+        <span class="close" @onclick="CloseModal">&times;</span>
+        <p>Job was created successfully!</p>
+        <button @onclick="CloseModal">Ok</button>
     </div>
+</div>
 }
 
-@code {
-    private bool showModal = false;
-
-    private IEnumerable<SkillDto>? skills;
-    
-    private JobDto job = new JobDto()
-    {
-        ClientId =  Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0178D"),     //Hard Coded
-        EndDate = DateTime.Now,
-        RequiredSkills = new List<SkillDto>(),
-        NiceToHaveSkills = new List<SkillDto>()
-    };
-
-    private List<SkillDto> availableSkills = new List<SkillDto>();
-
-    protected override async Task OnInitializedAsync()
-    {
-        skills = await ProfileService.GetSkills();
-        if (skills != null)
-        {
-            availableSkills = skills.ToList();
-        }
-    }
-
-    private void UpdateSkills(ChangeEventArgs e, SkillDto skill, bool isRequired)
-    {
-        if ((bool)e.Value)
-        {
-            if (isRequired)
-            {
-                if (!job.RequiredSkills.Any(s => s.SkillId == skill.SkillId))
-                {
-                    job.RequiredSkills.Add(skill);
-                }
-            }
-            else
-            {
-                if (!job.NiceToHaveSkills.Any(s => s.SkillId == skill.SkillId))
-                {
-                    job.NiceToHaveSkills.Add(skill);
-                }
-            }
-        }
-        else
-        {
-            if (isRequired)
-            {
-                var skillToRemove = job.RequiredSkills.FirstOrDefault(s => s.SkillId == skill.SkillId);
-                if (skillToRemove != null)
-                {
-                    job.RequiredSkills.Remove(skillToRemove);
-                }
-            }
-            else
-            {
-                var skillToRemove = job.NiceToHaveSkills.FirstOrDefault(s => s.SkillId == skill.SkillId);
-                if (skillToRemove != null)
-                {
-                    job.NiceToHaveSkills.Remove(skillToRemove);
-                }
-            }
-        }
-    }
-    
-    private async Task HandleSubmit()
-    {
-        try
-        {
-            await JobService.CreateJob(job.JobId, job.ClientId, job);
-            showModal = true;
-            StateHasChanged();
-        }
-        catch (HttpRequestException ex)
-        {
-            // Log the exception
-            Console.WriteLine($"Error creating job: {ex.Message}");
-        }
-    }
-
-    private void CloseModal()
-    {
-        showModal = false;
-        ClearForm();
-    }
-
-    private void ClearForm()
-    {
-        job = new JobDto()
-        {
-            ClientId =  Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0178D"),
-            EndDate = DateTime.Now,
-            RequiredSkills = new List<SkillDto>(),
-            NiceToHaveSkills = new List<SkillDto>()
-        };
-        StateHasChanged();
-    }
-}

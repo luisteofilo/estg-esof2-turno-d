@@ -1,5 +1,6 @@
 ﻿using ESOF.WebApp.DBLayer.Entities;
 using Common.Dtos.Profile;
+using Helpers.Job;
 
 namespace Common.Dtos.Job;
 
@@ -9,7 +10,7 @@ public class JobDto
     
     public Guid ClientId { get; set; }
     
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
     
     public String Position { get; set; }
     
@@ -21,11 +22,12 @@ public class JobDto
     
     public EducationLevel? Education { get; set; }
     
-    public String Experience { get; set; }
+    public String? Experience { get; set; }
     
     public String? Description { get; set; }
     
-    public List<SkillDto> RequiredSkills { get; set; } = new List<SkillDto>();
-    public List<SkillDto> NiceToHaveSkills { get; set; } = new List<SkillDto>();
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
     
 }

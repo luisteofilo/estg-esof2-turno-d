@@ -1,29 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using Helpers.Job;
 namespace ESOF.WebApp.DBLayer.Entities;
-
-public enum CommitmentType
-{
-    Hourly,
-    PartTime,
-    FullTime
-}
-
-public enum EducationLevel
-{
-    PrimaryEducation,
-    SecondaryEducation,
-    Bachelors,
-    Masters,
-    Doctoral
-}
-
-public enum RemoteType
-{
-    Hybrid,
-    Home,
-    Office
-}
 
 public class Job
 {
@@ -33,9 +10,8 @@ public class Job
     [Required]
     public Guid ClientId { get; set; }
     public Client Client { get; set; }    // Client who created the Job
-
-    [Required]
-    public DateTime EndDate { get; set; }   // End date of the job opportunity
+    
+    public DateTime? EndDate { get; set; }   // End date of the job opportunity
 
     [Required]
     public String Position { get; set; }    // Position of the job
@@ -54,12 +30,12 @@ public class Job
 
     public ICollection<JobSkill> JobSkills { get; set; }
     
-    public IQueryable RequiredSkills => JobSkills.Where(js => js.IsRequired).AsQueryable();
-    
-    public IQueryable NiceToHaveSkills => JobSkills.Where(js => !js.IsRequired).AsQueryable();
-
-    [Required]
-    public String Experience { get; set; }  // Minimum experience required
+    public String? Experience { get; set; }  // Minimum experience required
 
     public String? Description { get; set; } // Additional information about the Job
+    
+    public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset? DeletedAt { get; set; }
+    
 }

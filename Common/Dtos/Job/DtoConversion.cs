@@ -22,7 +22,10 @@ public static class DtoConversion
             Localization = job.Localization,
             Education = job.Education,
             Experience = job.Experience,
-            Description = job.Description
+            Description = job.Description,
+            CreatedAt = job.CreatedAt,
+            UpdatedAt = job.UpdatedAt,
+            DeletedAt = job.DeletedAt
         };
     }
     
@@ -39,13 +42,21 @@ public static class DtoConversion
             Localization = job.Localization,
             Education = job.Education,
             Experience = job.Experience,
-            Description = job.Description
+            Description = job.Description,
+            CreatedAt = job.CreatedAt,
+            UpdatedAt = job.UpdatedAt,
+            DeletedAt = job.DeletedAt
         };
     }
 
     public static Job DtoConvertToJob(this JobDto jobDto)
     {
-        jobDto.EndDate = DateTime.SpecifyKind(jobDto.EndDate, DateTimeKind.Utc);
+        
+        if (jobDto.EndDate.HasValue) 
+        {
+            DateTime endDateWithKind = DateTime.SpecifyKind(jobDto.EndDate.Value, DateTimeKind.Utc);
+            jobDto.EndDate = endDateWithKind;
+        }
         
         return new Job
         {
@@ -58,7 +69,10 @@ public static class DtoConversion
             Localization = jobDto.Localization,
             Education = jobDto.Education,
             Experience = jobDto.Experience,
-            Description = jobDto.Description
+            Description = jobDto.Description,
+            CreatedAt = jobDto.CreatedAt,
+            UpdatedAt = jobDto.UpdatedAt,
+            DeletedAt = jobDto.DeletedAt
         };
     }
     

@@ -7,48 +7,39 @@ namespace ESOF.WebApp.WebAPI.Repositories;
     
 public class JobRepository : IJobRepository
 {
-    private readonly ApplicationDbContext _context;
-    
-    public JobRepository()
-    { 
-        _context = new ApplicationDbContext();
-    }
-
-    
-    public JobRepository(ApplicationDbContext context)
-    { 
-        _context = context;
-    }
+    private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
 
     public async Task<IEnumerable<Job>> GetJobsAsync()
     { 
-        return await _context.Jobs.ToListAsync();
+        return await _dbContext.Jobs.ToListAsync();
     }
 
     public async Task<Job> GetJobByIdAsync(Guid jobId)
     { 
-        return await _context.Jobs.FindAsync(jobId);
+        return await _dbContext.Jobs.FindAsync(jobId);
     }
 
     public async Task AddJobAsync(Job job)
     { 
-        await _context.Jobs.AddAsync(job); 
-        await _context.SaveChangesAsync();
+        await _dbContext.Jobs.AddAsync(job); 
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateJobAsync(Job job)
     { 
-        _context.Jobs.Update(job); 
-        await _context.SaveChangesAsync();
+        job.UpdatedAt = DateTimeOffset.UtcNow;
+        _dbContext.Jobs.Update(job);
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task DeleteJobAsync(Guid jobId)
     {
-        var job = await _context.Jobs.FindAsync(jobId);
+        var job = await _dbContext.Jobs.FindAsync(jobId);
         if (job != null)
         {
-            _context.Jobs.Remove(job);
-            await _context.SaveChangesAsync();
+            job.DeletedAt = DateTimeOffset.UtcNow;
+            _dbContext.Jobs.Update(job);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

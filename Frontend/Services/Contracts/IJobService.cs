@@ -5,7 +5,7 @@ namespace Frontend.Services.Contracts;
 
 public interface IJobService
 {
-    Task<JobDto> CreateJob(Guid JobId, Guid ClientId, JobDto jobDto);
+    Task<JobDto> CreateJob(Guid ClientId, JobDto jobDto);
     
-    //Task<IEnumerable<SkillDto>> GetSkills();
+    Task<ClientDto> GetClient(Guid ClientId);
 }

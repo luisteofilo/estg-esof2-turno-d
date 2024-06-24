@@ -81,21 +81,5 @@ public class JobController(
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving job: {ex.Message}");
         }
     }
-    /*
-    [HttpGet("skills")]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<SkillDto>))]
-    public async Task<IActionResult> GetSkills()
-    {
-        try
-        {
-            var skills = await _skillRepository.GetSkillsAsync();
-            var skillsDto = skills.SkillsJobConvertToDto();
-            return Ok(skillsDto);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving skills: {ex.Message}");
-        }
-    }*/
 }
 

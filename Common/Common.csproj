@@ -10,4 +10,16 @@
       <ProjectReference Include="..\DBLayer\DBLayer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="JobEnums\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="JobEnums\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="JobEnums\**" />
+    </ItemGroup>
+
 </Project>
