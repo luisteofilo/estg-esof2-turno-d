@@ -17,4 +17,5 @@ public class User
     public byte[] PasswordSalt { get; set; }
     public ICollection<UserRole> UserRoles { get; set; }
     public Client Client { get; set; }
+    public Talent Talent { get; set; }
 }

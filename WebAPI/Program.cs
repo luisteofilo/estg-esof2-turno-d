@@ -19,7 +19,7 @@ builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository >();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 builder.Services.AddScoped<RoleRepository>();
-
+builder.Services.AddScoped<RegisterRepository>();
 
 
 var app = builder.Build();

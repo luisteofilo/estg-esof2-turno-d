@@ -4,17 +4,34 @@
 
 <PageTitle>Logout</PageTitle>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body flex-column">
-                <div class="text-center mt-2">
-                    <span class="text-danger fw-bolder">You have been logged out.</span>
+<AuthorizeView>
+    <Authorized>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body flex-column">
+                        <div class="text-center mt-2">
+                            <span class="text-danger fw-bolder">You have been logged out.</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body flex-column">
+                        <div class="text-center mt-2">
+                            <span class="text-danger fw-bolder">You are not logged in.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @code {

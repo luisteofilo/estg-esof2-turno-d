@@ -1,7 +1,6 @@
 using ESOF.WebApp.WebAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Common.Dtos.Role;
-using ESOF.WebApp.DBLayer.Entities;
+using Common.Dtos.RoleAndPerms;
 
 namespace ESOF.WebApp.WebAPI.Controllers
 {

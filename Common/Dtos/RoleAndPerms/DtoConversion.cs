@@ -1,11 +1,10 @@
-using Common.Dtos.Role;
 using ESOF.WebApp.DBLayer.Entities;
 
-namespace Common.Dtos.Role
+namespace Common.Dtos.RoleAndPerms
 {
     public static class DtoConversion
     {
-        public static RoleDto RoleConvertToDto(this ESOF.WebApp.DBLayer.Entities.Role role)
+        public static RoleDto RoleConvertToDto(this Role role)
         {
             return new RoleDto
             {
@@ -24,9 +23,9 @@ namespace Common.Dtos.Role
             };
         }
 
-        public static ESOF.WebApp.DBLayer.Entities.Role DtoConvertToRole(this RoleDto roleDto)
+        public static Role DtoConvertToRole(this RoleDto roleDto)
         {
-            return new ESOF.WebApp.DBLayer.Entities.Role
+            return new Role
             {
                 RoleId = roleDto.RoleId,
                 Name = roleDto.Name,
@@ -63,6 +62,24 @@ namespace Common.Dtos.Role
             {
                 PermissionId = permissionDto.PermissionId,
                 Name = permissionDto.Name
+            };
+        }
+        
+        public static UserRoleDto UserRoleConvertToDto(this UserRole userRole)
+        {
+            return new UserRoleDto
+            {
+                UserId = userRole.UserId,
+                RoleId = userRole.RoleId
+            };
+        }
+        
+        public static UserRole DtoConvertToUserRole(this UserRoleDto userRoleDto)
+        {
+            return new UserRole
+            {
+                UserId = userRoleDto.UserId,
+                RoleId = userRoleDto.RoleId
             };
         }
         

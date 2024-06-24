@@ -1,7 +1,6 @@
-using Common.Dtos.Role;
+using Common.Dtos.RoleAndPerms;
 using ESOF.WebApp.DBLayer.Entities;
 using Frontend.Services.Contracts;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Frontend.Services
 {
@@ -83,7 +82,6 @@ namespace Frontend.Services
                 return null;
             }
         }
-        
         
     }
 }

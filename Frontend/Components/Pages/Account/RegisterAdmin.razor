@@ -1,5 +1,110 @@
-<h3>RegisterAdmin</h3>
+@page "/register-admin"
+@using ESOF.WebApp.DBLayer.Entities
+@using Frontend.Components.Layout
+@using Frontend.Models.ViewModels
+@using Frontend.Services.Contracts
+@layout MainLayout
+@rendermode InteractiveServer
+@inject IRegisterService RegisterService
+
+<PageTitle>Register Admin</PageTitle>
+
+<AuthorizeView Roles="Admin">
+    <Authorized Context="_">
+        <EditForm Model="@RegisterModel" OnValidSubmit="HandleRegistration" FormName="RegisterAdminForm">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            @if (!string.IsNullOrEmpty(EmailExistsError))
+            {
+                <div class="alert alert-danger">@EmailExistsError</div>
+            }
+            @if (!string.IsNullOrEmpty(GeneralError))
+            {
+                <div class="alert alert-danger">@GeneralError</div>
+            }
+
+            <div class="mb-3 text-center">
+                <h3>Registar Admin</h3>
+            </div>
+
+            <div class="mb-3">
+                <label>Email</label>
+                <InputText @bind-Value="RegisterModel.Email" class="form-control" placeholder="Email" />
+                <ValidationMessage For="() => RegisterModel.Email" />
+            </div>
+
+            <div class="mb-3">
+                <label>Password</label>
+                <InputText @bind-Value="RegisterModel.Password" class="form-control" placeholder="Password" type="password" />
+                <ValidationMessage For="() => RegisterModel.Password" />
+            </div>
+
+            <div class="mb-3 d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </EditForm>
+    </Authorized>
+    
+    <NotAuthorized>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body flex-column">
+                        <div class="text-center mt-2">
+                            <span class="text-danger fw-bolder">You don't have permission to access this page.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
+    private RegisterAdminViewModel RegisterModel { get; set; } = new();
+    private string? EmailExistsError { get; set; }
+    private string? GeneralError { get; set; }
+
+    private async Task HandleRegistration()
+    {
+        var (passwordHash, passwordSalt) = CreatePasswordHash(RegisterModel.Password);
+        
+        var user = new User
+        {
+            Email = RegisterModel.Email,
+            PasswordHash = passwordHash,
+            PasswordSalt = passwordSalt,
+            UserRoles = new List<UserRole>()
+        };
+        
+        Console.WriteLine("Registering admin...");
+        Console.WriteLine($"Email: {user.Email}");
+
+        try
+        {
+            await RegisterService.RegisterAdminAsync(user);
+            RegisterModel = new RegisterAdminViewModel();
+            EmailExistsError = null;
+            GeneralError = null;
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
+        {
+            EmailExistsError = "Email already exists.";
+            GeneralError = null; 
+        }
+        catch (Exception ex)
+        {
+            GeneralError = "An error occurred while registering. Please try again.";
+            EmailExistsError = null; 
+        }
+    }
     
+    private static (byte[] passwordHash, byte[] passwordSalt) CreatePasswordHash(string password)
+    {
+        using var hmac = new System.Security.Cryptography.HMACSHA512();
+        var passwordSalt = hmac.Key;
+        var passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        return (passwordHash, passwordSalt);
+    }
 }

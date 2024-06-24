@@ -1,7 +1,6 @@
 using ESOF.WebApp.DBLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using ESOF.WebApp.DBLayer.Context;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Repositories
 {

@@ -39,8 +39,7 @@ public partial class ApplicationDbContext
         modelBuilder.Entity<Client>()
             .Property(p => p.CompanyDescription)
             .IsRequired();
-
-        // Configure the one-to-one relationship with User
+        
         modelBuilder.Entity<Client>()
             .HasOne(c => c.User)
             .WithOne(u => u.Client)

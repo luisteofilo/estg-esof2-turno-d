@@ -1,4 +1,3 @@
-using Common.Dtos.Role;
 using ESOF.WebApp.DBLayer.Entities;
 
 namespace Frontend.Services.Contracts;

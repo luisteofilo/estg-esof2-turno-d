@@ -1,4 +1,4 @@
-namespace Common.Dtos.Role
+namespace Common.Dtos.RoleAndPerms
 {
     public class RoleDto
     {
