@@ -14,7 +14,7 @@ public interface IInterviewFeedback
     Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByCandidate(Guid candidate);
     Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByInterview(Guid interview);
     Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByInterviewer(Guid interview);
-    Task<int> UpdateJobRequisits(Job job);
+    Task<int> UpdateJob(Job job, Guid JobId);
 
 
 }

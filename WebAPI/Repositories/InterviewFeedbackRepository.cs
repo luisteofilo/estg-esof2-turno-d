@@ -69,7 +69,7 @@ public class InterviewFeedbackRepository : IInterviewFeedback
     }
 
 
-    public async Task<int> UpdateJobRequisits(Job job)
+    public async Task<int> UpdateJob(Job job,Guid JobId)
     {
         job.UpdatedAt = DateTimeOffset.UtcNow;
         _dbContext.Jobs.Update(job);
