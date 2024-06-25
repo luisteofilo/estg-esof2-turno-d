@@ -2,6 +2,7 @@
 @using Common.Dtos.Interview
 @using Common.Dtos.Job
 @using Common.Dtos.Profile
+@using ESOF.WebApp.DBLayer.Entities.Interviews
 @using Frontend.Services.Contracts
 @inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
@@ -34,7 +35,15 @@ else {
             </div>
             <div class="stat-item">
                 <span class="stat-title">Total Interview's</span>
-                <h1 class="stat-value">@totalInterview</h1>
+                <h1 class="stat-value">@totalInterviews</h1>
+            </div>
+            <div class="stat-item" style="margin-top: 50px">
+                <span class="stat-title">Missed Interviews Percentage</span>
+                <h1 class="stat-value">@missedInterviewPercentage%</h1>
+            </div>
+            <div class="stat-item" style="margin-top: 50px">
+                <span class="stat-title">Canceled Interviews Percentage</span>
+                <h1 class="stat-value">@canceledInterviewPercentage%</h1>
             </div>
         </div>
 
@@ -129,15 +138,17 @@ else {
     private IEnumerable<string>? jobSkillNames;
     private int totalCandidates;
     private int totalJobs;
-    private int totalInterview;
+    private int totalInterviews;
+    private double missedInterviewPercentage;
+    private double canceledInterviewPercentage;
     private string selectedStatus = "All";
     private string searchText = "";
     private List<CandidateDto> FilteredCandidates => GetFilteredCandidates();
+    private bool chartsInitialized = false;
 
     private void OnStatusChanged(ChangeEventArgs e)
     {
         selectedStatus = e.Value.ToString();
-        StateHasChanged(); // Trigger a re-render
     }
 
     private string GetInterviewStateText(int? state)
@@ -176,7 +187,9 @@ else {
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        try 
+        if (!chartsInitialized)
+        {
+            try 
             {
                 module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Dashboard/Dashboard.razor.js"); 
                 Console.WriteLine("JS module loaded"); 
@@ -184,12 +197,14 @@ else {
                 if (module != null && skillNames != null && jobSkillNames != null) 
                 {
                     await InitializeCharts();
+                    chartsInitialized = true;
                 } 
             }
             catch (Exception ex) 
             {
                 Console.WriteLine($"Error initializing charts: {ex.Message}"); 
             } 
+        }
     }
 
     private async Task InitializeCharts()
@@ -229,7 +244,14 @@ else {
             
             totalCandidates = candidates.Count();
             totalJobs = jobs.Count();
-            totalInterview = interviews.Count();
+            totalInterviews = interviews.Count();
+            
+            int missedInterviews = interviews.Count(i => i.InterviewState == (InterviewState)1);
+            missedInterviewPercentage = totalInterviews > 0 ? (double)missedInterviews / totalInterviews * 100 : 0;
+            
+            int canceledInterviews = interviews.Count(i => i.InterviewState == (InterviewState)4);
+            canceledInterviewPercentage = totalInterviews > 0 ? (double)canceledInterviews / totalInterviews * 100 : 0;
+            
             
             foreach (var interview in interviews)
             {
