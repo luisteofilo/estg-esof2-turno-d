@@ -67,7 +67,7 @@ public partial class ApplicationDbContext : DbContext
         BuildVerticals(modelBuilder);
         BuildverticalUser(modelBuilder);
         BuildRoleVerticals(modelBuilder);
-        BuildSkilVerticals(modelBuilder);
+        BuildSkillVerticals(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 }

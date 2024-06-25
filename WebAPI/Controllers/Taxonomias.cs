@@ -70,24 +70,22 @@ namespace ESOF.WebApp.WebAPI.Controllers
 
             try
             {
-                // Retrieve existing Vertical entity from repository
+               
                 var existingTaxonomia = await _taxonomiasRepository.GetTaxonomiaById(id);
 
                 if (existingTaxonomia == null)
                 {
                     return NotFound();
                 }
-
-                // Map DTO properties to the existing entity
+                
                 existingTaxonomia.VerticalName = taxonomiaDto.VerticalName;
-
-                // Update entity in DbContext
+                
                 _taxonomiasRepository.Update(existingTaxonomia);
 
-                // Save changes to the database
+              
                 await _taxonomiasRepository.SaveAsync();
 
-                return NoContent(); // 204 No Content response
+                return NoContent(); 
             }
             
             catch (DbUpdateConcurrencyException)
@@ -101,7 +99,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
                     "Error updating data in the database.");
             }
         }
-        [HttpPost]
+      [HttpPost]
         public async Task<ActionResult<VerticalDto>> CreateTaxonomia(VerticalDto taxonomiaDto)
         {
             try
@@ -111,23 +109,25 @@ namespace ESOF.WebApp.WebAPI.Controllers
                     return BadRequest("Taxonomia data is null.");
                 }
 
-               
                 var newTaxonomia = new Vertical
                 {
-                    VerticalId = Guid.NewGuid(), 
+                    VerticalId = Guid.NewGuid(),
                     VerticalName = taxonomiaDto.VerticalName,
-                    Roles_verticals = taxonomiaDto.RolesVerticals?.Select(roleDto => new Role_verticals
+                    Roles_verticals = taxonomiaDto.RoleVerticals?.Select(roleDto => new Role_verticals
                     {
-                        Role_verticalsName = roleDto.RoleVerticalsName,
-                        Skills_verticals = roleDto.SkillsVerticals?.Select(skillDto => new skil_veticals
+                        Role_verticalsId = Guid.NewGuid(),
+                        Role_verticalsName = roleDto.RoleVerticalName,
+                        Skills_verticals = roleDto.SkillVerticals?.Select(skillDto => new skil_veticals
                         {
-                            skil_veticalsName = skillDto.SkillVerticalsName,
-                            skil_veticalsExperiencia = skillDto.SkillVerticalsExperiencia
+                            skil_veticalsId = Guid.NewGuid(),
+                            skil_veticalsName = skillDto.SkillVerticalName,
+                            skil_veticalsExperiencia = skillDto.SkillVerticalExperience
                         }).ToList()
                     }).ToList(),
-                    VerticalsUsers = taxonomiaDto.VerticalsUsers?.Select(userDto => new verticalsUser
+                    VerticalsUsers = taxonomiaDto.VerticalUsers?.Select(userDto => new verticalsUser
                     {
-                        // Map user properties as needed
+                        UserId = userDto.UserId,
+                        // Assuming you need to map the User entity here
                     }).ToList()
                 };
 
@@ -139,13 +139,13 @@ namespace ESOF.WebApp.WebAPI.Controllers
                 var addedTaxonomiaDto = newTaxonomia.ToDto();
                 return CreatedAtAction(nameof(GetTaxonomiaById), new { id = newTaxonomia.VerticalId }, addedTaxonomiaDto);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error creating data in the database.");
+                    "Error creating data in the database: " + ex.Message);
             }
         }
-        
+
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteTaxonomia(Guid id)
         {
@@ -163,10 +163,10 @@ namespace ESOF.WebApp.WebAPI.Controllers
 
                 return NoContent(); // 204 No Content response
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error deleting data from the database.");
+                    "Error deleting data from the database: " + ex.Message);
             }
         }
     }

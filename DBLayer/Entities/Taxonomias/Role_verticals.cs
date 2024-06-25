@@ -10,11 +10,9 @@ namespace ESOF.WebApp.DBLayer.Entities
 
         [Required]
         public string Role_verticalsName { get; set; }
-
-        // Foreign key
+        
         public Guid VerticalId { get; set; }
-
-        // Navigation properties
+        
         public Vertical Vertical { get; set; }
         public ICollection<skil_veticals> Skills_verticals { get; set; }
     }

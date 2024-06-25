@@ -9,8 +9,7 @@ namespace ESOF.WebApp.DBLayer.Entities
 
         [Required]
         public string VerticalName { get; set; }
-
-        // Navigation property
+        
         public ICollection<Role_verticals> Roles_verticals { get; set; }
         
         public ICollection<verticalsUser> VerticalsUsers { get; set; }
