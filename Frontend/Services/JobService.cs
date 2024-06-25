@@ -30,7 +30,8 @@ public class JobService(HttpClient _httpClient) : IJobService
         var response = await _httpClient.GetAsync("api/Job");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
-    
+    }
+
     public async Task<IEnumerable<JobDto>> GetJobsAsync()
     {
         var response = await _httpClient.GetAsync("api/Job");
