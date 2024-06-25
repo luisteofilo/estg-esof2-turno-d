@@ -9,7 +9,7 @@
         const counts = Object.values(skillCounts);
 
         const target = document.querySelector(selector);
-        const ctx = target.getContext('2d');
+        let ctx = target.getContext('2d');
         new Chart(ctx, {
             type: 'pie',
             data: {
@@ -37,7 +37,7 @@
         const counts = sortedExperienceEntries.map(entry => entry[1]);
 
         const target = document.querySelector(selector);
-        const ctx = target.getContext('2d');
+        let ctx = target.getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -61,7 +61,7 @@
     static initLineChart(selector, interviewData) {
         const target = document.querySelector(selector);
         const ctx = target.getContext('2d');
-        new Chart(ctx, {
+        window.lineChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: interviewData.labels,
@@ -84,6 +84,16 @@
                 }
             }
         });
+    }
+
+    static updateLineChart(selector, interviewData) {
+        if (window.lineChart) {
+            window.lineChart.data.labels = interviewData.labels;
+            window.lineChart.data.datasets[0].data = interviewData.counts;
+            window.lineChart.update();
+        } else {
+            Dashboard.initLineChart(selector, interviewData);
+        }
     }
 
     static getColor(index) {

@@ -8,7 +8,7 @@ public static class DtoConversion
     {
         return jobs.Select(job => job.JobConvertToDto()).ToList();
     }
-    
+
     public static JobDto CopyJobDto(this Job job)
     {
         return new JobDto
@@ -22,10 +22,13 @@ public static class DtoConversion
             Localization = job.Localization,
             Education = job.Education,
             Experience = job.Experience,
-            Description = job.Description
+            Description = job.Description,
+            Company = job.Company,
+            Import = job.Import,
+            OtherDetails = job.OtherDetails,
         };
     }
-    
+
     public static JobDto JobConvertToDto(this Job job)
     {
         return new JobDto
@@ -39,19 +42,22 @@ public static class DtoConversion
             Localization = job.Localization,
             Education = job.Education,
             Experience = job.Experience,
-            Description = job.Description
+            Description = job.Description,
+            Company = job.Company,
+            Import = job.Import,
+            OtherDetails = job.OtherDetails,
         };
     }
 
     public static Job DtoConvertToJob(this JobDto jobDto)
     {
-        
-        if (jobDto.EndDate.HasValue) 
+
+        if (jobDto.EndDate.HasValue)
         {
             DateTime endDateWithKind = DateTime.SpecifyKind(jobDto.EndDate.Value, DateTimeKind.Utc);
             jobDto.EndDate = endDateWithKind;
         }
-        
+
         return new Job
         {
             ClientId = jobDto.ClientId,
@@ -62,15 +68,18 @@ public static class DtoConversion
             Localization = jobDto.Localization,
             Education = jobDto.Education,
             Experience = jobDto.Experience,
-            Description = jobDto.Description
+            Description = jobDto.Description,
+            Company = jobDto.Company,
+            Import = jobDto.Import,
+            OtherDetails = jobDto.OtherDetails,
         };
     }
-    
+
     public static IEnumerable<SkillDto> SkillsJobConvertToDto(this IEnumerable<Skill> skills)
     {
         return skills.Select(skill => skill.SkillConvertToDto()).ToList();
     }
-    
+
     public static SkillDto SkillConvertToDto(this Skill skill)
     {
         return new SkillDto
@@ -79,7 +88,7 @@ public static class DtoConversion
             Name = skill.Name
         };
     }
-    
+
     public static Skill DtoConvertToSkill(this SkillDto skillDto)
     {
         return new Skill
@@ -88,12 +97,12 @@ public static class DtoConversion
             Name = skillDto.Name
         };
     }
-    
+
     public static IEnumerable<JobSkillDto> JobSkillsConvertToDto(this IEnumerable<JobSkill> jobSkills)
     {
         return jobSkills.Select(jobSkill => jobSkill.JobSkillConvertToDto()).ToList();
     }
-    
+
     public static JobSkillDto JobSkillConvertToDto(this JobSkill jobSkill)
     {
         return new JobSkillDto()
@@ -103,7 +112,7 @@ public static class DtoConversion
             IsRequired = jobSkill.IsRequired
         };
     }
-    
+
     public static JobSkill DtoConvertTOJobSkill(this JobSkillDto jobSkillDto)
     {
         return new JobSkill

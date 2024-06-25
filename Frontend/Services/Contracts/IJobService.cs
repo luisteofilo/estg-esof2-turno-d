@@ -9,4 +9,6 @@ public interface IJobService
     Task<IEnumerable<JobDto>> GetJobsAsync();
 
     Task<JobSkillDto> CreateJobSkill(Guid JobId, Guid SkillId, bool isRequired, JobSkillDto jobSkillDto);
+
+    Task<IEnumerable<JobDto>> GetJobs();
 }
