@@ -216,7 +216,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
                     {
                         var newUser = new verticalsUser
                         {
-                            UserId = userDto.UserId,
+                           //UserId = userDto.UserId,
                             VerticalId = newVertical.VerticalId
                         };
                         newVertical.VerticalsUsers.Add(newUser);
