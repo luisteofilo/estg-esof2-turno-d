@@ -22,22 +22,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Client", b =>
-                {
-                    b.Property<Guid>("ClientId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("ClientId");
-
-                    b.ToTable("Clients");
-                });
-
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
                 {
                     b.Property<Guid>("EducationId")
@@ -148,8 +132,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("JobId");
-
-                    b.HasIndex("ClientId");
 
                     b.ToTable("Jobs");
                 });
@@ -360,17 +342,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Client", "Client")
-                        .WithMany("Jobs")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-                });
-
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.JobSkill", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Job", "Job")
@@ -456,11 +427,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Client", b =>
-                {
-                    b.Navigation("Jobs");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>

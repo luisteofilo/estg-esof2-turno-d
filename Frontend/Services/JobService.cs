@@ -20,7 +20,7 @@ public class JobService(HttpClient _httpClient) : IJobService
         jobSkillDto.SkillId = SkillId;
         jobSkillDto.IsRequired = isRequired;
         
-        var response = await _httpClient.PostAsJsonAsync($"api/JobSkill", jobSkillDto);
+        var response = await _httpClient.PostAsJsonAsync($"api/Job/CreateJobSkill", jobSkillDto);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<JobSkillDto>();
     }

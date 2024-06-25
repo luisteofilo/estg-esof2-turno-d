@@ -10,8 +10,6 @@ public class JobCreationBase : ComponentBase
     [Inject] IProfileService ProfileService { get; set; }
     [Inject] IJobService JobService { get; set; }
     
-    [Parameter] public string? ClientId { get; set; }
-    
     protected string? ErrorMessage { get; set; }
     
     protected IEnumerable<SkillDto> AvailableSkills { get; set; } = new List<SkillDto>();
@@ -103,15 +101,12 @@ public class JobCreationBase : ComponentBase
         {
             foreach (SkillDto RSkill in RequiredSkills)
             {
-                var SkillDto = JobService.CreateJobSkill(JobNew.JobId, RSkill.SkillId, true, new JobSkillDto());
+                var SkillDto = JobService.CreateJobSkill(jobId, RSkill.SkillId, true, new JobSkillDto());
             }
             foreach (SkillDto NtHSkill in NiceToHaveSkills)
             {
-                var SkillDto = JobService.CreateJobSkill(JobNew.JobId, NtHSkill.SkillId, false, new JobSkillDto());
+                var SkillDto = JobService.CreateJobSkill(jobId, NtHSkill.SkillId, false, new JobSkillDto());
             }
-            
-            Console.WriteLine("Metodo para atualizar tabela de muitos para muitos" +
-                              "fazer a logica e chamar os servicos de acordo com o endpoint");
         }
         catch (Exception e)
         {

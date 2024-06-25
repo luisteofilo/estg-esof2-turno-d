@@ -8,8 +8,7 @@ public class Job
     public Guid JobId { get; set; } = Guid.NewGuid();
 
     [Required]
-    public Guid ClientId { get; set; }
-    public Client Client { get; set; }    // Client who created the Job
+    public Guid ClientId { get; set; }  // Client who created the Job
     
     public DateTime? EndDate { get; set; }   // End date of the job opportunity
 

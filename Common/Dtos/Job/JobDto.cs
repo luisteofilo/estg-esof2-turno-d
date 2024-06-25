@@ -1,6 +1,4 @@
-﻿using ESOF.WebApp.DBLayer.Entities;
-using Common.Dtos.Profile;
-using Helpers.Job;
+﻿using Helpers.Job;
 
 namespace Common.Dtos.Job;
 
