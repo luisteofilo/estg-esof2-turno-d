@@ -1,7 +1,5 @@
 ﻿export class Dashboard {
     static initPieChart(selector, skillNames) {
-        
-        // Count occurrences of each skill name
         const skillCounts = skillNames.reduce((acc, skill) => {
             acc[skill] = (acc[skill] || 0) + 1;
             return acc;
@@ -25,67 +23,49 @@
     }
 
     static initBarChart(selector, experienceNames) {
-
-        // Convert experience names to lowercase and count occurrences of each experience name
-        const experienceCounts = experienceNames.reduce((acc, experience) => {
-            const lowerCaseExperience = experience.toLowerCase();
-            acc[lowerCaseExperience] = (acc[lowerCaseExperience] || 0) + 1;
-            return acc;
-        }, {});
-
-        // Sort experiences by count, limit to top 5
-        const sortedExperienceEntries = Object.entries(experienceCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-        const labels = sortedExperienceEntries.map(entry => entry[0]);
-        const counts = sortedExperienceEntries.map(entry => entry[1]);
-
-        // Generate a unique color for each label
-        const colors = labels.map((label, index) => {
-            const hue = (index * 137.5) % 360; // Use golden angle approximation for color diversity
-            return `hsl(${hue}, 70%, 50%)`;
+        const experienceCounts = {};
+        experienceNames.forEach(name => {
+            experienceCounts[name] = (experienceCounts[name] || 0) + 1;
         });
+
+        const labels = Object.keys(experienceCounts);
+        const datasets = labels.map((label, index) => ({
+            label: label,
+            data: [experienceCounts[label]],
+            backgroundColor: Dashboard.getColor(index)
+        }));
 
         const target = document.querySelector(selector);
         let ctx = target.getContext('2d');
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
-                datasets: [{
-                    data: counts,
-                    backgroundColor: colors,
-                    label: labels
-                }]
+                labels: ['Experiences'],
+                datasets: datasets
             },
             options: {
                 scales: {
+                    x: {
+                        beginAtZero: true
+                    },
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 10 // Adjust the step size to 10
+                            stepSize: 1
                         }
-                    },
-                    x: {
-                        beginAtZero: true
                     }
                 },
-                indexAxis: 'y', // This option makes the bar chart horizontal
                 plugins: {
                     legend: {
-                        display: true, // Show the legend
-                        labels: {
-                            generateLabels: function(chart) {
-                                const data = chart.data;
-                                return data.labels.map((label, index) => ({
-                                    text: label,
-                                    fillStyle: data.datasets[0].backgroundColor[index]
-                                }));
-                            }
-                        }
+                        display: true
                     }
                 }
             }
         });
     }
-}
 
-window.Dashboard = Dashboard;
+    static getColor(index) {
+        const hue = (index * 137.5) % 360;
+        return `hsl(${hue}, 70%, 50%)`;
+    }
+}
