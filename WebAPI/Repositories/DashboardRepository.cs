@@ -1,9 +1,6 @@
 ﻿using Common.Dtos.Job;
 using ESOF.WebApp.DBLayer.Entities;
-using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using ESOF.WebApp.DBLayer.Context;
-using ESOF.WebApp.DBLayer.Entities;
-using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Common.Dtos.Profile;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +40,20 @@ namespace ESOF.WebApp.WebAPI.Repositories;
                 .ToListAsync();
     
             return jobSkills;
+        }
+        
+        public async Task<IEnumerable<ExperienceDto>> GetExperiencesAsync()
+        {
+            var experiences = await _dbContext.Experiences
+                .Select(e => new ExperienceDto
+                {
+                    ExperienceId = e.ExperienceId,
+                    Name = e.Name
+                })
+                .OrderBy(p => p.ExperienceId)
+                .ToListAsync();
+
+            return experiences;
         }
 
         public async Task<IEnumerable<Skill>> GetListOfSkillsAsync()
