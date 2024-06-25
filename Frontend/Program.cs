@@ -1,3 +1,4 @@
+using ESOF.WebApp.DBLayer.Entities;
 using Frontend.Components;
 using Frontend.Helpers;
 using Frontend.Services;
@@ -20,6 +21,7 @@ builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IInterviewerService, InterviewerService>();
 builder.Services.AddScoped<ICandidateService, CandidateService>();
+builder.Services.AddScoped<IinterviewFeedback, InterviewFeedbackService>();
 
 var app = builder.Build();
 
