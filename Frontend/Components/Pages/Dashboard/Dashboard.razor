@@ -1,10 +1,14 @@
 ﻿@page "/dashboard"
+@using Common.Dtos.Interview
 @using Common.Dtos.Profile 
+@using ESOF.WebApp.DBLayer.Entities.Interviews
 @using Frontend.Services.Contracts
 @inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
 
 @inject IProfileService ProfileService
+@inject ICandidateService CandidateService
+@inject IInterviewService InterviewService
 @inject IDashboardService DashboardService
 @rendermode InteractiveServer
 
@@ -21,8 +25,8 @@ else {
     <div class="dashboard-container">
         <div class="dashboard-stats">
             <div class="stat-item">
-                <span class="stat-title">Total Profiles</span>
-                <h1 class="stat-value">@totalProfiles</h1>
+                <span class="stat-title">Total Candidates</span>
+                <h1 class="stat-value">@totalCandidates</h1>
             </div>
             <div class="stat-item">
                 <span class="stat-title">Total jobs</span>
@@ -32,7 +36,6 @@ else {
                 <span class="stat-title">Total Jobs open</span>
                 <h1 class="stat-value">None</h1>
             </div>
-            
         </div>
 
         <div class="dashboard-graph">
@@ -40,7 +43,6 @@ else {
             <canvas id="commonSkills"></canvas>
             
             <h4>Most Common Skills on Jobs</h4>
-            
         </div>
         
         <div class="dashboard-graph">
@@ -66,13 +68,15 @@ else {
         <div>
             <label for="statusSelector">Select Status:</label>
             <select id="statusSelector" @onchange="OnStatusChanged">
-                <option value="Approved">Approved</option>
-                <option value="Pending">Pending</option>
-                <option value="Rejected">Rejected</option>
+                <option value="All">All</option>
+                <option value="0">Scheduled</option>
+                <option value="1">Missed</option>
+                <option value="2">On Going</option>
+                <option value="3">Completed</option>
+                <option value="4">Canceled</option>
             </select>
         </div>
 
-        
         <div class="applicant-table">
             <h4>Applicants</h4>
             <table>
@@ -81,18 +85,23 @@ else {
                     <th>Candidate</th>
                     <th>Location</th>
                     <th>Interview State</th>
-                    <th>See profile</th>
                 </tr>
                 </thead>
                 <tbody>
-                <!--Mostra até 10 perfis - onclick vai para o perfil (trocar para candidatos quando tiver funcionalidade)-->
-                @foreach (var profile in profiles.Take(10))
-                {
+                @foreach (var candidate in FilteredCandidates.Take(10))
+                { 
+                    var interview = interviews.FirstOrDefault(i => i.CandidateId == candidate.CandidateId); 
+                    var stateClass = GetInterviewStateClass((int?)interview?.InterviewState);
+                    var stateText = GetInterviewStateText((int?)interview?.InterviewState);
+                    
                     <tr>
-                        <td>@profile.FirstName @profile.LastName</td>
-                        <td>@profile.Location</td>
-                        <td><span class="status approved">Approved</span></td>
-                        <td><a href="profile/@profile.ProfileId">More</a></td>
+                        <td>@candidate.Name</td>
+                        <td>@(interview?.Location ?? "Unknown")</td>
+                        <td>
+                            <span class="status @(stateClass)">
+                                @(stateText)
+                            </span>
+                        </td>
                     </tr>
                 }
                 </tbody>
@@ -102,40 +111,89 @@ else {
 }
 
 @code {
-    
     private IJSObjectReference? module;
     private IEnumerable<ProfileDto>? profiles;
+    private IEnumerable<CandidateDto>? candidates;
+    private IEnumerable<InterviewDto>? interviews;
     private IEnumerable<string>? skillNames;
-    private int totalProfiles;
-    private string selectedStatus = "Approved";
-    
+    private int totalCandidates;
+    private string selectedStatus = "All";
+    private List<CandidateDto> FilteredCandidates => GetFilteredCandidates();
+
     private void OnStatusChanged(ChangeEventArgs e)
     {
         selectedStatus = e.Value.ToString();
+        StateHasChanged(); // Trigger a re-render
+    }
+
+    private List<CandidateDto> GetFilteredCandidates()
+    {
+        if (selectedStatus == "All")
+        {
+            return candidates.ToList();
+        }
+
+        if (int.TryParse(selectedStatus, out int status))
+        {
+            var filteredInterviews = interviews.Where(i => (int)i.InterviewState == status).ToList();
+            var candidateIds = filteredInterviews.Select(i => i.CandidateId).ToHashSet();
+            return candidates.Where(c => candidateIds.Contains(c.CandidateId)).ToList();
+        }
+
+        return candidates.ToList();
+    }
+
+    private string GetInterviewStateText(int? state)
+    {
+        if (state.HasValue)
+        {
+            Console.WriteLine($"Interview State (text): {state.Value}");
+        }
+        return state switch
+        {
+            0 => "Scheduled",
+            1 => "Missed",
+            2 => "On Going",
+            3 => "Completed",
+            4 => "Canceled",
+            _ => "No Interview"
+        };
+    }
+
+    private string GetInterviewStateClass(int? state)
+    {
+        if (state.HasValue)
+        {
+            Console.WriteLine($"Interview State (class): {state.Value}");
+        }
+        return state switch
+        {
+            0 => "scheduled",
+            1 => "missed",
+            2 => "on-going",
+            3 => "completed",
+            4 => "canceled",
+            _ => "no-interview"
+        };
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        
-            try
+        try 
+        {
+            module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Dashboard/Dashboard.razor.js"); 
+            Console.WriteLine("JS module loaded");
+            if (module != null && skillNames != null) 
             {
-                module = await JSRuntime.InvokeAsync<IJSObjectReference>(
-                    "import", "./Components/Pages/Dashboard/Dashboard.razor.js");
-                Console.WriteLine("JS module loaded");
-
-                
-                if (module != null && skillNames != null)
-                {
-                    await InitializeCharts();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error initializing charts: {ex.Message}");
-            }
-        
+                await InitializeCharts();
+            } 
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine($"Error initializing charts: {ex.Message}"); 
+        }
     }
+
     private async Task InitializeCharts()
     {
         if (module != null && skillNames != null)
@@ -143,6 +201,7 @@ else {
             await module.InvokeVoidAsync("Dashboard.initCharts", "#commonSkills", skillNames);
         }
     }
+
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
         if (module is not null)
@@ -150,6 +209,7 @@ else {
             await module.DisposeAsync();
         }
     }
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -157,14 +217,22 @@ else {
             Console.WriteLine("OnInitializedAsync started");
 
             profiles = await ProfileService.GetProfiles();
-
+            candidates = await CandidateService.GetCandidatesAsync();
+            interviews = await InterviewService.GetInterviewsAsync();
             
             var profileSkills = await DashboardService.GetProfileSkills();
-            skillNames = profileSkills.Select(ps => ps.SkillName).ToList();  
+            skillNames = profileSkills.Select(ps => ps.SkillName).ToList();
 
-            totalProfiles = profiles.Count();
+            totalCandidates = candidates.Count();
 
-            Console.WriteLine($"Profiles loaded: {totalProfiles}");
+            Console.WriteLine($"Interviews loaded: {interviews.Count()}");
+
+            // Print the state of each interview
+            foreach (var interview in interviews)
+            {
+                Console.WriteLine($"Interview ID: {interview.InterviewId}, State: {GetInterviewStateText((int?)interview.InterviewState)}");
+            }
+            Console.WriteLine($"Candidates loaded: {totalCandidates}");
             Console.WriteLine($"Skill names loaded: {string.Join(", ", skillNames)}");
         }
         catch (Exception ex)
@@ -172,6 +240,4 @@ else {
             Console.WriteLine($"Error loading profiles: {ex.Message}");
         }
     }
-
-    
 }
