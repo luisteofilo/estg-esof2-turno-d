@@ -1,4 +1,6 @@
 using ESOF.WebApp.DBLayer.Context;
+using ESOF.WebApp.WebAPI.Repositories;
+using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using ESOF.WebApp.WebAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
