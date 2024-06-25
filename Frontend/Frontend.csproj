@@ -15,12 +15,43 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Blazored.Typeahead" Version="4.7.0" />
       <PackageReference Include="DotNetEnv" Version="3.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
-      <ProjectReference Include="..\Helpers\Helpers.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Components\Pages\Dashboard.cshtml.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Components\Pages\Dashboard.cshtml.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\Dashboard\dashboard.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\Dashboard\dashboard.js" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Components\Pages\Dashboard.cshtml.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\Dashboard\dashboard.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\Dashboard\dashboard.js" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Components\Pages\Dashboard.cshtml.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\Dashboard\dashboard.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\Dashboard\dashboard.js" />
     </ItemGroup>
 
     <ItemGroup>

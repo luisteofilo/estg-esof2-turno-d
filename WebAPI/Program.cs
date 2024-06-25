@@ -21,11 +21,17 @@ builder.Services.AddScoped<IEducationRepository, EducationRepository >();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
+
+
 //Interview Repository
 builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 
+
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 var app = builder.Build();
 
