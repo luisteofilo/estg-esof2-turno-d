@@ -141,6 +141,18 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsCurrentlyEmployed")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("YearsWorked")
+                        .HasColumnType("integer");
+
                     b.HasKey("UserId", "CompanyId");
 
                     b.HasIndex("CompanyId");

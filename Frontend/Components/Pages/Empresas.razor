@@ -1,0 +1,47 @@
+﻿@page "/Empresas"
+@inject HttpClient HttpClient
+<PageTitle>Companies</PageTitle>
+<h1>Companies</h1>
+
+<head>
+    <link rel="stylesheet" href="Empresas.razor.css" />
+</head>
+
+@if (_companies == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <div class="company-grid">
+        @foreach (var company in _companies)
+        {
+            <div class="company-card">
+                <img src="@company.UrlImage" alt="@company.Name" class="company-image"/>
+                <h3>@company.Name</h3>
+                <p><strong>Location:</strong> @company.Location</p>
+                <p><strong>Min Employees:</strong> @company.MinFunc</p>
+                <p><strong>Max Employees:</strong> @company.MaxFunc</p>
+                <p><strong>Site:</strong> @company.Site</p>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<ESOF.WebApp.DBLayer.Entities.Companies> _companies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _companies = await HttpClient.GetFromJsonAsync<List<ESOF.WebApp.DBLayer.Entities.Companies>>("companies");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to fetch companies: {ex.Message}");
+        }
+    }
+}

@@ -1,0 +1,21 @@
+﻿@page "/Graficos"
+@inject IJSRuntime JSRuntime
+@using Microsoft.JSInterop
+<h3>Graficos</h3>
+
+<canvas id="myChart" width="400" height="400"></canvas>
+
+<script src="./js/chartInterop.js"></script>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            string[] labels = new string[] { "Red", "Blue", "Yellow", "Green", "Purple", "Orange" };
+            int[] data = new int[] { 12, 19, 3, 5, 2, 3 };
+
+            await JSRuntime.InvokeVoidAsync("chartInterop.createChart", "myChart", "bar", labels, data);
+        }
+    }
+}

@@ -20,6 +20,22 @@ public partial class ApplicationDbContext
             .HasOne(uc => uc.Company)
             .WithMany(c => c.UserCompanies)
             .HasForeignKey(uc => uc.CompanyId);
+
+        // Adicionar as novas propriedades
+        modelBuilder.Entity<UserCompany>()
+            .Property(uc => uc.YearsWorked)
+            .IsRequired(); // Exemplo, ajuste conforme sua lógica de negócio
+
+        modelBuilder.Entity<UserCompany>()
+            .Property(uc => uc.StartDate)
+            .IsRequired();
+
+        modelBuilder.Entity<UserCompany>()
+            .Property(uc => uc.EndDate);
+
+        modelBuilder.Entity<UserCompany>()
+            .Property(uc => uc.IsCurrentlyEmployed)
+            .IsRequired();
     }
     
 }

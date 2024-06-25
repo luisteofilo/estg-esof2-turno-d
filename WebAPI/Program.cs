@@ -3,6 +3,7 @@ using ESOF.WebApp.DBLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,15 +84,25 @@ app.MapGet("/companies", async (ApplicationDbContext dbContext) =>
 // New endpoint to add a company
 app.MapPost("/companies", async (ApplicationDbContext dbContext, Companies company) =>
     {
-        Console.WriteLine($"Recebida requisição para adicionar empresa: {company.Name}");
-    
-        dbContext.Companies.Add(company);
-        await dbContext.SaveChangesAsync();
-        return Results.Created($"/companies/{company.CompanieId}", company);
+        try
+        {
+            Console.WriteLine($"Recebida requisição para adicionar empresa: {company.Name}");
+
+            dbContext.Companies.Add(company);
+            await dbContext.SaveChangesAsync();
+
+            Console.WriteLine($"Empresa adicionada com sucesso: {company.CompanieId}");
+
+            return Results.Created($"/companies/{company.CompanieId}", company);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao adicionar empresa: {ex.Message}");
+            return Results.BadRequest($"Erro ao adicionar empresa: {ex.Message}");
+        }
     })
     .WithName("CreateCompany")
     .WithOpenApi();
-
 
 
 app.Run();

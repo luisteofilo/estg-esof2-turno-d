@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <PackageReference Include="DotNetEnv" Version="3.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.6" />
     </ItemGroup>
 
     <ItemGroup>

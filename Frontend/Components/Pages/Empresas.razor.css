@@ -1,0 +1,34 @@
+﻿.company-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; /* Alinha os cards no início */
+}
+
+.company-card {
+    flex: 1 1 calc(33.333% - 20px); /* Permite que os cards ocupem um terço da largura da grid, menos o gap */
+    max-width: calc(33.333% - 20px); /* Limita a largura máxima dos cards */
+    min-width: 200px; /* Define uma largura mínima para os cards */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    background-color: lightgrey; /* Define o background como lightgrey */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Certifica-se de que padding e border são incluídos na largura total */
+}
+
+.company-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.company-card h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.company-card p {
+    margin: 5px 0;
+}
