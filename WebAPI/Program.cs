@@ -13,13 +13,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
-builder.Services.AddScoped<IEducationRepository, EducationRepository >();
+builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+builder.Services.AddScoped<IInterviewFeedback, InterviewFeedbackRepository>();
 
-//Interview Repository
+// Interview Repository
 builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
+builder.Services.AddScoped<IInterviewFeedback, InterviewFeedbackRepository>(); // <-- Add this line
 
 // Job Repository
 builder.Services.AddScoped<IJobRepository, JobRepository>();
@@ -63,7 +65,6 @@ app.MapGet("/users/emails", () =>
     })
     .WithName("GetUsersNames")
     .WithOpenApi();
-
 
 app.MapControllers();
 

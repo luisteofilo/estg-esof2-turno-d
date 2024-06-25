@@ -1,10 +1,11 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Common.Dtos.Job;
 using Common.Dtos.Optimization_Requests;
-using ESOF.WebApp.DBLayer.Entities;
-using ESOF.WebApp.WebAPI.Repositories;
-using ESOF.WebApp.WebAPI.Repositories.Contracts;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Controllers
 {
@@ -13,12 +14,14 @@ namespace ESOF.WebApp.WebAPI.Controllers
     public class InterviewFeedbackController : ControllerBase
     {
         private readonly IInterviewFeedback _interviewFeedbackRepository;
-        private readonly JobRepository jobRepository;
+        private readonly IJobRepository _jobRepository;
 
-
-        public InterviewFeedbackController(IInterviewFeedback interviewFeedbackRepository)
+        public InterviewFeedbackController(IInterviewFeedback interviewFeedbackRepository, IJobRepository jobRepository)
         {
-            _interviewFeedbackRepository = interviewFeedbackRepository;
+            _interviewFeedbackRepository = interviewFeedbackRepository ??
+                                           throw new ArgumentNullException(nameof(interviewFeedbackRepository));
+            _jobRepository = jobRepository ??
+                             throw new ArgumentNullException(nameof(jobRepository));
         }
 
         [HttpGet]
@@ -33,43 +36,46 @@ namespace ESOF.WebApp.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profiles: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving interview feedback: {ex.Message}");
             }
         }
 
-        [HttpGet("{InterviewFeedbackId:guid}")]
+        [HttpGet("{interviewFeedbackId:guid}")]
         [ProducesResponseType(200, Type = typeof(InterviewFeedbackDTO))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetInterviewFeedback(Guid interviewFeedbackId)
         {
             try
             {
-                if (!await _interviewFeedbackRepository.InterviewFeedbackExistsAsync(interviewFeedbackId))
+                var interviewFeedback =
+                    await _interviewFeedbackRepository.GetInterviewFeedbackAsync(interviewFeedbackId);
+
+                if (interviewFeedback == null)
                 {
                     return NotFound();
                 }
 
-                var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackAsync(interviewFeedbackId);
                 var interviewFeedbackDto = interviewFeedback.InterviewFeedbackConvertToDto();
-
                 return Ok(interviewFeedbackDto);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving interview feedback: {ex.Message}");
             }
         }
 
         [HttpPost]
         [ProducesResponseType(201, Type = typeof(InterviewFeedbackDTO))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateProfile([FromBody] InterviewFeedbackDTO interviewFeedbackDto)
+        public async Task<IActionResult> CreateInterviewFeedback([FromBody] InterviewFeedbackDTO interviewFeedbackDto)
         {
             try
             {
                 if (interviewFeedbackDto == null)
                 {
-                    return BadRequest("Profile details are null.");
+                    return BadRequest("Interview feedback details are null.");
                 }
 
                 if (!ModelState.IsValid)
@@ -80,91 +86,75 @@ namespace ESOF.WebApp.WebAPI.Controllers
                 var interviewFeedback = interviewFeedbackDto.DtoConvertToInterviewFeedback();
                 await _interviewFeedbackRepository.AddInterviewFeedbackAsync(interviewFeedback);
 
-                var createdInterviewFeedback = interviewFeedback.InterviewFeedbackConvertToDto();
+                var createdInterviewFeedbackDto = interviewFeedback.InterviewFeedbackConvertToDto();
 
-                return CreatedAtAction(nameof(GetInterviewFeedback), new { interviewFeedbadId = createdInterviewFeedback.InterviewFeedbackId }, createdInterviewFeedback);
+                return CreatedAtAction(nameof(GetInterviewFeedback),
+                    new { interviewFeedbackId = createdInterviewFeedbackDto.InterviewFeedbackId },
+                    createdInterviewFeedbackDto);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error creating profile: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error creating interview feedback: {ex.Message}");
             }
         }
 
-        [HttpPut("{InterviewFeedbackId:guid}")]
+        [HttpPut("{interviewFeedbackId:guid}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> UpdateInterviewFeedback(Guid InterviewFeedbackId, [FromBody] InterviewFeedbackDTO interviewFeedbackUpdated)
+        public async Task<IActionResult> UpdateInterviewFeedback(Guid interviewFeedbackId,
+            [FromBody] InterviewFeedbackDTO interviewFeedbackDto)
         {
             try
             {
-                if (interviewFeedbackUpdated == null || interviewFeedbackUpdated.InterviewFeedbackId != InterviewFeedbackId)
+                if (interviewFeedbackDto == null || interviewFeedbackDto.InterviewFeedbackId != interviewFeedbackId)
+                {
+                    return BadRequest("Interview feedback ID mismatch or details are null.");
+                }
+
+                if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
-                if (!await _interviewFeedbackRepository.InterviewFeedbackExistsAsync(InterviewFeedbackId))
+                if (!await _interviewFeedbackRepository.InterviewFeedbackExistsAsync(interviewFeedbackId))
                 {
                     return NotFound();
                 }
-                var updatedInterviewFeedback = interviewFeedbackUpdated.DtoConvertToInterviewFeedback();
 
+                var updatedInterviewFeedback = interviewFeedbackDto.DtoConvertToInterviewFeedback();
                 await _interviewFeedbackRepository.UpdateInterviewFeedbackAsync(updatedInterviewFeedback);
+
                 return NoContent();
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating profile: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error updating interview feedback: {ex.Message}");
             }
         }
-        
-        
-        
-        [HttpPut("{JobId:guid}")]
+
+        [HttpDelete("{interviewFeedbackId:guid}")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> UpdateJob(Guid JobId, [FromBody] JobDto jobDto)
+        public async Task<IActionResult> DeleteInterviewFeedback(Guid interviewFeedbackId)
         {
             try
             {
-                if (jobDto == null || jobDto.JobId != JobId)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                
-                var updatedProfile = jobDto.DtoConvertToJob();
-                await jobRepository.UpdateJobAsync(updatedProfile);
-
-                return Ok(jobDto);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating profile: {ex.Message}");
-            }
-        }
-        
-        
-
-        [HttpDelete("{InterviewFeedbackId:guid}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> DeleteInterviewFeedback(Guid InterviewFeedbackId)
-        {
-            try
-            {
-                if (!await _interviewFeedbackRepository.InterviewFeedbackExistsAsync(InterviewFeedbackId))
+                if (!await _interviewFeedbackRepository.InterviewFeedbackExistsAsync(interviewFeedbackId))
                 {
                     return NotFound();
                 }
 
-                await _interviewFeedbackRepository.DeleteInterviewFeedbackAsync(InterviewFeedbackId);
+                await _interviewFeedbackRepository.DeleteInterviewFeedbackAsync(interviewFeedbackId);
+
                 return NoContent();
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error deleting profile: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error deleting interview feedback: {ex.Message}");
             }
         }
 
@@ -182,7 +172,8 @@ namespace ESOF.WebApp.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving interview feedback: {ex.Message}");
             }
         }
 
@@ -200,7 +191,8 @@ namespace ESOF.WebApp.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving interview feedback: {ex.Message}");
             }
         }
 
@@ -211,14 +203,16 @@ namespace ESOF.WebApp.WebAPI.Controllers
         {
             try
             {
-                var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackByInterviewer(interviewerId);
+                var interviewFeedback =
+                    await _interviewFeedbackRepository.GetInterviewFeedbackByInterviewer(interviewerId);
                 var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
 
                 return Ok(interviewFeedbackDto);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving interview feedback: {ex.Message}");
             }
         }
 
@@ -236,8 +230,56 @@ namespace ESOF.WebApp.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving interview feedback: {ex.Message}");
             }
         }
+
+        [HttpPut("update-job/{jobId:guid}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateJob(Guid jobId, [FromBody] JobDto jobDto)
+        {
+            try
+            {
+                if (jobDto == null || jobDto.JobId != jobId)
+                {
+                    return BadRequest("Job ID mismatch or details are null.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var existingJob = await _jobRepository.GetJobByIdAsync(jobId);
+                if (existingJob == null)
+                {
+                    return NotFound(new { message = "Job not found." });
+                }
+
+                // Update the existing job with the new values
+                existingJob.ClientId = jobDto.ClientId;
+                existingJob.EndDate = jobDto.EndDate;
+                existingJob.Position = jobDto.Position;
+                existingJob.Commitment = jobDto.Commitment;
+                existingJob.Remote = jobDto.Remote;
+                existingJob.Localization = jobDto.Localization;
+                existingJob.Education = jobDto.Education;
+                existingJob.Experience = jobDto.Experience;
+                existingJob.Description = jobDto.Description;
+
+                await _jobRepository.UpdateJobAsync(existingJob);
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating job: {ex.Message}");
+            }
+        }
+
+
     }
 }

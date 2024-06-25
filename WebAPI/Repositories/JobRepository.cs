@@ -42,4 +42,10 @@ public class JobRepository : IJobRepository
             await _dbContext.SaveChangesAsync();
         }
     }
+    
+    
+    public async Task<bool> JobExistsAsync(Guid JobId)
+    {
+        return await _dbContext.Jobs.AnyAsync(e => e.JobId == JobId);
+    }
 }

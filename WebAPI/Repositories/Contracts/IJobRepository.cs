@@ -8,4 +8,6 @@ public interface IJobRepository
     Task AddJobAsync(Job job);
     Task UpdateJobAsync(Job job);
     Task DeleteJobAsync(Guid jobId);
+    Task<bool> JobExistsAsync(Guid JobId);
+
 }
