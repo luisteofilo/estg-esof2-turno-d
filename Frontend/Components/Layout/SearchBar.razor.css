@@ -1,3 +1,7 @@
+input:invalid {
+    box-shadow: none;
+}
+
 .search-container {
     width: 100%;
     display: flex;

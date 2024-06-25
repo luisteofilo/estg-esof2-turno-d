@@ -12,8 +12,44 @@ namespace ESOF.WebApp.WebAPI.Controllers;
 [ApiController]
 public class SearchController(ISearchRepository searchRepository) : ControllerBase
 {
+    [HttpGet("profile")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<ProfileDto>))]
+    public async Task<IActionResult> GetSearchResultsSkillsLocation([FromQuery] string firstName,[FromQuery] string skill = null,[FromQuery] string location = null)
+    {
+        try
+        {
+            if (!await searchRepository.ProfileExistsAsync(firstName))
+            {
+                return NotFound();
+            }
 
-    [HttpGet("{firstName}")]
+            var result = await searchRepository.GetSearchResultsAsync(firstName, skill, location);
+            var profileDto = result.ProfilesConvertToDto();
+            
+            return Ok(profileDto);
+        } catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("locations/")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<string>))]
+    public async Task<IActionResult> s()
+    {
+        try
+        {
+            var result = await searchRepository.GetLocationsAsync(); ;
+            
+            return Ok(result);
+        } catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
+
+    
+  /*  [HttpGet("{firstName}")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<ProfileDto>))]
     public async Task<IActionResult> GetSearchResults(string firstName)
     {
@@ -210,5 +246,5 @@ public class SearchController(ISearchRepository searchRepository) : ControllerBa
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
         }
     }
-    
+    */
 }

@@ -11,14 +11,48 @@ public class SearchRepository : ISearchRepository
 {
     private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
 
+    
+    public async Task<IEnumerable<Profile>> GetSearchResultsAsync(string firstName = null, string skill = null, string location = null)
+    {
+        IQueryable<Profile> query = _dbContext.Profiles;
+
+        if (!string.IsNullOrEmpty(firstName))
+        {
+            query = query.Where(p => p.FirstName.ToLower().Contains(firstName.ToLower()));
+        }
+
+        if (!string.IsNullOrEmpty(skill))
+        {
+            query = query.Where(p => p.ProfileSkills.Any(ps => ps.Skill.Name.ToLower().Contains(skill.ToLower())));
+        }
+
+        if (!string.IsNullOrEmpty(location))
+        {
+            query = query.Where(p => p.Location.ToLower().Contains(location.ToLower()));
+        }
+
+        return await query.ToListAsync();
+    }
+
+    public async Task<bool> ProfileExistsAsync(string firstName)
+    {
+        return await _dbContext.Profiles.AnyAsync(p => p.FirstName.ToLower().Contains(firstName.ToLower()));
+    }
+    
+    public async Task<IEnumerable<string>> GetLocationsAsync()
+    {
+        return await _dbContext.Profiles.Select(p => p.Location).Distinct().ToListAsync();
+    }
+    
+    /*
     public async Task<IEnumerable<Profile>> GetSearchResultsAsync(string firstName)
     {
-        return await _dbContext.Profiles.Where(p => p.FirstName.Contains(firstName)).ToListAsync();
+        return await _dbContext.Profiles.Where(p => p.FirstName.ToLower().Contains(firstName.ToLower())).ToListAsync();
     }
     
     public async Task<bool> ProfileExistsAsync(string firstName)
     {
-        return await _dbContext.Profiles.AnyAsync(p => p.FirstName.Contains(firstName));
+        return await _dbContext.Profiles.AnyAsync(p => p.FirstName.ToLower().Contains(firstName.ToLower()));
     }
     
     public async Task<IEnumerable<Profile>> GetSearchResultsSkillsAsync(string firstName, string skill)
@@ -94,5 +128,5 @@ public class SearchRepository : ISearchRepository
     public async Task<IEnumerable<Job>> GetJobByPositionAsync(string position)
     {
         return await _dbContext.Jobs.Where(j => j.Position.Contains(position)).ToListAsync();
-    }
+    }*/
 }

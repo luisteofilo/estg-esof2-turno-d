@@ -8,9 +8,9 @@
 @inherits SearchBase
 
 <div class="search-container">
-    <form method="get" action="/searchresults" class="search-form" >
+    <form method="get" action="/searchresults" class="search-form">
         <div class="input-row">
-            <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input" />
+            <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input" required/>
             <button type="submit" class="submit-button">Ok</button>
         </div>
         @if (SearchService.searchPerformed)
@@ -26,7 +26,7 @@
                 }
                 }
             </select>
-                <select name="job" class="custom-select">
+              <!--  <select name="job" class="custom-select">
                     <option value="">Jobs</option>
                     @if (Jobs != null && Jobs.Any())
                     {
@@ -35,19 +35,14 @@
                     <option value="@job.Position">@job.Position</option>
                     }
                     }
-                </select>
+                </select>-->
                 <select class="custom-select">
                     <option value="">People</option>
                     <option value="1">People 1</option>
                     <option value="2">People 2</option>
                     <option value="3">People 3</option>
                 </select>
-                <select class="custom-select">
-                    <option value="">Companies</option>
-                    <option value="1">Company 1</option>
-                    <option value="2">Company 2</option>
-                    <option value="3">Company 3</option>
-                </select>
+
                 <select name="location" class="custom-select">
                     <option value="">Location</option>
                     @if (Locations != null && Locations.Any())

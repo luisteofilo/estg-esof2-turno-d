@@ -10,15 +10,31 @@ public class SearchService(HttpClient httpClient) : ISearchService
 {   
     public bool searchPerformed { get; set; } = false;
     
-    public async Task<IEnumerable<ProfileDto>> GetResults(string firstName)
+    public async Task<IEnumerable<ProfileDto>> GetResults(string firstName, string skill, string location)
     {
-            var response = await httpClient.GetAsync($"api/Search/{firstName}");
+        try
+        {
+            var response = await httpClient.GetAsync($"api/Search/profile?firstName={firstName}&skill={skill}&location={location}");
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileDto>>();
-            
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);  
+            return Enumerable.Empty<ProfileDto>();
+        }
+         
     }
     
-    public async Task<IEnumerable<ProfileDto>> GetResultsBySkill(string skill)
+    public async Task<IEnumerable<string>> GetLocations()
+    {
+        var response = await httpClient.GetAsync($"api/Search/locations");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<string>>();
+    }
+    
+  /*  public async Task<IEnumerable<ProfileDto>> GetResultsBySkill(string skill)
     {
         var response = await httpClient.GetAsync($"api/Search/skills/{skill}");
         response.EnsureSuccessStatusCode();
@@ -93,6 +109,6 @@ public class SearchService(HttpClient httpClient) : ISearchService
         var response = await httpClient.GetAsync($"api/Search/jobs/positions/{position}");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
-    }
+    }*/
    
 }

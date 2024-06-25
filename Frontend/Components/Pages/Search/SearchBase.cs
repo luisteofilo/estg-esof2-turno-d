@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common.Dtos.Job;
-using Frontend.Components.Layout;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Frontend.Components.Pages
@@ -18,19 +17,19 @@ namespace Frontend.Components.Pages
         public string firstName { get; set; } 
 
         protected IEnumerable<ProfileDto> Profiles { get; set; }
-        protected IEnumerable<ProfileDto> ProfilesSkill { get; set; }
+     //   protected IEnumerable<ProfileDto> ProfilesSkill { get; set; }
         protected IEnumerable<SkillDto> Skills { get; set; }
         
-        protected IEnumerable<JobDto> Jobs { get; set; }
+      //  protected IEnumerable<JobDto> Jobs { get; set; }
         
-        protected IEnumerable<JobDto> ResultJobs { get; set; }
+     //   protected IEnumerable<JobDto> ResultJobs { get; set; }
         protected IEnumerable<string> Locations { get; set; }
         
         [SupplyParameterFromQuery(Name= "location")]
         public string location { get; set; }
         
         [SupplyParameterFromQuery(Name= "skill")]
-        public string Skill { get; set; }
+        public string skill { get; set; }
         
         [SupplyParameterFromQuery(Name= "job")]
         public string Position { get; set; }
@@ -38,9 +37,9 @@ namespace Frontend.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            var searchMethods = new Dictionary<Func<bool>, Func<Task>>()
+          /*   var searchMethods = new Dictionary<Func<bool>, Func<Task>>()
             {
-                { () => !string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(Skill) && string.IsNullOrEmpty(location), 
+               { () => !string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(Skill) && string.IsNullOrEmpty(location), 
                     async () => Profiles = await SearchService.GetResults(firstName) },
 
                 { () => !string.IsNullOrEmpty(Skill) && string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(location), 
@@ -85,17 +84,25 @@ namespace Frontend.Components.Pages
                 }
             }
 
-            
+            */
+
+          if (firstName != null)
+          {
+               SearchService.searchPerformed = true;
+          }
+          
             Skills = await ProfileService.GetSkills();
             Locations = await SearchService.GetLocations();
-            Jobs = await SearchService.GetJobs();
+           // Jobs = await SearchService.GetJobs();
+
+            Profiles = await SearchService.GetResults(firstName, skill, location);
 
         }
         
         public async ValueTask DisposeAsync()
         {
             firstName = string.Empty;
-            Skill = string.Empty;
+            skill = string.Empty;
             SearchService.searchPerformed = false;
             
             await Task.CompletedTask;
