@@ -10,9 +10,12 @@ public class Question
     [Required]
     public string QuestionText { get; set; }
     
-    public Answer VerifiedAnswer { get; set; }
+    public Answer? VerifiedAnswer { get; set; }
     
-    public User Verifier { get; set; }
+    public User? Verifier { get; set; }
     
-    public ICollection<Answer> Answers { get; set; }
+    [Required]
+    public Job Job { get; set; }
+
+    public ICollection<Answer>? Answers { get; set; }
 }

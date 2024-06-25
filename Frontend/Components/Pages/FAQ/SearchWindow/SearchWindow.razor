@@ -1,4 +1,5 @@
 @using ESOF.WebApp.DBLayer.Entities.FAQ
+@using Common.Dtos.FAQ
 @inherits LayoutComponentBase
 @rendermode InteractiveServer
 
@@ -58,13 +59,13 @@
 
     private string _faqSuggestion;
     private bool open { get; set; }
-    private List<Question> _results;
+    private List<QuestionDto> _results;
 
     protected override async Task OnInitializedAsync()
     {
             _faqSuggestion = _faqSearchSuggestions[new Random().Next(0, _faqSearchSuggestions.Count)];
             open = true;
-            _results = new List<Question>();
+            _results = new List<QuestionDto>();
     }
     
     private void HandleClick()
@@ -74,12 +75,11 @@
 
     private void Search()
     {
-        _results = new List<Question>();
+        _results = new List<QuestionDto>();
         Question q = new Question();
         q.QuestionText = "What is the company environment like?";
         q.QuestionId = new Guid();
         q.Answers = new List<Answer>();
-        _results.Add(q);
     }
 
 }

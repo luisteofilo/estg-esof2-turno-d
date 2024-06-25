@@ -2,6 +2,7 @@
 @using Frontend.Helpers
 @using ESOF.WebApp.DBLayer.Entities.FAQ
 @using ESOF.WebApp.DBLayer.Entities
+@using Common.Dtos.FAQ
 @attribute [StreamRendering]
 @inject ApiHelper ApiHelper
 
@@ -16,54 +17,28 @@
 <div>
     <div class="card shadow-lg mb-4">
         <div class="card-body">
-            <h3>New Question</h3>
-            <textarea class="form-control mb-3" placeholder="Your Question"></textarea>
-            <button class="btn btn-primary" @onclick="SubmitQuestion">Submit</button>
+            
         </div>
     </div>
     
     <div>
-        <div>
-            <h3>Previously Asked Questions @{ _questions.Count(); }</h3>
-        </div>
-        <hr/>
-        <div>
-            @if (_questions != null && _questions.Any())
-            {
-                foreach (var question in _questions)
-                {
-                    <QuestionPreview Question="@question" />
-                }
-            }
-            else
-            {
-                <p>No questions have been asked yet.</p>
-            }
-        </div>
+        
+            
     </div>
 </div>
 
 @code {
     [Parameter]
     public string? Text { get; set; }
+    [Parameter]
+    public string? QuestionId { get; set; }
     
     private string[]? _userEmails;
-    private List<Question>? _questions;
+    private QuestionDto _question;
     private string _selectedJobId = "1";
 
     protected override async Task OnInitializedAsync()
     {
-        _questions = new List<Question>();
-        Question question = new Question();
-        question.QuestionText = "How do I apply for this job?";
-        question.Answers = new List<Answer>();
-        Answer answer = new Answer();
-        answer.AnswerText = "You can apply for this job by clicking the 'Apply' button on the job page.";
-        question.Answers.Add(answer);
-        User user = new User();
-        user.Email = "admin@mail.com";
-        answer.Author = user;
-        _questions.Add(question);
     }
 
     private void SubmitQuestion()

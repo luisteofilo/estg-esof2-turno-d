@@ -1,3 +1,6 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using Common.Dtos.FAQ;
 using ESOF.WebApp.WebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,11 +10,11 @@ namespace ESOF.WebApp.WebAPI.Controllers;
 [ApiController]
 public class JobFAQController : ControllerBase
 {
-    private readonly JobFAQService JobFAQService;
+    private readonly JobFAQRepository _jobFaqRepository;
     
-    public JobFAQController(JobFAQService jobFAQService)
+    public JobFAQController(JobFAQRepository jobFaqRepository)
     {
-        JobFAQService = jobFAQService;
+        _jobFaqRepository = jobFaqRepository;
     }
     
     [HttpGet]
@@ -21,9 +24,20 @@ public class JobFAQController : ControllerBase
     }
     
     [HttpGet("{jobId}/questions")]
-    public IActionResult GetJobQuestions(Guid jobId)
+    public async Task<IActionResult> GetJobQuestions(Guid jobId)
     {
-        return Ok();
+        try
+        {
+            var questions = await _jobFaqRepository.GetQuestions(jobId);
+            Console.Out.WriteLine(questions.Select(q => q.Job.JobId.ToString()));
+            var questionDtos = DtoConversion.QuestionConvertToDto(questions);
+
+            return Ok(questionDtos);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e);
+        } 
     }
     
     [HttpGet("{jobId}/questions/{questionId}")]
@@ -33,17 +47,30 @@ public class JobFAQController : ControllerBase
     }
     
     [HttpGet("{jobId}/questions/{questionId}/answers")]
-    public IActionResult GetJobQuestionAnswers(Guid jobId, Guid questionId)
+    public async Task<ActionResult> GetAnswersForQuestion(Guid jobId, Guid questionId)
     {
-        return Ok();
+        Console.Out.WriteLine($"api/JobFAQ/{jobId}/questions/{questionId}/answers");
+        try
+        {
+            var answers = await _jobFaqRepository.GetAnswersForQuestion(questionId);
+            Console.Out.WriteLine(answers.Select(q => q.AnswerText));
+            var answersDtos = DtoConversion.AnswerConvertToDto(answers);
+
+            return Ok(answersDtos);
+        } 
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e);
+        }
     }
+
     
     [HttpPost("{jobId}/questions")]
     public async Task<ActionResult> PostJobQuestion(Guid jobId, [FromBody] string questionText)
     {
         try
         {
-            await JobFAQService.AddQuestion(jobId, questionText);
+            await _jobFaqRepository.AddQuestion(jobId, questionText);
             return Ok();
         }
         catch (Exception e)

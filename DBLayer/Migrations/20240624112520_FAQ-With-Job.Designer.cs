@@ -3,6 +3,7 @@ using System;
 using ESOF.WebApp.DBLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240624112520_FAQ-With-Job")]
+    partial class FAQWithJob
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,8 +121,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 {
                     b.Property<Guid>("JobId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
@@ -127,7 +129,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasKey("JobId");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Job");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Question", b =>
@@ -144,10 +146,10 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("VerifiedAnswerAnswerId")
+                    b.Property<Guid>("VerifiedAnswerAnswerId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("VerifierUserId")
+                    b.Property<Guid>("VerifierUserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("QuestionId");
@@ -374,11 +376,15 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.FAQ.Answer", "VerifiedAnswer")
                         .WithMany()
-                        .HasForeignKey("VerifiedAnswerAnswerId");
+                        .HasForeignKey("VerifiedAnswerAnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "Verifier")
                         .WithMany()
-                        .HasForeignKey("VerifierUserId");
+                        .HasForeignKey("VerifierUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Job");
 

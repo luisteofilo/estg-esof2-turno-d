@@ -1,4 +1,5 @@
 using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Entities.FAQ;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,6 +50,11 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Experience> Experiences { get; set; }
     public DbSet<ProfileSkill> ProfileSkills { get; set; }
     public DbSet<Skill> Skills { get; set; }
+    
+    public DbSet<Question> FAQQuestions { get; set; }
+    public DbSet<Answer> FAQAnswers { get; set; }
+    
+    public DbSet<Job> Jobs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -71,6 +77,11 @@ public partial class ApplicationDbContext : DbContext
         BuildEducations(modelBuilder);
         BuildProfileSkills(modelBuilder);
         BuildSkills(modelBuilder);
+        
+        // FAQ Features
+        BuildQuestions(modelBuilder);
+        BuildAnswers(modelBuilder);
+        BuildJobs(modelBuilder);
         
         base.OnModelCreating(modelBuilder);
     }

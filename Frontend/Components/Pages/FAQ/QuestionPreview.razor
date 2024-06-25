@@ -1,16 +1,19 @@
 @using ESOF.WebApp.DBLayer.Entities.FAQ
+@using Common.Dtos.FAQ
+@using Frontend.Services.Contracts
 @inject NavigationManager Navigation
+@inject IFAQService FaqService
 
 <div class="my-2 card p-4" @onclick="NavigateToQuestionPage">
         <h4>@question.QuestionText</h4>
-        @if (question.Answers.Count > 0)
+        @if (_answers.Any())
         {
             <ul class="list-group p-2">
-                @foreach (var answer in question.Answers)
+                @foreach (var answer in _answers)
                 {
                     <li class="list-group-item p-2">
                         <p>@answer.AnswerText</p>
-                        <small class="text-muted">- @answer.Author.Email</small>
+                        <small class="text-muted">- @answer.AuthorEmail</small>
                     </li>
                 }
             </ul>
@@ -22,8 +25,18 @@
     </div>
 @code {
     [Parameter]
-    public ESOF.WebApp.DBLayer.Entities.FAQ.Question question { get; set; }
+    public QuestionDto question { get; set; }
+    [Parameter]
+    public String jobId { get; set; }
     
+    
+    private List<AnswerDto> _answers = new List<AnswerDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _answers = (await FaqService.GetAnswersForQuestion(jobId, question.QuestionId.ToString())).ToList();
+    }
+
     void NavigateToQuestionPage()
     {
         Console.Out.WriteLine("Navigating to question page");

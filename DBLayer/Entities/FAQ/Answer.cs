@@ -12,4 +12,7 @@ public class Answer
     
     [Required]
     public string AnswerText { get; set; }
+    
+    [Required]
+    public Question Question { get; set; }
 }

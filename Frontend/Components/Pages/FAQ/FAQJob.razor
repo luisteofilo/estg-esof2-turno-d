@@ -1,10 +1,11 @@
-@page "/faqs/{text?}"
+@page "/faqs/{jobId?}"
 @using Frontend.Helpers
-@using ESOF.WebApp.DBLayer.Entities.FAQ
-@using ESOF.WebApp.DBLayer.Entities
+@using Frontend.Services
+@using Common.Dtos.FAQ
+@using Frontend.Services.Contracts
 @attribute [StreamRendering]
-@inject ApiHelper ApiHelper
 @rendermode InteractiveServer
+@inject IFAQService FaqService
 
 <PageTitle>Jobs FAQ</PageTitle>
 
@@ -19,7 +20,7 @@
         <div class="card-body">
             <h3 class="mt-2">New Question</h3>
             <textarea
-                @onchange="e => Text = e.Value.ToString()" 
+                @onchange="e => QuestionInput = e.Value.ToString()" 
 class="form-control mb-3" placeholder="Your Question"></textarea>
             <button class="btn btn-primary" @onclick="SubmitQuestion">Submit</button>
         </div>
@@ -35,7 +36,7 @@ class="form-control mb-3" placeholder="Your Question"></textarea>
             {
                 foreach (var question in _questions)
                 {
-                    <QuestionPreview Question="@question" />
+                    <QuestionPreview Question="@question" jobId="@JobId" />
                 }
             }
             else
@@ -49,38 +50,21 @@ class="form-control mb-3" placeholder="Your Question"></textarea>
 
 @code {
     [Parameter]
-    public string? Text { get; set; }
-    
-    private string[]? _userEmails;
-    private List<ESOF.WebApp.DBLayer.Entities.FAQ.Question>? _questions;
-    private string _selectedJobId = "1";
-    private int _questionCount => _questions?.Count ?? 0;
+    public string JobId { get; set; }
 
+    private List<QuestionDto> _questions = new List<QuestionDto>();
+    private int _questionCount => _questions?.Count() ?? 0;
+    
+    private string QuestionInput { get; set; } = string.Empty;
+    
     protected override async Task OnInitializedAsync()
     {
-        _questions = new List<ESOF.WebApp.DBLayer.Entities.FAQ.Question>();
-        ESOF.WebApp.DBLayer.Entities.FAQ.Question question = new ESOF.WebApp.DBLayer.Entities.FAQ.Question();
-        question.QuestionText = "How do I apply for this job?";
-        question.Answers = new List<Answer>();
-        Answer answer = new Answer();
-        answer.AnswerText = "You can apply for this job by clicking the 'Apply' button on the job page.";
-        question.Answers.Add(answer);
-        User user = new User();
-        user.Email = "admin@mail.com";
-        answer.Author = user;
-        _questions.Add(question);
+        _questions = (await FaqService.GetQuestions(JobId)).ToList();
     }
 
     private void SubmitQuestion()
     {
-        if (Text == null)
-        {
-            return;
-        }
-        ESOF.WebApp.DBLayer.Entities.FAQ.Question dummy = new ESOF.WebApp.DBLayer.Entities.FAQ.Question();
-        dummy.QuestionText = Text;
-        dummy.QuestionId = new Guid();
-        dummy.Answers = new List<Answer>();
-        _questions.Add(dummy);
+        Console.Out.WriteLine("Submitting question");
     }
+
 }
