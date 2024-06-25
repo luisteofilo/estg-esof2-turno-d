@@ -30,4 +30,8 @@
       <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Repositories\iInterviewFeedback.cs" />
+    </ItemGroup>
+
 </Project>

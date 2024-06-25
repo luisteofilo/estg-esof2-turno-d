@@ -34,5 +34,7 @@ public class Job
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? DeletedAt { get; set; }
-    
+
+    public List<InterviewFeedback> InterviewFeedbacks;
+
 }
