@@ -11,5 +11,10 @@ public partial class ApplicationDbContext
         modelBuilder.Entity<Skill>()
             .Property(p => p.SkillId)
             .HasDefaultValueSql("gen_random_uuid()");
+        
+        modelBuilder.Entity<Skill>()
+            .HasMany(s => s.JobSkills)
+            .WithOne(js => js.Skill)
+            .HasForeignKey(js => js.SkillId);
     }
 }
