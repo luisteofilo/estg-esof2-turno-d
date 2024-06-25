@@ -1,0 +1,97 @@
+﻿@page "/InterviewCreation"
+@inherits InterviewCreationBase
+@rendermode InteractiveServer
+
+<PageTitle>Interview Creation</PageTitle>
+
+<h3>Interview Creation</h3>
+
+<form @onsubmit="HandleSubmit">
+    <label for="location">Location:</label>
+    <input id="location" @bind="Interview.Location" />
+
+    <label for="start-time">Start Time:</label>
+    <input type="datetime-local" id="start-time" @bind="Interview.DateHourStart" min="@GetCurrentDateTimeString()" />
+
+    <label for="end-time">End Time:</label>
+    <input type="datetime-local" id="end-time" @bind="Interview.DateHourEnd" min="@GetCurrentDateTimeString()" />
+
+    <label for="candidate">Candidate:</label>
+    <select id="candidate" @bind="Interview.CandidateId">
+        <option value="Choose Candidate" active selected>Choose Candidate</option>
+        @foreach (var candidate in AvailableCandidates)
+        {
+        <option value="@candidate.CandidateId">@candidate.Name</option>
+        }
+    </select>
+
+    <label for="interviewer">Interviewer:</label>
+    <select id="interviewer" @bind="Interview.InterviewerId">
+        <option value="Choose Candidate" active selected>Choose Candidate</option>
+        @foreach (var interviewer in AvailableInterviewers)
+        {
+        <option value="@interviewer.InterviewerId">@interviewer.Name</option>
+        }
+    </select>
+
+    <button type="submit">Create Interview</button>
+</form>
+
+<div class="form-container">
+    <div class="form-group">
+        <h4>Create New Candidate</h4>
+        <form @onsubmit="CreateCandidate">
+            <label for="candidate-name">Name:</label>
+            <input id="candidate-name" @bind="NewCandidate.Name" />
+            <button type="submit">Create Candidate</button>
+        </form>
+    </div>
+    <div class="form-group">
+        <h4>Create New Interviewer</h4>
+        <form @onsubmit="CreateInterviewer">
+            <label for="interviewer-name">Name:</label>
+            <input id="interviewer-name" @bind="NewInterviewer.Name" />
+            <button type="submit">Create Interviewer</button>
+        </form>
+    </div>
+</div>
+
+@if (ShowError)
+{
+<div class="modal">
+    <div class="modal-content">
+        <div class="alert alert-danger">@ErrorMessage</div>
+        <button @onclick="() => ShowError = false">Close</button>
+    </div>
+</div>
+}
+
+@if (IsInterviewCreated)
+{
+<div class="modal">
+    <div class="modal-content">
+        <p>Interview Created Successfully!</p>
+        <button @onclick="() => IsInterviewCreated = false">Ok</button>
+    </div>
+</div>
+}
+
+@if (IsCandidateCreated)
+{
+<div class="modal">
+    <div class="modal-content">
+        <p>Candidate Created Successfully!</p>
+        <button @onclick="() => IsCandidateCreated = false">Ok</button>
+    </div>
+</div>
+}
+
+@if (IsInterviewerCreated)
+{
+<div class="modal">
+    <div class="modal-content">
+        <p>Interviewer Created Successfully!</p>
+        <button @onclick="() => IsInterviewerCreated = false">Ok</button>
+    </div>
+</div>
+}
