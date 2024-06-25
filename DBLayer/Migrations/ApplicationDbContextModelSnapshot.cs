@@ -111,23 +111,17 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<Guid>("CandidateId")
+                    b.Property<Guid>("Candidate")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Feedback")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("InterviewCandidateId")
+                    b.Property<Guid>("Interview")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("InterviewId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("InterviewerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("InterviewerId1")
+                    b.Property<Guid>("Interviewer")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("JobId")
@@ -143,13 +137,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasKey("InterviewFeedbackId");
 
-                    b.HasIndex("CandidateId");
-
-                    b.HasIndex("InterviewerId");
-
                     b.HasIndex("JobId");
-
-                    b.HasIndex("InterviewId", "InterviewerId1", "InterviewCandidateId");
 
                     b.ToTable("InterviewFeedbacks");
                 });
@@ -480,35 +468,11 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.InterviewFeedback", b =>
                 {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate", "Candidate")
-                        .WithMany()
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Interviews.Interviewer", "Interviewer")
-                        .WithMany()
-                        .HasForeignKey("InterviewerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Job", "Job")
                         .WithMany("InterviewFeedbacks")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Interviews.Interview", "Interview")
-                        .WithMany()
-                        .HasForeignKey("InterviewId", "InterviewerId1", "InterviewCandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Candidate");
-
-                    b.Navigation("Interview");
-
-                    b.Navigation("Interviewer");
 
                     b.Navigation("Job");
                 });

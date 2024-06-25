@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class migrationwqw2 : Migration
+    public partial class mig : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -230,6 +230,30 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "InterviewFeedbacks",
+                columns: table => new
+                {
+                    InterviewFeedbackId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    Candidate = table.Column<Guid>(type: "uuid", nullable: false),
+                    Interview = table.Column<Guid>(type: "uuid", nullable: false),
+                    Interviewer = table.Column<Guid>(type: "uuid", nullable: false),
+                    Feedback = table.Column<string>(type: "text", nullable: false),
+                    RejectionReason = table.Column<string>(type: "text", nullable: false),
+                    OptimizationSuggestions = table.Column<string>(type: "text", nullable: false),
+                    JobId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InterviewFeedbacks", x => x.InterviewFeedbackId);
+                    table.ForeignKey(
+                        name: "FK_InterviewFeedbacks_Jobs_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Jobs",
+                        principalColumn: "JobId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "JobSkills",
                 columns: table => new
                 {
@@ -251,50 +275,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         column: x => x.SkillId,
                         principalTable: "Skills",
                         principalColumn: "SkillId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InterviewFeedbacks",
-                columns: table => new
-                {
-                    InterviewFeedbackId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    CandidateId = table.Column<Guid>(type: "uuid", nullable: false),
-                    InterviewId = table.Column<Guid>(type: "uuid", nullable: false),
-                    InterviewerId1 = table.Column<Guid>(type: "uuid", nullable: false),
-                    InterviewCandidateId = table.Column<Guid>(type: "uuid", nullable: false),
-                    InterviewerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Feedback = table.Column<string>(type: "text", nullable: false),
-                    RejectionReason = table.Column<string>(type: "text", nullable: false),
-                    OptimizationSuggestions = table.Column<string>(type: "text", nullable: false),
-                    JobId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InterviewFeedbacks", x => x.InterviewFeedbackId);
-                    table.ForeignKey(
-                        name: "FK_InterviewFeedbacks_Candidates_CandidateId",
-                        column: x => x.CandidateId,
-                        principalTable: "Candidates",
-                        principalColumn: "CandidateId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InterviewFeedbacks_Interviewers_InterviewerId",
-                        column: x => x.InterviewerId,
-                        principalTable: "Interviewers",
-                        principalColumn: "InterviewerId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InterviewFeedbacks_Interviews_InterviewId_InterviewerId1_In~",
-                        columns: x => new { x.InterviewId, x.InterviewerId1, x.InterviewCandidateId },
-                        principalTable: "Interviews",
-                        principalColumns: new[] { "InterviewId", "InterviewerId", "CandidateId" },
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InterviewFeedbacks_Jobs_JobId",
-                        column: x => x.JobId,
-                        principalTable: "Jobs",
-                        principalColumn: "JobId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -377,21 +357,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 column: "ProfileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InterviewFeedbacks_CandidateId",
-                table: "InterviewFeedbacks",
-                column: "CandidateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InterviewFeedbacks_InterviewerId",
-                table: "InterviewFeedbacks",
-                column: "InterviewerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InterviewFeedbacks_InterviewId_InterviewerId1_InterviewCand~",
-                table: "InterviewFeedbacks",
-                columns: new[] { "InterviewId", "InterviewerId1", "InterviewCandidateId" });
-
-            migrationBuilder.CreateIndex(
                 name: "IX_InterviewFeedbacks_JobId",
                 table: "InterviewFeedbacks",
                 column: "JobId");
@@ -457,6 +422,9 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 name: "InterviewFeedbacks");
 
             migrationBuilder.DropTable(
+                name: "Interviews");
+
+            migrationBuilder.DropTable(
                 name: "JobSkills");
 
             migrationBuilder.DropTable(
@@ -469,7 +437,10 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 name: "UserRoles");
 
             migrationBuilder.DropTable(
-                name: "Interviews");
+                name: "Candidates");
+
+            migrationBuilder.DropTable(
+                name: "Interviewers");
 
             migrationBuilder.DropTable(
                 name: "Jobs");
@@ -485,12 +456,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "Candidates");
-
-            migrationBuilder.DropTable(
-                name: "Interviewers");
 
             migrationBuilder.DropTable(
                 name: "Clients");
