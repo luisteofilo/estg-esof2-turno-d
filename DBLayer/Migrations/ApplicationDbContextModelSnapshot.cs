@@ -102,7 +102,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Property<Guid>("AuthorUserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("QuestionId")
+                    b.Property<Guid>("QuestionId")
                         .HasColumnType("uuid");
 
                     b.HasKey("AnswerId");
@@ -144,17 +144,12 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("VerifiedAnswerAnswerId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid?>("VerifierUserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("QuestionId");
 
                     b.HasIndex("JobId");
-
-                    b.HasIndex("VerifiedAnswerAnswerId");
 
                     b.HasIndex("VerifierUserId");
 
@@ -357,11 +352,15 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.FAQ.Question", null)
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.FAQ.Question", "Question")
                         .WithMany("Answers")
-                        .HasForeignKey("QuestionId");
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Author");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Question", b =>
@@ -372,17 +371,11 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.FAQ.Answer", "VerifiedAnswer")
-                        .WithMany()
-                        .HasForeignKey("VerifiedAnswerAnswerId");
-
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "Verifier")
                         .WithMany()
                         .HasForeignKey("VerifierUserId");
 
                     b.Navigation("Job");
-
-                    b.Navigation("VerifiedAnswer");
 
                     b.Navigation("Verifier");
                 });

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ESOF.WebApp.DBLayer.Entities.FAQ;
 
@@ -10,6 +11,7 @@ public class Question
     [Required]
     public string QuestionText { get; set; }
     
+    [NotMapped]
     public Answer? VerifiedAnswer { get; set; }
     
     public User? Verifier { get; set; }

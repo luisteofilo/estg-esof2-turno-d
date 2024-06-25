@@ -7,7 +7,7 @@ public interface IFAQService
 {
     Task<IEnumerable<QuestionDto>> GetQuestions(string jobId);
     Task<Question> GetQuestion(Guid questionId);
-    Task<Question> CreateQuestion(Question question);
+    Task CreateQuestion(string jobId, string question);
     Task<Question> UpdateQuestion(Guid questionId, Question updatedQuestion);
     Task DeleteQuestion(Guid questionId);
     Task<IEnumerable<AnswerDto>> GetAnswersForQuestion(string jobId, string questionId);
