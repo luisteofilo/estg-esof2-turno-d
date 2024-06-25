@@ -31,4 +31,8 @@
       <ProjectReference Include="..\Frontend\Frontend.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Controllers\UserController.cs" />
+    </ItemGroup>
+
 </Project>

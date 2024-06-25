@@ -1,6 +1,7 @@
 using ESOF.WebApp.WebAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Common.Dtos.RoleAndPerms;
+using Common.Dtos.Users;
 
 namespace ESOF.WebApp.WebAPI.Controllers
 {
@@ -90,6 +91,37 @@ namespace ESOF.WebApp.WebAPI.Controllers
 
             await _roleRepository.DeleteRoleAsync(id);
             return NoContent();
+        }
+        
+        [HttpPost("{roleId:guid}/permissions")]
+        public async Task<IActionResult> AddPermissionToRole(Guid roleId, PermissionDto permissionDto)
+        {
+            var permission = permissionDto.DtoConvertToPermission();
+            var createdPermission = await _roleRepository.AddPermissionToRoleAsync(roleId, permission);
+            var createdPermissionDto = createdPermission.PermissionConvertToDto();
+            return CreatedAtAction(nameof(GetRolePermissions), new { id = roleId }, createdPermissionDto);
+        }
+        
+        [HttpDelete("{roleId:guid}/permissions/{permissionId:guid}")]
+        public async Task<IActionResult> RemovePermissionFromRole(Guid roleId, Guid permissionId)
+        {
+            try
+            {
+                await _roleRepository.RemovePermissionFromRoleAsync(roleId, permissionId);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+        
+        [HttpGet("{roleId:guid}/users")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByRole(Guid roleId)
+        {
+            var users = await _roleRepository.GetUsersByRoleAsync(roleId);
+            var userDtos = users.Select(user => user.UserConvertToDto()).ToList();
+            return Ok(userDtos);
         }
     }
 }

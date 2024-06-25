@@ -14,7 +14,6 @@ public static class DtoConversion
             Email = userDto.Email,
             PasswordHash = userDto.PasswordHash,
             PasswordSalt = userDto.PasswordSalt,
-            UserRoles = userDto.UserRoles.Select(ur => ur.DtoConvertToUserRole()).ToList()
         };
     }
     
@@ -26,7 +25,6 @@ public static class DtoConversion
             Email = user.Email,
             PasswordHash = user.PasswordHash,
             PasswordSalt = user.PasswordSalt,
-            UserRoles = user.UserRoles.Select(ur => ur.UserRoleConvertToDto()).ToList()
         };
     }
     

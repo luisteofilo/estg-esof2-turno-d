@@ -11,4 +11,6 @@ public interface IRoleService
     Task UpdateRoleAsync(Guid id, Role role);
     Task DeleteRoleAsync(Guid id);
     Task<List<Permission>?> GetRolePermissionsAsync(Guid id);
+    Task AddPermissionToRoleAsync(Guid roleId, Permission permission);
+    Task RemovePermissionFromRoleAsync(Guid roleId, Guid permissionId);
 }

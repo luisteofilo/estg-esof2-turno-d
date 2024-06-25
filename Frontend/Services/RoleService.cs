@@ -22,12 +22,12 @@ namespace Frontend.Services
         {
             return await _httpClient.GetFromJsonAsync<Role>($"api/roles/{id}");
         }
-        
+
         public async Task<Role> GetRoleByNameAsync(string name)
         {
             return await _httpClient.GetFromJsonAsync<Role>($"api/roles/{name}");
         }
-        
+
         public async Task<Role?> CreateRoleAsync(Role role)
         {
             var roleDto = role.RoleConvertToDto();
@@ -57,9 +57,9 @@ namespace Frontend.Services
             var response = await _httpClient.DeleteAsync($"api/roles/{id}");
             response.EnsureSuccessStatusCode();
         }
-        
+
         public async Task<List<Permission>?> GetRolePermissionsAsync(Guid id)
-        { 
+        {
             try
             {
                 var response = await _httpClient.GetAsync($"api/roles/{id}/permissions");
@@ -69,17 +69,40 @@ namespace Frontend.Services
                     var permissions = await response.Content.ReadFromJsonAsync<List<Permission>>();
                     return permissions;
                 }
-                else
-                {
-                    // Tratar o caso em que a requisição não foi bem sucedida (como 404 Not Found)
-                    Console.WriteLine($"Failed to retrieve permissions for role {id}. Status code: {response.StatusCode}");
-                    return null;
-                }
+
+                Console.WriteLine(
+                    $"Failed to retrieve permissions for role {id}. Status code: {response.StatusCode}");
+                return null;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching role permissions: {ex.Message}");
                 return null;
+            }
+        }
+        
+        public async Task AddPermissionToRoleAsync(Guid roleId, Permission permission)
+        {
+            
+                var permissionDto = permission.PermissionConvertToDto();
+                var response = await _httpClient.PostAsJsonAsync($"api/roles/{roleId}/permissions", permissionDto);
+                response.EnsureSuccessStatusCode();
+                Console.WriteLine("Permission added successfully.");
+            
+            
+        }
+        
+        public async Task RemovePermissionFromRoleAsync(Guid roleId, Guid permissionId)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"api/roles/{roleId}/permissions/{permissionId}");
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error removing permission: {ex.Message}");
+                throw;
             }
         }
         

@@ -4,6 +4,7 @@
 @using Frontend.Components.Layout
 @using Frontend.Services.Contracts
 @inject IRoleService RoleService
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Roles</PageTitle>
@@ -73,10 +74,10 @@
                                 }
                             </td>
                             <td>
-                                <button class="btn btn-warning" @onclick="() => StartEditRoleName(role)">
-                                    Edit
-                                </button>
+                                <button class="btn btn-warning" @onclick="() => StartEditRoleName(role)">Edit</button>
                                 <button @onclick="() => ShowConfirmationModal(role.RoleId)" class="btn btn-danger">Delete</button>
+                                <button class="btn btn-info" @onclick="() => NavigateToManagePermissions(role.RoleId)">Manage Perms</button>
+                                <button class="btn btn-primary" @onclick="() => NavigateToUsersWithRole(role.RoleId)">Users with role</button>
                             </td>
                         </tr>
                     }
@@ -243,6 +244,11 @@
         }
     }
 
+    private void NavigateToManagePermissions(Guid roleId)
+    {
+        NavigationManager.NavigateTo($"/manage-permissions/{roleId}");
+    }
+    
     private void CancelEditRoleName(RoleWithPermissionsModel role)
     {
         role.UpdatedName = role.Name;
@@ -264,6 +270,11 @@
     {
         await DeleteRole(_roleIdToDelete);
         CloseConfirmationModal();
+    }
+    
+    private void NavigateToUsersWithRole(Guid roleId)
+    {
+        NavigationManager.NavigateTo($"/roles/{roleId}/users");
     }
 
     public class RoleWithPermissionsModel

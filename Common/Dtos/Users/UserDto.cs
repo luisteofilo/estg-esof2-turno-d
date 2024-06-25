@@ -8,5 +8,4 @@ public class UserDto
     public string Email { get; set; }
     public byte[] PasswordHash { get; set; }
     public byte[] PasswordSalt { get; set; }
-    public ICollection<UserRoleDto> UserRoles { get; set; }
 }
