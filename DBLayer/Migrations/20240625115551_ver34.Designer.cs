@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240613112243_verticals")]
-    partial class verticals
+    [Migration("20240625115551_ver34")]
+    partial class ver34
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -284,18 +284,19 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.HasKey("VerticalId");
 
-                    b.ToTable("Vertical");
+                    b.ToTable("Verticals", (string)null);
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.skil_veticals", b =>
                 {
                     b.Property<Guid>("skil_veticalsId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("Role_verticalsId")
-                        .HasColumnType("uuid");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<int>("skil_veticalsExperiencia")
                         .HasColumnType("integer");

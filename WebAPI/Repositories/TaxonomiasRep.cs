@@ -8,16 +8,14 @@ namespace ESOF.WebApp.WebAPI.Repositories
 {
     public class TaxonomiasRep : ITaxonomias
     {
-        private readonly ApplicationDbContext _db;
         
-
-        public async Task<Vertical?> GetTaxonomias()
-        {
+        public async Task<Vertical> GetTaxonomias()
+        { var db = new ApplicationDbContext();
             try
             {
                 var Id = Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0155f");
 
-                var vertical = await _db.Verticals
+                var vertical = await db.Verticals
                     .Include(v => v.Roles_verticals)
                     .Include(v => v.VerticalsUsers)
                     .FirstOrDefaultAsync(v => v.VerticalId == Id);
@@ -31,11 +29,11 @@ namespace ESOF.WebApp.WebAPI.Repositories
             }
         }
 
-        public async Task<Vertical?> GetTaxonomiaById(Guid id)
-        {
+        public async Task<Vertical> GetTaxonomiaById(Guid id)
+        {var db = new ApplicationDbContext();
             try
             {
-                var vertical = await _db.Verticals
+                var vertical = await db.Verticals
                     .Include(v => v.Roles_verticals)
                     .Include(v => v.VerticalsUsers)
                     .FirstOrDefaultAsync(v => v.VerticalId == id);
@@ -50,10 +48,10 @@ namespace ESOF.WebApp.WebAPI.Repositories
         }
 
         public void Update(Vertical vertical)
-        {
+        {var db = new ApplicationDbContext();
             try
             {
-                _db.Entry(vertical).State = EntityState.Modified;
+                db.Entry(vertical).State = EntityState.Modified;
             }
             catch (Exception ex)
             {
@@ -63,10 +61,10 @@ namespace ESOF.WebApp.WebAPI.Repositories
         }
 
         public async Task SaveAsync()
-        {
+        {var db = new ApplicationDbContext();
             try
             {
-                await _db.SaveChangesAsync();
+                await db.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -76,10 +74,10 @@ namespace ESOF.WebApp.WebAPI.Repositories
         }
 
         public async Task Add(Vertical vertical)
-        {
+        { var db = new ApplicationDbContext();
             try
             {
-                await _db.Verticals.AddAsync(vertical);
+                await db.Verticals.AddAsync(vertical);
             }
             catch (Exception ex)
             {
@@ -89,11 +87,11 @@ namespace ESOF.WebApp.WebAPI.Repositories
         }
 
         public void Delete(Guid id)
-        {
+        { var db = new ApplicationDbContext();
             try
             {
                 var vertical = new Vertical { VerticalId = id };
-                _db.Verticals.Remove(vertical);
+                db.Verticals.Remove(vertical);
             }
             catch (Exception ex)
             {
