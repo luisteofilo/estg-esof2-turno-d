@@ -3,17 +3,11 @@
 @inherits SearchBase
 @inject NavigationManager Navigation
 
-<div class="button-container">
-   
-</div>
+@if (Profiles != null && Profiles.Any())
+{
+    <p>Profiles</p>
 
-<h3>Search Results</h3>
-
-<p>You searched for: @searchText</p>
-
-<div class="search-results-container">
-    @if (Profiles != null && Profiles.Any())
-    {
+    <div class="search-results-container">
         @foreach (var profile in Profiles)
         {
             <div class="person-entry">
@@ -26,8 +20,28 @@
 
             </div>
         }
-    }
-</div>
+    </div> 
+}
+
+@if (ResultJobs != null && ResultJobs.Any())
+{
+    <p>Jobs</p>
+
+    <div class="search-results-container">
+        @foreach (var job in ResultJobs)
+        {
+            <div class="person-entry">
+                <div class="text-container">
+                    <p class="person-name">@job.Position </p>
+                    <p class="person-details">@job.Description - @job.Experience</p>
+                    <p class="person-details">@job.Localization</p>
+                </div>
+
+            </div>
+        }
+    </div>  
+}
+
 
 
 

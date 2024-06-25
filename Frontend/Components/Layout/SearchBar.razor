@@ -26,11 +26,15 @@
                 }
                 }
             </select>
-                <select class="custom-select">
+                <select name="job" class="custom-select">
                     <option value="">Jobs</option>
-                    <option value="1">Job 1</option>
-                    <option value="2">Job 2</option>
-                    <option value="3">Job 3</option>
+                    @if (Jobs != null && Jobs.Any())
+                    {
+                    @foreach (var job in Jobs)
+                    {
+                    <option value="@job.Position">@job.Position</option>
+                    }
+                    }
                 </select>
                 <select class="custom-select">
                     <option value="">People</option>
@@ -61,8 +65,10 @@
 
 
 @code {
-private string searchText { get; set; } = string.Empty;
-private string skill { get; set; } = string.Empty;
+    
+    [SupplyParameterFromQuery(Name= "searchText")]
+    private string searchText { get; set; } = string.Empty;
+    private string skill { get; set; } = string.Empty;
 
 [Inject] public ISearchService SearchService { get; set; }
 }

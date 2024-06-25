@@ -1,3 +1,4 @@
+using Common.Dtos.Job;
 using Common.Dtos.Profile;
 using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.DBLayer.Entities;
@@ -57,5 +58,41 @@ public class SearchRepository : ISearchRepository
     public async Task<IEnumerable<string>> GetLocationsAsync()
     {
         return await _dbContext.Profiles.Select(p => p.Location).Distinct().ToListAsync();
+    }
+
+    public async Task<IEnumerable<Job>> GetJobBySkillAsync(string skill)
+    {
+       
+        var skillId = await _dbContext.Skills
+            .Where(s => s.Name == skill)
+            .Select(s => s.SkillId)
+            .FirstOrDefaultAsync();
+
+        if (skillId == Guid.Empty)
+        {
+            return Enumerable.Empty<Job>();
+        }
+
+        
+        var jobIds = await _dbContext.JobSkills
+            .Where(js => js.SkillId == skillId && js.IsRequired == true)
+            .Select(js => js.JobId)
+            .Distinct()
+            .ToListAsync();
+
+        
+        var jobs = await _dbContext.Jobs.Where(j => jobIds.Contains(j.JobId)).ToListAsync();
+
+        return jobs;
+    }
+
+    public async Task<IEnumerable<Job>> GetJobByLocationAsync(string location)
+    {
+        return await _dbContext.Jobs.Where(j => j.Localization.Contains(location)).ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Job>> GetJobByPositionAsync(string position)
+    {
+        return await _dbContext.Jobs.Where(j => j.Position.Contains(position)).ToListAsync();
     }
 }

@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Common.Dtos.Job;
 using Common.Dtos.Profile;
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.WebAPI.Repositories;
@@ -114,7 +115,6 @@ public class SearchController(ISearchRepository searchRepository) : ControllerBa
     {
         try
         {
-            
             var result = await searchRepository.GetResultsLocationAsync(location);
             var profileDto = result.ProfilesConvertToDto();
             
@@ -131,7 +131,6 @@ public class SearchController(ISearchRepository searchRepository) : ControllerBa
     {
         try
         {
-            
             var result = await searchRepository.GetResultsLocationSkillAsync(location, skill);
             var profileDto = result.ProfilesConvertToDto();
             
@@ -163,5 +162,53 @@ public class SearchController(ISearchRepository searchRepository) : ControllerBa
         }
     }
     
+    [HttpGet("jobs/skills/{skill}")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<JobDto>))]
+    public async Task<IActionResult>GetResultsJobBySkillAsync(string skill)
+    {
+        try
+        {
+            var result = await searchRepository.GetJobBySkillAsync(skill);
+            var jobDto = result.JobsConvertToDto();
+            
+            return Ok(jobDto);
+        } catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
+    
+    
+    [HttpGet("jobs/locations/{location}")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<JobDto>))]
+    public async Task<IActionResult>GetResultsJobByLocationAsync(string location)
+    {
+        try
+        {
+            var result = await searchRepository.GetJobByLocationAsync(location);
+            var jobDto = result.JobsConvertToDto();
+            
+            return Ok(jobDto);
+        } catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("jobs/positions/{position}")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<JobDto>))]
+    public async Task<IActionResult>GetResultsJobByPositionAsync(string position)
+    {
+        try
+        {
+            var result = await searchRepository.GetJobByPositionAsync(position);
+            var jobDto = result.JobsConvertToDto();
+            
+            return Ok(jobDto);
+        } catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
     
 }

@@ -1,4 +1,5 @@
 
+using Common.Dtos.Job;
 using Common.Dtos.Profile;
 
 using Frontend.Services.Contracts;
@@ -64,6 +65,34 @@ public class SearchService(HttpClient httpClient) : ISearchService
         var response = await httpClient.GetAsync($"api/Search/locations");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<IEnumerable<string>>();
+    }
+    
+    public async Task<IEnumerable<JobDto>> GetJobs()
+    {
+        var response = await httpClient.GetAsync($"api/Job");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
+    }
+
+    public async Task<IEnumerable<JobDto>> GetJobsBySkill(string skill)
+    {
+        var response = await httpClient.GetAsync($"api/Search/jobs/skills/{skill}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
+    }
+    
+    public async Task<IEnumerable<JobDto>> GetJobsByLocation(string location)
+    {
+        var response = await httpClient.GetAsync($"api/Search/jobs/locations/{location}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
+    }
+    
+    public async Task<IEnumerable<JobDto>> GetJobsByPosition(string position)
+    {
+        var response = await httpClient.GetAsync($"api/Search/jobs/positions/{position}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
     }
    
 }

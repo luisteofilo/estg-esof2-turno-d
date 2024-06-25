@@ -11,7 +11,7 @@ public interface ISearchRepository
     Task<IEnumerable<Profile>> GetSearchResultsAsync(string firstName);
 
     Task<bool> ProfileExistsAsync(string firstName);
-
+    
     Task<IEnumerable<Profile>> GetSearchResultsSkillsAsync(string firstName, string skill);
 
     Task<IEnumerable<Profile>> GetSearchResultsLocationAsync(string firstName, string location);
@@ -25,4 +25,10 @@ public interface ISearchRepository
     Task<IEnumerable<Profile>> GetResultsLocationSkillAsync(string location, string skill);
 
     Task<IEnumerable<string>> GetLocationsAsync();
+
+    Task<IEnumerable<Job>> GetJobBySkillAsync(string skill);
+
+    Task<IEnumerable<Job>> GetJobByLocationAsync(string location);
+
+    Task<IEnumerable<Job>> GetJobByPositionAsync(string position);
 }

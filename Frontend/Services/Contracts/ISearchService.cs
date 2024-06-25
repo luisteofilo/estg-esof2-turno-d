@@ -1,3 +1,4 @@
+using Common.Dtos.Job;
 using Common.Dtos.Profile;
 
 namespace Frontend.Services.Contracts;
@@ -20,4 +21,12 @@ public interface ISearchService
     Task<IEnumerable<ProfileDto>> GetResultsByLocation_Name(string location, string firstName);
 
     Task<IEnumerable<ProfileDto>> GetResultsByLocation_Skill(string location, string skill);
+
+    Task<IEnumerable<JobDto>> GetJobs();
+
+    Task<IEnumerable<JobDto>> GetJobsBySkill(string skill);
+
+    Task<IEnumerable<JobDto>> GetJobsByLocation(string location);
+
+    Task<IEnumerable<JobDto>> GetJobsByPosition(string position);
 }
