@@ -4,90 +4,55 @@ using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace ESOF.WebApp.WebAPI.Repositories
+public class TaxonomiasRep : ITaxonomias
 {
-    public class TaxonomiasRep : ITaxonomias
+    private readonly ApplicationDbContext _db = new ApplicationDbContext();
+
+    public async Task<IEnumerable<Vertical>> GetTaxonomias()
     {
-        
-        public async Task<IEnumerable<Vertical>> GetTaxonomias()
-        {var db = new ApplicationDbContext();
-            return await db.Verticals
-                .Include(p => p.Roles_verticals)
-                .ThenInclude(r => r.Skills_verticals)
-                .Include(p => p.VerticalsUsers)
-                .ThenInclude(vu => vu.User) // Assuming you have a User entity
-                .ToListAsync();
-        }
+        var db = new ApplicationDbContext();
+        return await db.Verticals
+            .Include(v => v.Roles_verticals)
+            .ThenInclude(rv => rv.Skills_verticals)
+            .Include(v => v.VerticalsUsers)
+            .ThenInclude(vu => vu.User)
+            .ToListAsync();
+    }
 
-        public async Task<Vertical> GetTaxonomiaById(Guid id)
-        {var db = new ApplicationDbContext();
-            try
-            {
-                var vertical = await db.Verticals
-                    .Include(v => v.Roles_verticals)
-                    .Include(v => v.VerticalsUsers)
-                    .FirstOrDefaultAsync(v => v.VerticalId == id);
+    public async Task<Vertical?> GetTaxonomiaById(Guid id)
+    {
+        return await _db.Verticals
+            .Include(v => v.Roles_verticals)
+            .ThenInclude(rv => rv.Skills_verticals)
+            .Include(v => v.VerticalsUsers)
+            .ThenInclude(vu => vu.User)
+            .FirstOrDefaultAsync(v => v.VerticalId == id);
+    }
 
-                return vertical;
-            }
-            catch (Exception ex)
-            {
-                // Log or handle exceptions as needed
-                throw new Exception($"Error retrieving taxonomia with id {id} from the database.", ex);
-            }
-        }
+    public async Task Add(Vertical vertical)
+    {
+        _db.Verticals.Add(vertical);
+        await _db.SaveChangesAsync();
+    }
 
-        public void Update(Vertical vertical)
-        {var db = new ApplicationDbContext();
-            try
-            {
-                db.Entry(vertical).State = EntityState.Modified;
-            }
-            catch (Exception ex)
-            {
-                // Log or handle exceptions as needed
-                throw new Exception($"Error updating taxonomia with id {vertical.VerticalId}.", ex);
-            }
-        }
+    public async Task Update(Vertical vertical)
+    {
+        _db.Entry(vertical).State = EntityState.Modified;
+        await _db.SaveChangesAsync();
+    }
 
-        public async Task SaveAsync()
-        {var db = new ApplicationDbContext();
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // Log or handle exceptions as needed
-                throw new Exception("Error saving changes to the database.", ex);
-            }
+    public async Task Delete(Guid id)
+    {
+        var vertical = await _db.Verticals.FindAsync(id);
+        if (vertical != null)
+        {
+            _db.Verticals.Remove(vertical);
+            await _db.SaveChangesAsync();
         }
+    }
 
-        public async Task Add(Vertical vertical)
-        { var db = new ApplicationDbContext();
-            try
-            {
-                await db.Verticals.AddAsync(vertical);
-            }
-            catch (Exception ex)
-            {
-                // Log or handle exceptions as needed
-                throw new Exception("Error adding new taxonomia to the database.", ex);
-            }
-        }
-
-        public void Delete(Guid id)
-        { var db = new ApplicationDbContext();
-            try
-            {
-                var vertical = new Vertical { VerticalId = id };
-                db.Verticals.Remove(vertical);
-            }
-            catch (Exception ex)
-            {
-                // Log or handle exceptions as needed
-                throw new Exception($"Error deleting taxonomia with id {id} from the database.", ex);
-            }
-        }
+    public async Task SaveAsync()
+    {
+        await _db.SaveChangesAsync();
     }
 }
