@@ -19,10 +19,7 @@ public partial class ApplicationDbContext
                 .HasForeignKey(rp => rp.PermissionId);
         });
 
-        modelBuilder.Entity<RolePermission>(entity =>
-        {
-            entity.HasKey(rp => rp.PermissionId);
-        });
+        modelBuilder.Entity<RolePermission>(entity => { entity.HasKey(rp => rp.PermissionId); });
 
         modelBuilder.Entity<Role>(entity =>
         {
@@ -35,25 +32,24 @@ public partial class ApplicationDbContext
                 .HasForeignKey(rp => rp.RoleId);
         });
     }
-    
+
     private void BuildInterviewFeedback(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Job>(entity =>
-        {
-            entity.HasKey(j => j.JobId);
-            entity.Property(j => j.JobId)
-                .HasDefaultValueSql("gen_random_uuid()");
-
-            entity.HasMany(j => j.InterviewFeedbacks)
-                .WithOne(ifb => ifb.Job)
-                .HasForeignKey(ifb => ifb.Job.JobId);
-        });
-
         modelBuilder.Entity<InterviewFeedback>(entity =>
         {
             entity.HasKey(ifb => ifb.InterviewFeedbackId);
             entity.Property(ifb => ifb.InterviewFeedbackId)
                 .HasDefaultValueSql("gen_random_uuid()");
+
+            // Define JobId as foreign key
+            entity.Property(ifb => ifb.JobId);
+
+            // Configure Job relationship
+            entity.HasOne(ifb => ifb.Job)
+                .WithMany(j =>
+                    j.InterviewFeedbacks) // Assuming InterviewFeedbacks is the collection navigation property in Job
+                .HasForeignKey(ifb => ifb.JobId);
         });
     }
 }
+

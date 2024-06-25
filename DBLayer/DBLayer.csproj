@@ -25,7 +25,8 @@
     <ItemGroup>
       <Compile Remove="Helpers\EmailService.cs" />
       <Compile Remove="Entities\Job.cs" />
-      <Compile Remove="Migrations\ApplicationDbContextModelSnapshot.cs" />
+      <Compile Remove="Migrations\20240625014726_job-creation-1.cs" />
+      <Compile Remove="Migrations\20240625014726_job-creation-1.Designer.cs" />
     </ItemGroup>
 
 </Project>
