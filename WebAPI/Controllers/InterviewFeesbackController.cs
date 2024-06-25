@@ -1,5 +1,6 @@
 ﻿
 using Common.Dtos.Job;
+using Common.Dtos.Optimization_Requests;
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
@@ -21,13 +22,14 @@ namespace ESOF.WebApp.WebAPI.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedback>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
         public async Task<IActionResult> GetInterviewsFeedback()
         {
             try
             {
                 var interviewFeedback = await _interviewFeedbackRepository.GetInterviewsFeedbackAsync();
-                return Ok(interviewFeedback);
+                var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
+                return Ok(interviewFeedbackDto);
             }
             catch (Exception ex)
             {
@@ -36,7 +38,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
         }
 
         [HttpGet("{InterviewFeedbackId:guid}")]
-        [ProducesResponseType(200, Type = typeof(InterviewFeedback))]
+        [ProducesResponseType(200, Type = typeof(InterviewFeedbackDTO))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetInterviewFeedback(Guid interviewFeedbackId)
         {
@@ -48,7 +50,9 @@ namespace ESOF.WebApp.WebAPI.Controllers
                 }
 
                 var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackAsync(interviewFeedbackId);
-                return Ok(interviewFeedback);
+                var interviewFeedbackDto = interviewFeedback.InterviewFeedbackConvertToDto();
+
+                return Ok(interviewFeedbackDto);
             }
             catch (Exception ex)
             {
@@ -57,15 +61,15 @@ namespace ESOF.WebApp.WebAPI.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(201, Type = typeof(InterviewFeedback))]
+        [ProducesResponseType(201, Type = typeof(InterviewFeedbackDTO))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateInterviewFeedback([FromBody] InterviewFeedback interviewFeedback)
+        public async Task<IActionResult> CreateProfile([FromBody] InterviewFeedbackDTO interviewFeedbackDto)
         {
             try
             {
-                if (interviewFeedback == null)
+                if (interviewFeedbackDto == null)
                 {
-                    return BadRequest("InterviewFeedback details are null.");
+                    return BadRequest("Profile details are null.");
                 }
 
                 if (!ModelState.IsValid)
@@ -73,8 +77,12 @@ namespace ESOF.WebApp.WebAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
+                var interviewFeedback = interviewFeedbackDto.DtoConvertToInterviewFeedback();
                 await _interviewFeedbackRepository.AddInterviewFeedbackAsync(interviewFeedback);
-                return CreatedAtAction(nameof(GetInterviewFeedback), new { InterviewFeedbackId = interviewFeedback.InterviewFeedbackId }, interviewFeedback);
+
+                var createdInterviewFeedback = interviewFeedback.InterviewFeedbackConvertToDto();
+
+                return CreatedAtAction(nameof(GetInterviewFeedback), new { interviewFeedbadId = createdInterviewFeedback.InterviewFeedbackId }, createdInterviewFeedback);
             }
             catch (Exception ex)
             {
@@ -86,7 +94,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> UpdateInterviewFeedback(Guid InterviewFeedbackId, [FromBody] InterviewFeedback interviewFeedbackUpdated)
+        public async Task<IActionResult> UpdateInterviewFeedback(Guid InterviewFeedbackId, [FromBody] InterviewFeedbackDTO interviewFeedbackUpdated)
         {
             try
             {
@@ -99,8 +107,9 @@ namespace ESOF.WebApp.WebAPI.Controllers
                 {
                     return NotFound();
                 }
+                var updatedInterviewFeedback = interviewFeedbackUpdated.DtoConvertToInterviewFeedback();
 
-                await _interviewFeedbackRepository.UpdateInterviewFeedbackAsync(interviewFeedbackUpdated);
+                await _interviewFeedbackRepository.UpdateInterviewFeedbackAsync(updatedInterviewFeedback);
                 return NoContent();
             }
             catch (Exception ex)
@@ -115,7 +124,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> UpdateProfile(Guid JobId, [FromBody] JobDto jobDto)
+        public async Task<IActionResult> UpdateJob(Guid JobId, [FromBody] JobDto jobDto)
         {
             try
             {
@@ -160,14 +169,16 @@ namespace ESOF.WebApp.WebAPI.Controllers
         }
 
         [HttpGet("job/{jobId:guid}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedback>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetInterviewFeedbackByJob(Guid jobId)
         {
             try
             {
                 var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackByJob(jobId);
-                return Ok(interviewFeedback);
+                var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
+
+                return Ok(interviewFeedbackDto);
             }
             catch (Exception ex)
             {
@@ -176,14 +187,16 @@ namespace ESOF.WebApp.WebAPI.Controllers
         }
 
         [HttpGet("candidate/{candidateId:guid}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedback>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetInterviewFeedbackByCandidate(Guid candidateId)
         {
             try
             {
                 var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackByCandidate(candidateId);
-                return Ok(interviewFeedback);
+                var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
+
+                return Ok(interviewFeedbackDto);
             }
             catch (Exception ex)
             {
@@ -192,14 +205,16 @@ namespace ESOF.WebApp.WebAPI.Controllers
         }
 
         [HttpGet("interviewer/{interviewerId:guid}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedback>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetInterviewFeedbackByInterviewer(Guid interviewerId)
         {
             try
             {
                 var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackByInterviewer(interviewerId);
-                return Ok(interviewFeedback);
+                var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
+
+                return Ok(interviewFeedbackDto);
             }
             catch (Exception ex)
             {
@@ -208,14 +223,16 @@ namespace ESOF.WebApp.WebAPI.Controllers
         }
 
         [HttpGet("interview/{interviewId:guid}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedback>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetInterviewFeedbackByInterview(Guid interviewId)
         {
             try
             {
                 var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackByInterview(interviewId);
-                return Ok(interviewFeedback);
+                var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
+
+                return Ok(interviewFeedbackDto);
             }
             catch (Exception ex)
             {
