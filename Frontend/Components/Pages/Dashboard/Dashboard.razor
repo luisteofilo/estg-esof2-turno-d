@@ -62,7 +62,7 @@ else {
         </h3>
         <div class="row mb-3">
             <div class="col" style="margin-top: 20px">
-                <label for="statusSelector">Select Status:</label>
+                <label for="statusSelector">Select Interview Status:</label>
                 <select id="statusSelector" class="form-control" @onchange="OnStatusChanged">
                     <option value="All">All</option>
                     <option value="0">Scheduled</option>
@@ -73,8 +73,8 @@ else {
                 </select>
             </div>
             <div class="col" style="margin-top: 20px">
-                <label for="searchBox">Search candidates:</label>
-                <input type="text" id="searchBox" class="form-control" placeholder="Search candidates..." @bind="searchText" @oninput="OnSearchTextChanged">
+                <label for="searchBox">Search Candidates:</label>
+                <input type="text" id="searchBox" class="form-control" placeholder="Search Candidates..." @bind="searchText" @oninput="OnSearchTextChanged">
             </div>
         </div>
 
@@ -198,7 +198,7 @@ else {
         {
             await module.InvokeVoidAsync("Dashboard.initPieChart", "#commonSkills", skillNames);
             await module.InvokeVoidAsync("Dashboard.initPieChart", "#commonSkillsJobs", jobSkillNames);
-            await module.InvokeVoidAsync("Dashboard.initBarChart", "#applicationSourceChart", experiences.Select(e => e.Name).ToList());
+            await module.InvokeVoidAsync("Dashboard.initDoughnutChart", "#applicationSourceChart", experiences.Select(e => e.Name).ToList());
         }
     }
 

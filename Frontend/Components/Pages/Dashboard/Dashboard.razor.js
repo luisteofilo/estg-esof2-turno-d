@@ -22,39 +22,33 @@
         });
     }
 
-    static initBarChart(selector, experienceNames) {
+    static initDoughnutChart(selector, experienceNames) {
         const experienceCounts = {};
         experienceNames.forEach(name => {
-            experienceCounts[name] = (experienceCounts[name] || 0) + 1;
+            const lowerCaseExperience = name.toLowerCase();
+            experienceCounts[lowerCaseExperience] = (experienceCounts[lowerCaseExperience] || 0) + 1;
         });
 
-        const labels = Object.keys(experienceCounts);
-        const datasets = labels.map((label, index) => ({
-            label: label,
-            data: [experienceCounts[label]],
-            backgroundColor: Dashboard.getColor(index)
-        }));
+        const sortedExperienceEntries = Object.entries(experienceCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+        const labels = sortedExperienceEntries.map(entry => entry[0]);
+        const counts = sortedExperienceEntries.map(entry => entry[1]);
 
         const target = document.querySelector(selector);
         let ctx = target.getContext('2d');
         new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
-                labels: ['Experiences'],
-                datasets: datasets
+                labels: labels,
+                datasets: [{
+                    data: counts,
+                    backgroundColor: labels.map((label, index) => Dashboard.getColor(index)),
+                    hoverBackgroundColor: labels.map((label, index) => Dashboard.getColor(index))
+                }]
             },
             options: {
-                scales: {
-                    x: {
-                        beginAtZero: true
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                },
                 plugins: {
                     legend: {
                         display: true
@@ -69,3 +63,5 @@
         return `hsl(${hue}, 70%, 50%)`;
     }
 }
+
+window.Dashboard = Dashboard;
