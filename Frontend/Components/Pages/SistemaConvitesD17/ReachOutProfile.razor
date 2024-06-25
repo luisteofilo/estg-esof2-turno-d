@@ -1,0 +1,131 @@
+@page "/ReachOutProfile"
+@rendermode InteractiveServer
+
+<PageTitle>ReachOut Profile</PageTitle>
+
+<link href="CssD17/ReachOutProfile.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="containerProfile">
+    <div class="containerDadosProfile">
+        <div class="esquerda">
+            <div class="containerTitulo">
+                <h1 class="textoLocalidade">Lisbon, Portugal</h1>
+                <h1 class="textoNome">Luc Bernier</h1>
+            </div>
+            <div class="backgroundImagem">
+                <div class="containerImagem">
+                    <i size="30" class="fas fa-user custom-outline"></i>
+                </div>
+            </div>
+        </div>
+        <div class="direita">
+            <div class="rowContainerFiltros">
+                <div class="containerFiltros @GetActiveClass("About Me")" @onclick='() => SetActiveFilter("About Me")'>
+                    <h1 class="textoFiltros @GetActiveClass("About Me")" @onclick='() => SetActiveFilter("About Me")'>About Me</h1>
+                </div>
+                <div class="containerFiltros @GetActiveClass("Experience")" @onclick='() => SetActiveFilter("Experience")'>
+                    <h1 class="textoFiltros @GetActiveClass("Experience")" @onclick='() => SetActiveFilter("Experience")'>Experience</h1>
+                </div>
+                <div class="containerFiltros @GetActiveClass("Education")" @onclick='() => SetActiveFilter("Education")'>
+                    <h1 class="textoFiltros @GetActiveClass("Education")" @onclick='() => SetActiveFilter("Education")'>Education</h1>
+                </div>
+                <div class="containerFiltros @GetActiveClass("Skills")" @onclick='() => SetActiveFilter("Skills")'>
+                    <h1 class="textoFiltros @GetActiveClass("Skills")" @onclick='() => SetActiveFilter("Skills")'>Skills</h1>
+                </div>
+            </div>
+            <div class="linha"></div>
+            <div class="containerTituloFiltro">
+                <h1 class="textoTituloFiltro">@activeFilter</h1>
+            </div>
+            @if(@activeFilter == "About Me")
+            {
+                <div class="containerSubtituloFiltro">
+                    <h1 class="textoSubtituloFiltro">@AboutMe</h1>
+                </div>
+            } else if (@activeFilter == "Experience"){
+                <div class="containerAtributos">
+                    <div class="containerAtributo">
+                        <div class="containerIcon">
+                            <i class="fas fa-suitcase iconsAtributos"></i>
+                        </div>
+                        <div class="containerDadosAtributo">
+                            <h1 class="tituloAtributo">Carpinter</h1>
+                            <h1 class="subtituloAtributo">2013     2019</h1>
+                        </div>
+                    </div>
+                    <div class="containerAtributo">
+                        <div class="containerIcon">
+                            <i class="fas fa-suitcase iconsAtributos"></i>
+                        </div>
+                        <div class="containerDadosAtributo">
+                            <h1 class="tituloAtributo">Carpinter</h1>
+                            <h1 class="subtituloAtributo">2013     2019</h1>
+                        </div>
+                    </div>
+                </div>
+            } else if (@activeFilter == "Education")
+            {
+                <div class="containerAtributos">
+                    <div class="containerAtributo">
+                        <div class="containerIcon">
+                            <i class="fas fa-book iconsAtributos"></i>
+                        </div>
+                        <div class="containerDadosAtributo">
+                            <h1 class="tituloAtributo">Christ University</h1>
+                            <h1 class="subtituloAtributo">BBA     2019</h1>
+                        </div>
+                    </div>
+                    <div class="containerAtributo">
+                        <div class="containerIcon">
+                            <i class="fas fa-book iconsAtributos"></i>
+                        </div>
+                        <div class="containerDadosAtributo">
+                            <h1 class="tituloAtributo">Christ University</h1>
+                            <h1 class="subtituloAtributo">PUC     2016</h1>
+                        </div>
+                    </div>
+                </div>
+            } else if (@activeFilter == "Skills")
+            {
+                <div class="containerAtributos">
+                    <div class="containerAtributo">
+                        <div class="containerIcon">
+                            <i class="fas fa-gear iconsAtributos"></i>
+                        </div>
+                        <div class="containerDadosAtributo">
+                            <h1 class="tituloAtributo">Good Skill</h1>
+                        </div>
+                    </div>
+                    <div class="containerAtributo">
+                        <div class="containerIcon">
+                            <i class="fas fa-gear iconsAtributos"></i>
+                        </div>
+                        <div class="containerDadosAtributo">
+                            <h1 class="tituloAtributo">Bad One</h1>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="containerProfile">
+    <NavLink class="containerBotaoReachOut" href="MessageSent">
+        <h1 class="textoReachOut">ReachOut</h1>
+    </NavLink>
+</div>
+@code {
+    private string activeFilter = "About Me";
+    private string AboutMe = "Hello! I am a passionate and dedicated programmer with a strong background in software development. With a keen interest in creating innovative solutions, I enjoy tackling challenging problems and continuously learning new technologies to enhance my skills.";
+    
+    private void SetActiveFilter(string filter)
+    {
+        activeFilter = filter;
+    }
+
+    private string GetActiveClass(string filter)
+    {
+        return activeFilter == filter ? "active" : string.Empty;
+    }
+}

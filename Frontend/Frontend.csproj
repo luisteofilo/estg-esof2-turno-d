@@ -11,6 +11,11 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Update="Components\Pages\SistemaConvitesD17\RespostaConviteDecline.css">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <DependentUpon>RespostaConviteDecline.razor</DependentUpon>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -20,6 +25,15 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\CssD17\RespostaConviteDecline.css" />
+      <None Include="wwwroot\Images\animaisVideoConferencia.png" />
+      <None Include="wwwroot\Images\gatoAborrecido.png" />
+      <None Include="wwwroot\Images\homemLupa.png" />
+      <None Include="wwwroot\Images\ursoCanaPesca.png" />
+      <None Include="wwwroot\Images\ursoFolhas.png" />
     </ItemGroup>
 
 </Project>

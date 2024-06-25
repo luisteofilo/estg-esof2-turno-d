@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+.page{
+    background-color: #150B23;
+}
+
+h1. {
+    margin-bottom: 0px;
+}
+
+.top-row{
+    visibility: hidden;
+}
+
+.paginaInterviewInvitation {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #150B23;
+    justify-content: center;
+    align-items: center;
+}
+
+.contentRetanguloInvitation{
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 470px;
+    background-color: #1F1136;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.containerImagem {
+    height: 220px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px;
+}
+
+.imagemGatoAborrecido{
+    height: 100%;
+    width: auto;
+}
+
+.containerTextoTitulo{
+    margin-top: 80px;
+}
+
+.textoTitulo{
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+    letter-spacing: 2px;
+    color: #F6F2FF;
+    font-size: 31px ;
+}
+
+
+.containerTextoSubtitulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 10px;
+}
+
+.textoSubtitulo {
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: 2px;
+    color: #F6F2FF;
+    font-size: 15px ;;
+    line-height: 27px;
+    text-align: center;
+}
+
+.containerBotaoOk {
+    border-radius: 60px;
+    width: 156px;
+    height: 53px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6929C4;
+    transition: background-color 1s ease;
+    cursor: pointer;
+    margin-top: 20px;
+    text-decoration: none;
+}
+
+.containerBotaoOk:hover {
+    background-color: #8A3FFC;
+}
+
+.textoBotaoOk {
+    font-family: 'Inter', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 2px;
+    color: #F6F2FF;
+    font-size: 14px;
+    transition: color 1s ease;
+    margin-bottom: 0px;
+}
+
+.containerBotaoOk:hover .textoBotaoOk {
+    color: #FFFFFF;
+}

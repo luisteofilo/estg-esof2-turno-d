@@ -36,7 +36,7 @@
     else
     {
         <div class="containerResultNumber">
-            <div class="textoResultNumber">Results @filteredJobs.Count</div>
+            <div class="textoResultNumber">Results (@filteredJobs.Count)</div>
         </div>
         <div class="containerTabela">
             <div class="containerRowTituloTabela">
@@ -57,20 +57,22 @@
             @foreach (var job in filteredJobs)
             {
             var rowClass = (filteredJobs.IndexOf(job) % 2 == 0) ? "corLinhaPar" : "corLinhaImpar";
-            <div class="containerRowDadosTabela @rowClass">
-                <div class="containerTextoTabelas">
-                    <h1 class="textoRowDadosTabelaColuna1">@job[0]</h1>
+            <NavLink href="SelectProfile">
+                <div class="containerRowDadosTabela @rowClass">
+                    <div class="containerTextoTabelas">
+                        <h1 class="textoRowDadosTabelaColuna1">@job[0]</h1>
+                    </div>
+                    <div class="containerTextoTabelas">
+                        <h1 class="textoRowDadosTabela">@job[1]</h1>
+                    </div>
+                    <div class="containerTextoTabelas">
+                        <h1 class="textoRowDadosTabela">@job[2]</h1>
+                    </div>
+                    <div class="containerTextoTabelas">
+                        <h1 class="textoRowDadosTabela">@job[3]</h1>
+                    </div>
                 </div>
-                <div class="containerTextoTabelas">
-                    <h1 class="textoRowDadosTabela">@job[1]</h1>
-                </div>
-                <div class="containerTextoTabelas">
-                    <h1 class="textoRowDadosTabela">@job[2]</h1>
-                </div>
-                <div class="containerTextoTabelas">
-                    <h1 class="textoRowDadosTabela">@job[3]</h1>
-                </div>
-            </div>
+            </NavLink>
             }
         </div>
     }

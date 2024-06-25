@@ -9,6 +9,11 @@ a :hover{
     background-color: #8A3FFC;
 }
 
+
+h1 {
+    margin-bottom: 0;
+}
+
 .page{
     background-color: #1C0F30;
 }
@@ -16,15 +21,7 @@ a :hover{
 .top-row{
     visibility: hidden;
 }
-
-html, body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 1.5px;
-}
-
-.containerSelectJob {
+.containerSelectProfile {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -43,7 +40,47 @@ html, body {
     text-align: center;
     font-family: 'Inter', sans-serif;
     letter-spacing: 2px;
-    font-weight: 800;
+    font-weight: 600;
+}
+
+.rowContainerFiltros{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.containerFiltros{
+    height: 50px;
+    border: solid;
+    border-radius: 100px;
+    border-width: 2px;
+    border-color: #F6F2FF;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.containerFiltros.active {
+    border-color: #8A3FFC;
+}
+
+.textoFiltros.active {
+    color: #8A3FFC;
+}
+
+.textoFiltros{
+    color: #F6F2FF;
+    font-size: 14px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 2px;
+    font-weight: 600;
+    padding-left: 23px;
+    padding-right: 23px;
 }
 
 .containerBarraPesquisa {
@@ -97,39 +134,15 @@ html, body {
 
 .textoResultNumber{
     color: rgba(206, 178, 255, 0.5);
-    font-size: 30px;
-    letter-spacing: 2px;
-    font-weight: 800;
+    font-size: 40px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
     text-align: start;
-    font-family: 'Inter', sans-serif;
 }
 
 .containerTabela {
     padding-right: 200px;
     padding-left: 200px;
-}
-.containerImagem {
-    text-align: center;
-}
-
-.containerTextoEmpty {
-    margin-top: 12px;
-    margin-left: 137px;
-}
-
-.textoEmpty{
-    color: rgba(206, 178, 255, 0.5);
-    font-size: 20px;
-    text-align: center;
-    letter-spacing: 10px;
-    font-weight: 800;
-    font-family: 'Inter', sans-serif;
-}
-
-.imagemJob {
-    max-width: 100%;
-    height: auto;
-    opacity: 0.5;
 }
 
 .containerRowTituloTabela {
@@ -141,14 +154,13 @@ html, body {
 
 .containerTextoTabelas {
     width: 100%;
-    padding-right: 20px;
 }
 
 .textoRowTituloTabela {
     color: rgba(246, 242, 255, 1);
     font-size: 16px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
+    font-weight: 300;
+    letter-spacing: 1.5px;
 }
 
 .linha {
@@ -174,18 +186,18 @@ html, body {
     padding-bottom: 15px;
 }
 
+
 .textoRowDadosTabelaColuna1 {
     color: rgba(246, 242, 255, 1);
-    font-family: 'Inter', sans-serif;
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 300;
+    letter-spacing: 1.5px;
 }
 
 .textoRowDadosTabela {
     color: rgba(246, 242, 255, 1);
-    font-family: 'Inter', sans-serif;
     font-size: 14px;
-    font-weight: 400;
-    line-height: 30px;
-    letter-spacing: 2px;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    line-height: 25px;
 }
