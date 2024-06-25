@@ -56,6 +56,11 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Interviewer> Interviewers { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
 
+    // Job Features
+    
+    public DbSet<Job> Jobs { get; set; }
+    public DbSet<JobSkill> JobSkills { get; set; }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -78,10 +83,16 @@ public partial class ApplicationDbContext : DbContext
         BuildProfileSkills(modelBuilder);
         BuildSkills(modelBuilder);
         
+
+        // Job Features
+        BuildJobs(modelBuilder);
+        BuildJobSkills(modelBuilder);
+        
         // Interview Features 
         BuildInterviews(modelBuilder);
         BuildInterviewer(modelBuilder);
         BuildCandidates(modelBuilder);
+
         
         base.OnModelCreating(modelBuilder);
     }
