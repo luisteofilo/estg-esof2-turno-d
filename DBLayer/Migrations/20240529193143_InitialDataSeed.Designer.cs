@@ -205,48 +205,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                 b.ToTable("Companies");
             });
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserCompany", b =>
-            {
-                b.ToTable("UserCompanies");
-
-                b.Property<Guid>("UserCompanyId")
-                    .HasColumnType("uuid")
-                    .HasDefaultValueSql("gen_random_uuid()")
-                    .IsRequired();
-
-                b.Property<Guid>("UserId")
-                    .IsRequired();
-
-                b.Property<Guid>("CompanyId")
-                    .IsRequired();
-
-                b.Property<int>("YearsWorked")
-                    .IsRequired()
-                    .HasColumnType("integer");
-
-                b.Property<DateTime>("StartDate")
-                    .IsRequired()
-                    .HasColumnType("timestamp without time zone");
-
-                b.Property<DateTime?>("EndDate")
-                    .HasColumnType("timestamp without time zone");
-
-                b.Property<bool>("IsCurrentlyEmployed")
-                    .IsRequired()
-                    .HasColumnType("boolean");
-
-                b.HasKey("UserCompanyId");
-
-                b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
-                    .WithMany()
-                    .HasForeignKey("UserId")
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                b.HasOne("ESOF.WebApp.DBLayer.Entities.Companies", "Company")
-                    .WithMany()
-                    .HasForeignKey("CompanyId")
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
 #pragma warning restore 612, 618
         }
     }
