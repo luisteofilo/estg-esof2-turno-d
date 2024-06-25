@@ -15,7 +15,7 @@ namespace Frontend.Components.Pages
         
         [SupplyParameterFromQuery(Name= "searchText")]
         public string firstName { get; set; } 
-
+        
         protected IEnumerable<ProfileDto> Profiles { get; set; }
      //   protected IEnumerable<ProfileDto> ProfilesSkill { get; set; }
         protected IEnumerable<SkillDto> Skills { get; set; }
@@ -95,7 +95,7 @@ namespace Frontend.Components.Pages
             Locations = await SearchService.GetLocations();
            // Jobs = await SearchService.GetJobs();
 
-            Profiles = await SearchService.GetResults(firstName, skill, location);
+            Profiles = await SearchService.GetResultsProfile(firstName, skill, location);
 
         }
         

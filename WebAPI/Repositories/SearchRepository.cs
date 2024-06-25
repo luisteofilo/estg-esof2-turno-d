@@ -12,7 +12,7 @@ public class SearchRepository : ISearchRepository
     private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
 
     
-    public async Task<IEnumerable<Profile>> GetSearchResultsAsync(string firstName = null, string skill = null, string location = null)
+    public async Task<IEnumerable<Profile>> GetProfileResultsAsync(string firstName = null, string skill = null, string location = null)
     {
         IQueryable<Profile> query = _dbContext.Profiles;
 
@@ -39,11 +39,43 @@ public class SearchRepository : ISearchRepository
         return await _dbContext.Profiles.AnyAsync(p => p.FirstName.ToLower().Contains(firstName.ToLower()));
     }
     
+    public async Task<bool> JobExistsAsync(string position)
+    {
+        return await _dbContext.Jobs.AnyAsync(p => p.Position.ToLower().Contains(position.ToLower()));
+    }
+    
     public async Task<IEnumerable<string>> GetLocationsAsync()
     {
         return await _dbContext.Profiles.Select(p => p.Location).Distinct().ToListAsync();
     }
     
+    public async Task<IEnumerable<Job>> GetJobResultsAsync(string position, string skill = null, string location = null)
+    {
+        IQueryable<Job> query = _dbContext.Jobs;
+
+        if (!string.IsNullOrEmpty(skill))
+        {
+            var skillIds = await _dbContext.Skills
+                .Where(s => s.Name.ToLower().Contains(skill.ToLower()))
+                .Select(s => s.SkillId)
+                .ToListAsync();
+
+            query = query.Where(j => j.JobSkills.Any(js => skillIds.Contains(js.SkillId) && js.IsRequired));
+        }
+
+        if (!string.IsNullOrEmpty(location))
+        {
+            query = query.Where(j => j.Localization.ToLower().Contains(location.ToLower()));
+        }
+
+        if (!string.IsNullOrEmpty(position))
+        {
+            query = query.Where(j => j.Position.ToLower().Contains(position.ToLower()));
+        }
+
+        return await query.ToListAsync();
+    }
+
     /*
     public async Task<IEnumerable<Profile>> GetSearchResultsAsync(string firstName)
     {

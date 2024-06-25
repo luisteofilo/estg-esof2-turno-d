@@ -10,7 +10,7 @@ public class SearchService(HttpClient httpClient) : ISearchService
 {   
     public bool searchPerformed { get; set; } = false;
     
-    public async Task<IEnumerable<ProfileDto>> GetResults(string firstName, string skill, string location)
+    public async Task<IEnumerable<ProfileDto>> GetResultsProfile(string firstName, string skill, string location)
     {
         try
         {

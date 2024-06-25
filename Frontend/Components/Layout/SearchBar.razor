@@ -8,7 +8,7 @@
 @inherits SearchBase
 
 <div class="search-container">
-    <form method="get" action="/searchresults" class="search-form">
+    <form method="get" action="/search/results" class="search-form">
         <div class="input-row">
             <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input" required/>
             <button type="submit" class="submit-button">Ok</button>
@@ -16,7 +16,7 @@
         @if (SearchService.searchPerformed)
         {
         <div class="select-row">
-            <select name="skill" @bind="skill" class="custom-select">
+        <!--    <select name="skill" @bind="skill" class="custom-select">
                 <option value="">Skills</option>
                 @if (Skills != null && Skills.Any())
                 {
@@ -25,7 +25,7 @@
                 <option value="@skill.Name">@skill.Name</option>
                 }
                 }
-            </select>
+            </select>-->
               <!--  <select name="job" class="custom-select">
                     <option value="">Jobs</option>
                     @if (Jobs != null && Jobs.Any())
@@ -36,14 +36,15 @@
                     }
                     }
                 </select>-->
-                <select class="custom-select">
-                    <option value="">People</option>
-                    <option value="1">People 1</option>
-                    <option value="2">People 2</option>
-                    <option value="3">People 3</option>
-                </select>
+              <a href="search/people?searchText=@searchText" type="button" class="btn-primary">
+                  People
+              </a>
+              
+              <button type="button" class="btn-primary">
+                  Jobs
+              </button>
 
-                <select name="location" class="custom-select">
+        <!--      <select name="location" class="custom-select">
                     <option value="">Location</option>
                     @if (Locations != null && Locations.Any())
                     {
@@ -52,7 +53,7 @@
                     <option value="@location">@location</option>
                     }
                     }
-                </select>
+                </select>-->
         </div>
         }
     </form>

@@ -1,7 +1,36 @@
-@page "/search/results"
+@page "/search/people"
 @using Microsoft.AspNetCore.Components
 @inherits SearchBase
 @inject NavigationManager Navigation
+
+<div class="input-row">
+            <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input" required/>
+            <button type="submit" class="submit-button">Ok</button>
+</div>
+
+<div class="select-row">
+    <select name="skill" @bind="skill" class="custom-select">
+        <option value="">Skills</option>
+        @if (Skills != null && Skills.Any())
+        {
+        @foreach (var skill in Skills)
+        {
+        <option value="@skill.Name">@skill.Name</option>
+        }
+        }
+    </select>
+
+    <select name="location" class="custom-select">
+        <option value="">Location</option>
+        @if (Locations != null && Locations.Any())
+        {
+        @foreach (var location in Locations)
+        {
+        <option value="@location">@location</option>
+        }
+        }
+    </select>
+</div>
 
 @if ( Profiles != null && Profiles.Any())
 {
@@ -31,35 +60,11 @@ else
     
     
 }
-<!--
-@if (ResultJobs != null && ResultJobs.Any())
-{
-    <p>Jobs</p>
-
-    <div class="search-results-container">
-        @foreach (var job in ResultJobs)
-        {
-            <div class="person-entry">
-                <div class="text-container">
-                    <p class="person-name">@job.Position </p>
-                    <p class="person-details">@job.Description - @job.Experience</p>
-                    <p class="person-details">@job.Localization</p>
-                </div>
-
-            </div>
-        }
-    </div>  
-}
--->
-
 
 
 @code {
     [Parameter]
     [SupplyParameterFromQuery(Name= "searchText")]
     public string searchText { get; set; }
-    
-    [SupplyParameterFromQuery(Name= "skill")]
-    public string SkillSelected { get; set; }
     
 }

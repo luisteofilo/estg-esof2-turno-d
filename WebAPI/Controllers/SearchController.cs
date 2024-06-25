@@ -14,7 +14,7 @@ public class SearchController(ISearchRepository searchRepository) : ControllerBa
 {
     [HttpGet("profile")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<ProfileDto>))]
-    public async Task<IActionResult> GetSearchResultsSkillsLocation([FromQuery] string firstName,[FromQuery] string skill = null,[FromQuery] string location = null)
+    public async Task<IActionResult> GetSearchResultsProfile([FromQuery] string firstName,[FromQuery] string skill = null,[FromQuery] string location = null)
     {
         try
         {
@@ -23,7 +23,7 @@ public class SearchController(ISearchRepository searchRepository) : ControllerBa
                 return NotFound();
             }
 
-            var result = await searchRepository.GetSearchResultsAsync(firstName, skill, location);
+            var result = await searchRepository.GetProfileResultsAsync(firstName, skill, location);
             var profileDto = result.ProfilesConvertToDto();
             
             return Ok(profileDto);
@@ -47,6 +47,29 @@ public class SearchController(ISearchRepository searchRepository) : ControllerBa
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
         }
     }
+    
+    [HttpGet("job")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<JobDto>))]
+    public async Task<IActionResult> GetSearchResultsJob([FromQuery] string postion,[FromQuery] string skill = null,[FromQuery] string location = null)
+    {
+        try
+        {
+            if (!await searchRepository.JobExistsAsync(postion))
+            {
+                return NotFound();
+            }
+
+            var result = await searchRepository.GetJobResultsAsync(postion, skill, location);
+            var JobDto = result.JobsConvertToDto();
+            
+            return Ok(JobDto);
+        } catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
+    
+    
 
     
   /*  [HttpGet("{firstName}")]

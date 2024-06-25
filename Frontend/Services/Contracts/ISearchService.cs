@@ -6,7 +6,7 @@ namespace Frontend.Services.Contracts;
 public interface ISearchService
 {
     bool searchPerformed { get; set; }
-    Task<IEnumerable<ProfileDto>> GetResults(string firstName, string skill, string location);
+    Task<IEnumerable<ProfileDto>> GetResultsProfile(string firstName, string skill, string location);
 
     Task<IEnumerable<string>> GetLocations();
 /*

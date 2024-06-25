@@ -9,12 +9,15 @@ namespace ESOF.WebApp.WebAPI.Repositories.Contracts;
 public interface ISearchRepository
 {
 
-    Task<IEnumerable<Profile>> GetSearchResultsAsync(string firstName = null, string skill = null,
-        string location = null);
+    Task<IEnumerable<Profile>> GetProfileResultsAsync(string location, string firstName = null, string skill = null);
     
-    Task<bool> ProfileExistsAsync(string firstName);
+    Task<bool> ProfileExistsAsync(string location);
     
     Task<IEnumerable<string>> GetLocationsAsync();
+
+    Task<IEnumerable<Job>> GetJobResultsAsync(string position = null, string skill = null, string location = null);
+
+    Task<bool> JobExistsAsync(string position);
     /*
     Task<IEnumerable<Profile>> GetSearchResultsAsync(string firstName);
 
