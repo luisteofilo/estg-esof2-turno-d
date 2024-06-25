@@ -34,7 +34,7 @@ else {
                 <h1 class="stat-value">@totalJobs</h1>
             </div>
             <div class="stat-item">
-                <span class="stat-title">Total Interview's</span>
+                <span class="stat-title">Total Interviews</span>
                 <h1 class="stat-value">@totalInterviews</h1>
             </div>
             <div class="stat-item" style="margin-top: 50px">
@@ -66,13 +66,20 @@ else {
 
         <div class="dashboard-graph">
             <h4>Interviews Over Time</h4>
-            <canvas id="interviewsOverTime"></canvas>
+            <label for="yearSelector">Select Year:</label>
+            <select id="yearSelector" class="form-control" @onchange="OnYearChanged">
+                @foreach (var year in years)
+                {
+                    <option value="@year">@year</option>
+                }
+            </select>
+            <canvas id="interviewsOverTime" style="margin-top: 50px"></canvas>
         </div>
         
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
-        <h3 class="mb-3">
-            Interview's State's
+        <h3 class="mb-3" style="margin-top: 100px">
+            Interview's States
         </h3>
         <div class="row mb-3">
             <div class="col" style="margin-top: 20px">
@@ -132,6 +139,7 @@ else {
 }
 
 @code {
+    
     private IJSObjectReference? module;
     private IEnumerable<CandidateDto>? candidates;
     private IEnumerable<InterviewDto>? interviews;
@@ -149,12 +157,24 @@ else {
     private bool chartsInitialized = false;
     
     private Dictionary<int, int> monthlyInterviewCounts = new Dictionary<int, int>();
+    private List<int> years = Enumerable.Range(DateTime.Now.Year, 5).ToList(); // Current year to next 4 years
+    private int selectedYear = DateTime.Now.Year;
 
     private List<CandidateDto> FilteredCandidates => GetFilteredCandidates();
 
     private void OnStatusChanged(ChangeEventArgs e)
     {
         selectedStatus = e.Value.ToString();
+    }
+
+    private void OnYearChanged(ChangeEventArgs e)
+    {
+        selectedYear = int.Parse(e.Value.ToString());
+        if (chartsInitialized)
+        {
+            var interviewData = GetMonthlyInterviewData();
+            module.InvokeVoidAsync("Dashboard.updateLineChart", "#interviewsOverTime", interviewData);
+        }
     }
 
     private string GetInterviewStateText(InterviewState? state)
@@ -231,7 +251,7 @@ else {
             monthlyInterviewCounts[month] = 0;
         }
 
-        foreach (var interview in interviews)
+        foreach (var interview in interviews.Where(i => i.DateHourStart.Year == selectedYear))
         {
             var month = interview.DateHourStart.Month;
             monthlyInterviewCounts[month]++;
@@ -274,10 +294,10 @@ else {
             totalInterviews = interviews.Count();
             
             int missedInterviews = interviews.Count(i => i.InterviewState == InterviewState.Missed);
-            missedInterviewPercentage = totalInterviews > 0 ? (double)missedInterviews / totalInterviews * 100 : 0;
+            missedInterviewPercentage = totalInterviews > 0 ? Math.Round((double)missedInterviews / totalInterviews * 100, 2) : 0;
             
             int canceledInterviews = interviews.Count(i => i.InterviewState == InterviewState.Canceled);
-            canceledInterviewPercentage = totalInterviews > 0 ? (double)canceledInterviews / totalInterviews * 100 : 0;
+            canceledInterviewPercentage = totalInterviews > 0 ? Math.Round((double)canceledInterviews / totalInterviews * 100, 2) : 0;
             
             foreach (var interview in interviews)
             {
