@@ -9,17 +9,18 @@ public class JobCreationBase : ComponentBase
 {
     [Inject] IProfileService ProfileService { get; set; }
     [Inject] IJobService JobService { get; set; }
-    
+    [Inject] protected NavigationManager Navigation { get; set; }
+
     protected string? ErrorMessage { get; set; }
-    
+
     protected IEnumerable<SkillDto> AvailableSkills { get; set; } = new List<SkillDto>();
     private List<SkillDto> RequiredSkills { get; set; } = [];
     private List<SkillDto> NiceToHaveSkills { get; set; } = [];
-    
+
     protected JobDto JobNew { get; set; } = new JobDto();
-    
+
     protected bool showModal { get; set; }
-    
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -32,15 +33,19 @@ public class JobCreationBase : ComponentBase
             Console.WriteLine(e.Message);
         }
     }
-    
-    
+
+    protected void GoBack()
+    {
+        Navigation.NavigateTo("/jobs");
+    }
+
     protected async Task CreateJob()
     {
         try
         {
             //Hard Coded ClientId
             var JobDto = await JobService.CreateJob(Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0153a"), JobNew);
-            
+
             await createSkillsForJob(JobDto.JobId);
             showModal = true;
             StateHasChanged();
@@ -63,8 +68,8 @@ public class JobCreationBase : ComponentBase
         JobNew = new JobDto();
         StateHasChanged();
     }
-    
-    
+
+
     protected void UpdateSkills(ChangeEventArgs e, SkillDto skill, bool isRequired)
     {
         var isChecked = (bool)e.Value;
