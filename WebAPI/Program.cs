@@ -1,6 +1,7 @@
 using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+using Microsoft.EntityFrameworkCore;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
 
@@ -12,7 +13,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-builder.Services.AddScoped<EmailTemplateService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository >();

@@ -1,4 +1,5 @@
-﻿using Helpers.Job;
+﻿using ESOF.WebApp.DBLayer.Entities;
+using Helpers.Job;
 
 namespace Common.Dtos.Job;
 
@@ -10,7 +11,7 @@ public class JobDto
     
     public DateTime? EndDate { get; set; }
     
-    public String Position { get; set; }
+    public ICollection<ESOF.WebApp.DBLayer.Entities.Position>? Positions { get; set; }
     
     public CommitmentType? Commitment { get; set; }
     

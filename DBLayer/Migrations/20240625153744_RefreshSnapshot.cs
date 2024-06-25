@@ -1,42 +1,29 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialEnt : Migration
+    public partial class RefreshSnapshot : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Jobs",
-                columns: table => new
-                {
-                    JobId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Jobs", x => x.JobId);
-                });
+            migrationBuilder.DropColumn(
+                name: "Position",
+                table: "Jobs");
 
             migrationBuilder.CreateTable(
                 name: "Positions",
                 columns: table => new
                 {
-                    PositionId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PositionId = table.Column<Guid>(type: "uuid", nullable: false),
                     StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     BillingType = table.Column<string>(type: "text", nullable: false),
-                    JobId = table.Column<int>(type: "integer", nullable: false)
+                    JobId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,12 +40,11 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 name: "Timesheets",
                 columns: table => new
                 {
-                    TimesheetId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TimesheetId = table.Column<Guid>(type: "uuid", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     HoursWorked = table.Column<int>(type: "integer", nullable: false),
                     TaskDescription = table.Column<string>(type: "text", nullable: false),
-                    PositionId = table.Column<int>(type: "integer", nullable: false)
+                    PositionId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,8 +77,12 @@ namespace ESOF.WebApp.DBLayer.Migrations
             migrationBuilder.DropTable(
                 name: "Positions");
 
-            migrationBuilder.DropTable(
-                name: "Jobs");
+            migrationBuilder.AddColumn<string>(
+                name: "Position",
+                table: "Jobs",
+                type: "text",
+                nullable: false,
+                defaultValue: "");
         }
     }
 }

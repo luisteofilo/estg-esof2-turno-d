@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.Services;
-using ESOF.WebApp.WebAPI.Services;
+using ESOF.WebApp.WebAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.Controllers
@@ -26,7 +26,7 @@ namespace ESOF.WebApp.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Position>> GetPositionById(int id)
+        public async Task<ActionResult<Position>> GetPositionById(Guid id)
         {
             var position = await _positionService.GetPositionById(id);
             if (position == null)
@@ -44,7 +44,7 @@ namespace ESOF.WebApp.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePosition(int id, Position position)
+        public async Task<IActionResult> UpdatePosition(Guid id, Position position)
         {
             if (id != position.PositionId)
             {
@@ -56,7 +56,7 @@ namespace ESOF.WebApp.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePosition(int id)
+        public async Task<IActionResult> DeletePosition(Guid id)
         {
             var result = await _positionService.DeletePosition(id);
             if (!result)

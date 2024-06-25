@@ -11,9 +11,8 @@ public class Job
     public Guid ClientId { get; set; }  // Client who created the Job
     
     public DateTime? EndDate { get; set; }   // End date of the job opportunity
-
-    [Required]
-    public String Position { get; set; }    // Position of the job
+    
+    public ICollection<Position>? Positions { get; set; }    // Position of the job
 
     public CommitmentType? Commitment { get; set; }  // Commitment type of the job
 
