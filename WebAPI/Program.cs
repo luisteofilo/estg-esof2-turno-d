@@ -1,3 +1,4 @@
+using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using WebAPI.Repositories;
@@ -64,6 +65,14 @@ app.MapGet("/weatherforecast", () =>
         return forecast;
     })
     .WithName("GetWeatherForecast")
+    .WithOpenApi();
+
+app.MapGet("/users/emails", () =>
+    {
+        var db = new ApplicationDbContext();
+        return db.Users.Select(u => u.Email);
+    })
+    .WithName("GetUsersNames")
     .WithOpenApi();
 
 app.MapControllers();
