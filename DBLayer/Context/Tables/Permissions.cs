@@ -46,7 +46,7 @@ public partial class ApplicationDbContext
 
             entity.HasMany(j => j.InterviewFeedbacks)
                 .WithOne(ifb => ifb.Job)
-                .HasForeignKey(ifb => ifb.JobId);
+                .HasForeignKey(ifb => ifb.Job.JobId);
         });
 
         modelBuilder.Entity<InterviewFeedback>(entity =>
