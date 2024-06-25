@@ -30,5 +30,12 @@ namespace Frontend.Services
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IEnumerable<JobSkillDto>>();
         }
+        
+        public async Task<IEnumerable<ExperienceDto>> GetExperiences()
+        {
+            var response = await _httpClient.GetAsync("api/Dashboard/Experiences");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<ExperienceDto>>();
+        }
     }
 }

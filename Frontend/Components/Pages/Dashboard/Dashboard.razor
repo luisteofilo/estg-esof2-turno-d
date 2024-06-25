@@ -1,6 +1,7 @@
 ﻿@page "/dashboard"
 @using Common.Dtos.Interview
 @using Common.Dtos.Job
+@using Common.Dtos.Profile
 @using Frontend.Services.Contracts
 @inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
@@ -20,24 +21,24 @@ else if (!candidates.Any())
     <h2>No Candidates found.</h2>
 }
 else { 
-    <h3 class="dashboard-title">HR Recruitment Dashboard </h3> 
+    <h3 class="dashboard-title" style="margin-top: 30px; margin-bottom: 50px">HR Recruitment Dashboard </h3> 
     <div class="dashboard-container">
-        <div class="dashboard-stats">
+        <div class="dashboard-stats" style="margin-bottom: 30px">
             <div class="stat-item">
                 <span class="stat-title">Total Candidates</span>
                 <h1 class="stat-value">@totalCandidates</h1>
             </div>
             <div class="stat-item">
-                <span class="stat-title">Total jobs</span>
+                <span class="stat-title">Total Jobs</span>
                 <h1 class="stat-value">@totalJobs</h1>
             </div>
             <div class="stat-item">
-                <span class="stat-title">Total Jobs open</span>
+                <span class="stat-title">Total Jobs Open</span>
                 <h1 class="stat-value">None</h1>
             </div>
         </div>
 
-        <div class="dashboard-graphs">
+        <div class="dashboard-graphs" style="margin-bottom: 20px">
             <div class="dashboard-graph">
                 <h4 style="text-align: center">Most Common Skills on Candidates</h4>
                 <canvas id="commonSkills"></canvas>
@@ -50,30 +51,17 @@ else {
         </div>
         
         <div class="dashboard-graph">
-            <h4>Job locations</h4>
+            <h4>Most Common Experiences</h4>
             <canvas id="applicationSourceChart"></canvas>
-        </div>
-
-        <div class="dashboard-stats">
-            <div class="stat-item">
-                <span class="stat-title">Offer Acceptance Ratio</span>
-                <h1 class="stat-value">79%</h1>
-            </div>
-            <div class="stat-item">
-                <span class="stat-title">Offers Accepted</span>
-                <h1 class="stat-value">19</h1>
-            </div>
-            <div class="stat-item">
-                <span class="stat-title">Offers Provided</span>
-                <h1 class="stat-value">24</h1>
-            </div>
         </div>
         
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
-        <h3 class="mb-3">Applicants</h3>
+        <h3 class="mb-3">
+            Applicants
+        </h3>
         <div class="row mb-3">
-            <div class="col">
+            <div class="col" style="margin-top: 20px">
                 <label for="statusSelector">Select Status:</label>
                 <select id="statusSelector" class="form-control" @onchange="OnStatusChanged">
                     <option value="All">All</option>
@@ -84,7 +72,7 @@ else {
                     <option value="4">Canceled</option>
                 </select>
             </div>
-            <div class="col">
+            <div class="col" style="margin-top: 20px">
                 <label for="searchBox">Search candidates:</label>
                 <input type="text" id="searchBox" class="form-control" placeholder="Search candidates..." @bind="searchText" @oninput="OnSearchTextChanged">
             </div>
@@ -136,6 +124,7 @@ else {
     private IEnumerable<CandidateDto>? candidates;
     private IEnumerable<InterviewDto>? interviews;
     private IEnumerable<JobDto>? jobs;
+    private IEnumerable<ExperienceDto>? experiences;
     private IEnumerable<string>? skillNames;
     private IEnumerable<string>? jobSkillNames;
     private int totalCandidates;
@@ -149,8 +138,6 @@ else {
         selectedStatus = e.Value.ToString();
         StateHasChanged(); // Trigger a re-render
     }
-
-    
 
     private string GetInterviewStateText(int? state)
     {
@@ -192,6 +179,7 @@ else {
             {
                 module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Dashboard/Dashboard.razor.js"); 
                 Console.WriteLine("JS module loaded"); 
+                
                 if (module != null && skillNames != null && jobSkillNames != null) 
                 {
                     await InitializeCharts();
@@ -205,13 +193,13 @@ else {
 
     private async Task InitializeCharts()
     {
-        if (module != null && skillNames != null && jobSkillNames != null)
+        if (module != null && skillNames != null && jobSkillNames != null && experiences != null)
         {
-            await module.InvokeVoidAsync("Dashboard.initChart", "#commonSkills", skillNames, "pie");
-            await module.InvokeVoidAsync("Dashboard.initChart", "#commonSkillsJobs", jobSkillNames, "pie");
+            await module.InvokeVoidAsync("Dashboard.initPieChart", "#commonSkills", skillNames);
+            await module.InvokeVoidAsync("Dashboard.initPieChart", "#commonSkillsJobs", jobSkillNames);
+            await module.InvokeVoidAsync("Dashboard.initBarChart", "#applicationSourceChart", experiences.Select(e => e.Name).ToList());
         }
     }
-
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
@@ -230,27 +218,21 @@ else {
             candidates = await CandidateService.GetCandidatesAsync();
             interviews = await InterviewService.GetInterviewsAsync();
             jobs = await JobService.GetJobsAsync();
+            experiences = await DashboardService.GetExperiences();
             
             var profileSkills = await DashboardService.GetProfileSkills();
             skillNames = profileSkills.Select(ps => ps.SkillName).ToList();
             
             var jobSkills = await DashboardService.GetJobSkills();
             jobSkillNames = jobSkills.Select(js => js.SkillName).ToList();
-            Console.WriteLine("Skill names : "  + skillNames);
-            Console.WriteLine("Skill JOB names :"  +  jobSkillNames);
+            
             totalCandidates = candidates.Count();
             totalJobs = jobs.Count();
-
-            Console.WriteLine($"Interviews loaded: {interviews.Count()}");
-
-            // Print the state of each interview
+            
             foreach (var interview in interviews)
             {
                 Console.WriteLine($"Interview ID: {interview.InterviewId}, State: {GetInterviewStateText((int?)interview.InterviewState)}");
             }
-            Console.WriteLine($"Candidates loaded: {totalCandidates}");
-            Console.WriteLine($"Skill names loaded: {string.Join(", ", skillNames)}");
-            Console.WriteLine($"Job skill names loaded: {string.Join(", ", jobSkillNames)}");
 
         }
         catch (Exception ex)
@@ -258,11 +240,13 @@ else {
             Console.WriteLine($"Error loading candidates: {ex.Message}");
         }
     }
+    
     private void OnSearchTextChanged(ChangeEventArgs e)
     {
         searchText = e.Value.ToString();
         StateHasChanged();
     }
+    
     private List<CandidateDto> GetFilteredCandidates()
     {
         IEnumerable<CandidateDto> result = candidates;

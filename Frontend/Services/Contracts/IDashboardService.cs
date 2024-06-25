@@ -9,4 +9,6 @@ public interface IDashboardService
     
     Task<IEnumerable<JobSkillDto>> GetJobSkills();
     
+    Task<IEnumerable<ExperienceDto>> GetExperiences();
+    
 }

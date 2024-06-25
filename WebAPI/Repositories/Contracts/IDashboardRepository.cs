@@ -9,5 +9,7 @@ public interface IDashboardRepository
     
     Task<IEnumerable<JobSkillDto>> GetJobSkillsAsync();
     
+    Task<IEnumerable<ExperienceDto>> GetExperiencesAsync();
+    
     Task<IEnumerable<Skill>> GetListOfSkillsAsync();
 }
