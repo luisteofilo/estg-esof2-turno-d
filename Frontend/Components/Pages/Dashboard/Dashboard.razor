@@ -63,6 +63,11 @@ else {
             <h4>Most Common Experiences</h4>
             <canvas id="applicationSourceChart"></canvas>
         </div>
+
+        <div class="dashboard-graph">
+            <h4>Interviews Over Time</h4>
+            <canvas id="interviewsOverTime"></canvas>
+        </div>
         
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
@@ -88,26 +93,24 @@ else {
         </div>
 
         <div class="applicant-table">
-            
             <table>
                 <thead>
-                <tr>
-                    <th>Candidate</th>
-                    <th>Location</th>
-                    <th>Interview State</th>
-                    <th>Date/Hour Start</th>
-                    <th>Date/Hour End</th>
-                </tr>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Location</th>
+                        <th>Interview State</th>
+                        <th>Date/Hour Start</th>
+                        <th>Date/Hour End</th>
+                    </tr>
                 </thead>
                 <tbody>
                 @foreach (var candidate in FilteredCandidates)
                 { 
-                    var interviewsForCandidate = interviews.Where(i => i.CandidateId == candidate.CandidateId && 
-                                                                        (selectedStatus == "All" || (int?)i.InterviewState == int.Parse(selectedStatus))).ToList();
+                    var interviewsForCandidate = GetInterviewsForCandidate(candidate);
                     foreach (var interview in interviewsForCandidate)
                     {
-                        var stateClass = GetInterviewStateClass((int?)interview?.InterviewState);
-                        var stateText = GetInterviewStateText((int?)interview?.InterviewState);
+                        var stateClass = GetInterviewStateClass(interview?.InterviewState);
+                        var stateText = GetInterviewStateText(interview?.InterviewState);
                         
                         <tr>
                             <td>@candidate.Name</td>
@@ -143,15 +146,18 @@ else {
     private double canceledInterviewPercentage;
     private string selectedStatus = "All";
     private string searchText = "";
-    private List<CandidateDto> FilteredCandidates => GetFilteredCandidates();
     private bool chartsInitialized = false;
+    
+    private Dictionary<int, int> monthlyInterviewCounts = new Dictionary<int, int>();
+
+    private List<CandidateDto> FilteredCandidates => GetFilteredCandidates();
 
     private void OnStatusChanged(ChangeEventArgs e)
     {
         selectedStatus = e.Value.ToString();
     }
 
-    private string GetInterviewStateText(int? state)
+    private string GetInterviewStateText(InterviewState? state)
     {
         if (state.HasValue)
         {
@@ -159,16 +165,16 @@ else {
         }
         return state switch
         {
-            0 => "Scheduled",
-            1 => "Missed",
-            2 => "On Going",
-            3 => "Completed",
-            4 => "Canceled",
+            InterviewState.Scheduled => "Scheduled",
+            InterviewState.Missed => "Missed",
+            InterviewState.OnGoing => "On Going",
+            InterviewState.Completed => "Completed",
+            InterviewState.Canceled => "Canceled",
             _ => "No Interview"
         };
     }
 
-    private string GetInterviewStateClass(int? state)
+    private string GetInterviewStateClass(InterviewState? state)
     {
         if (state.HasValue)
         {
@@ -176,11 +182,11 @@ else {
         }
         return state switch
         {
-            0 => "scheduled",
-            1 => "missed",
-            2 => "on-going",
-            3 => "completed",
-            4 => "canceled",
+            InterviewState.Scheduled => "scheduled",
+            InterviewState.Missed => "missed",
+            InterviewState.OnGoing => "on-going",
+            InterviewState.Completed => "completed",
+            InterviewState.Canceled => "canceled",
             _ => "no-interview"
         };
     }
@@ -214,7 +220,28 @@ else {
             await module.InvokeVoidAsync("Dashboard.initPieChart", "#commonSkills", skillNames);
             await module.InvokeVoidAsync("Dashboard.initPieChart", "#commonSkillsJobs", jobSkillNames);
             await module.InvokeVoidAsync("Dashboard.initDoughnutChart", "#applicationSourceChart", experiences.Select(e => e.Name).ToList());
+            await module.InvokeVoidAsync("Dashboard.initLineChart", "#interviewsOverTime", GetMonthlyInterviewData());
         }
+    }
+    
+    private object GetMonthlyInterviewData()
+    {
+        for (int month = 1; month <= 12; month++)
+        {
+            monthlyInterviewCounts[month] = 0;
+        }
+
+        foreach (var interview in interviews)
+        {
+            var month = interview.DateHourStart.Month;
+            monthlyInterviewCounts[month]++;
+        }
+
+        return new
+        {
+            labels = monthlyInterviewCounts.Keys.OrderBy(m => m).Select(m => new DateTime(1, m, 1).ToString("MMM")).ToArray(),
+            counts = monthlyInterviewCounts.Values.ToArray()
+        };
     }
 
     async ValueTask IAsyncDisposable.DisposeAsync()
@@ -246,16 +273,15 @@ else {
             totalJobs = jobs.Count();
             totalInterviews = interviews.Count();
             
-            int missedInterviews = interviews.Count(i => i.InterviewState == (InterviewState)1);
+            int missedInterviews = interviews.Count(i => i.InterviewState == InterviewState.Missed);
             missedInterviewPercentage = totalInterviews > 0 ? (double)missedInterviews / totalInterviews * 100 : 0;
             
-            int canceledInterviews = interviews.Count(i => i.InterviewState == (InterviewState)4);
+            int canceledInterviews = interviews.Count(i => i.InterviewState == InterviewState.Canceled);
             canceledInterviewPercentage = totalInterviews > 0 ? (double)canceledInterviews / totalInterviews * 100 : 0;
-            
             
             foreach (var interview in interviews)
             {
-                Console.WriteLine($"Interview ID: {interview.InterviewId}, State: {GetInterviewStateText((int?)interview.InterviewState)}");
+                Console.WriteLine($"Interview ID: {interview.InterviewId}, State: {GetInterviewStateText(interview.InterviewState)}");
             }
 
         }
