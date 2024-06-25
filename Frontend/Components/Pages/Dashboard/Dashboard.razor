@@ -1,24 +1,23 @@
 ﻿@page "/dashboard"
 @using Common.Dtos.Interview
-@using Common.Dtos.Profile 
-@using ESOF.WebApp.DBLayer.Entities.Interviews
+@using Common.Dtos.Job
 @using Frontend.Services.Contracts
 @inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
 
-@inject IProfileService ProfileService
 @inject ICandidateService CandidateService
 @inject IInterviewService InterviewService
 @inject IDashboardService DashboardService
+@inject IJobService JobService
 @rendermode InteractiveServer
 
-@if (profiles == null) 
+@if (candidates == null) 
 { 
     <h2>Loading...</h2> 
 }
-else if (!profiles.Any()) 
+else if (!candidates.Any()) 
 { 
-    <h2>No profiles found.</h2>
+    <h2>No Candidates found.</h2>
 }
 else { 
     <h3 class="dashboard-title">HR Recruitment Dashboard </h3> 
@@ -30,7 +29,7 @@ else {
             </div>
             <div class="stat-item">
                 <span class="stat-title">Total jobs</span>
-                <h1 class="stat-value">None</h1>
+                <h1 class="stat-value">@totalJobs</h1>
             </div>
             <div class="stat-item">
                 <span class="stat-title">Total Jobs open</span>
@@ -41,8 +40,11 @@ else {
         <div class="dashboard-graph">
             <h4>Most Common Skills</h4>
             <canvas id="commonSkills"></canvas>
-            
+        </div>
+
+        <div class="dashboard-graph">
             <h4>Most Common Skills on Jobs</h4>
+            <canvas id="commonSkillsJobs"></canvas>
         </div>
         
         <div class="dashboard-graph">
@@ -90,19 +92,23 @@ else {
                 <tbody>
                 @foreach (var candidate in FilteredCandidates.Take(10))
                 { 
-                    var interview = interviews.FirstOrDefault(i => i.CandidateId == candidate.CandidateId); 
-                    var stateClass = GetInterviewStateClass((int?)interview?.InterviewState);
-                    var stateText = GetInterviewStateText((int?)interview?.InterviewState);
-                    
-                    <tr>
-                        <td>@candidate.Name</td>
-                        <td>@(interview?.Location ?? "Unknown")</td>
-                        <td>
-                            <span class="status @(stateClass)">
-                                @(stateText)
-                            </span>
-                        </td>
-                    </tr>
+                    var interviewsForCandidate = interviews.Where(i => i.CandidateId == candidate.CandidateId && 
+                                                                        (selectedStatus == "All" || (int?)i.InterviewState == int.Parse(selectedStatus))).ToList();
+                    foreach (var interview in interviewsForCandidate)
+                    {
+                        var stateClass = GetInterviewStateClass((int?)interview?.InterviewState);
+                        var stateText = GetInterviewStateText((int?)interview?.InterviewState);
+
+                        <tr>
+                            <td>@candidate.Name</td>
+                            <td>@(interview?.Location ?? "Unknown")</td>
+                            <td>
+                                <span class="status @(stateClass)">
+                                    @(stateText)
+                                </span>
+                            </td>
+                        </tr>
+                    }
                 }
                 </tbody>
             </table>
@@ -112,11 +118,13 @@ else {
 
 @code {
     private IJSObjectReference? module;
-    private IEnumerable<ProfileDto>? profiles;
     private IEnumerable<CandidateDto>? candidates;
     private IEnumerable<InterviewDto>? interviews;
+    private IEnumerable<JobDto>? jobs;
     private IEnumerable<string>? skillNames;
+    private IEnumerable<string>? jobSkillNames;
     private int totalCandidates;
+    private int totalJobs;
     private string selectedStatus = "All";
     private List<CandidateDto> FilteredCandidates => GetFilteredCandidates();
 
@@ -180,25 +188,26 @@ else {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         try 
-        {
-            module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Dashboard/Dashboard.razor.js"); 
-            Console.WriteLine("JS module loaded");
-            if (module != null && skillNames != null) 
             {
-                await InitializeCharts();
+                module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Dashboard/Dashboard.razor.js"); 
+                Console.WriteLine("JS module loaded"); 
+                if (module != null && skillNames != null && jobSkillNames != null) 
+                {
+                    await InitializeCharts();
+                } 
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine($"Error initializing charts: {ex.Message}"); 
             } 
-        }
-        catch (Exception ex) 
-        {
-            Console.WriteLine($"Error initializing charts: {ex.Message}"); 
-        }
     }
 
     private async Task InitializeCharts()
     {
-        if (module != null && skillNames != null)
+        if (module != null && skillNames != null && jobSkillNames != null)
         {
             await module.InvokeVoidAsync("Dashboard.initCharts", "#commonSkills", skillNames);
+            await module.InvokeVoidAsync("Dashboard.initCommonJobSkillsChart", "#commonSkillsJobs", jobSkillNames);
         }
     }
 
@@ -216,14 +225,18 @@ else {
         {
             Console.WriteLine("OnInitializedAsync started");
 
-            profiles = await ProfileService.GetProfiles();
             candidates = await CandidateService.GetCandidatesAsync();
             interviews = await InterviewService.GetInterviewsAsync();
+            jobs = await JobService.GetJobsAsync();
             
             var profileSkills = await DashboardService.GetProfileSkills();
             skillNames = profileSkills.Select(ps => ps.SkillName).ToList();
+            
+            var jobSkills = await DashboardService.GetJobSkills();
+            jobSkillNames = jobSkills.Select(js => js.SkillName).ToList();
 
             totalCandidates = candidates.Count();
+            totalJobs = jobs.Count();
 
             Console.WriteLine($"Interviews loaded: {interviews.Count()}");
 
@@ -234,10 +247,12 @@ else {
             }
             Console.WriteLine($"Candidates loaded: {totalCandidates}");
             Console.WriteLine($"Skill names loaded: {string.Join(", ", skillNames)}");
+            Console.WriteLine($"Job skill names loaded: {string.Join(", ", jobSkillNames)}");
+
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading profiles: {ex.Message}");
+            Console.WriteLine($"Error loading candidates: {ex.Message}");
         }
     }
 ﻿@page "/Dashboard"

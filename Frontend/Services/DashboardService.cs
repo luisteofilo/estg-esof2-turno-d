@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Common.Dtos.Job;
 using Common.Dtos.Profile;
 using Frontend.Services.Contracts;
 
@@ -23,11 +24,11 @@ namespace Frontend.Services
             return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileSkillDto>>();
         }
 
-        public async Task<IEnumerable<string>> GetProfileListOfSkills()
+        public async Task<IEnumerable<JobSkillDto>> GetJobSkills()
         {
-            var response = await _httpClient.GetAsync("api/Dashboard/Skills");
+            var response = await _httpClient.GetAsync("api/Dashboard/JobSkills");
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<IEnumerable<string>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<JobSkillDto>>();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ESOF.WebApp.DBLayer.Entities;
+﻿using Common.Dtos.Job;
+using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.DBLayer.Entities;
@@ -26,6 +27,22 @@ namespace ESOF.WebApp.WebAPI.Repositories;
                 .ToListAsync();
     
             return profileSkills;
+        }
+        
+        public async Task<IEnumerable<JobSkillDto>> GetJobSkillsAsync()
+        {
+            var jobSkills = await _dbContext.JobSkills
+                .Include(js => js.Skill)
+                .Select(js => new JobSkillDto()
+                {
+                    JobId = js.JobId,
+                    SkillId = js.SkillId,
+                    SkillName = js.Skill.Name  
+                })
+                .OrderBy(p => p.SkillId)
+                .ToListAsync();
+    
+            return jobSkills;
         }
 
         public async Task<IEnumerable<Skill>> GetListOfSkillsAsync()

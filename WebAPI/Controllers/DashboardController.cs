@@ -24,6 +24,13 @@ namespace ESOF.WebApp.WebAPI.Controllers
             return Ok(profileSkills);
         }
         
+        [HttpGet("JobSkills")]
+        public async Task<ActionResult<IEnumerable<ProfileSkill>>> GetJobSkills()
+        {
+            var jobSkills = await _dashboardRepository.GetJobSkillsAsync();
+            return Ok(jobSkills);
+        }
+        
         [HttpGet("Skills")]
         public async Task<ActionResult<IEnumerable<Skill>>> GetSkills()
         {
