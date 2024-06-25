@@ -17,10 +17,11 @@ public class Import
 
     public DateTimeOffset? DeletedAt { get; set; }
 
-    public Job AddJob(string title, string location, string content, string company, string otherDetails)
+    public Job AddJob(Guid clientId, string title, string location, string content, string company, string otherDetails)
     {
         var job = new Job
         {
+            ClientId = clientId,
             Position = title,
             Localization = location,
             Description = content,

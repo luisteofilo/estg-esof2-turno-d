@@ -1,4 +1,4 @@
-using ESOF.WebApp.WebAPI.Contracts.Job;
+using Common.Contracts.Job;
 using ESOF.WebApp.WebAPI.Errors;
 using ESOF.WebApp.WebAPI.Services;
 using Hangfire;

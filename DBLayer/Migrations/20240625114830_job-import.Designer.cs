@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240625101725_job-import")]
+    [Migration("20240625114830_job-import")]
     partial class jobimport
     {
         /// <inheritdoc />

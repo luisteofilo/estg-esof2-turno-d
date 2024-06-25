@@ -19,7 +19,8 @@ public class ExternalJobService(IExternalJobRepository _jobRepository, IImportRe
 
         await _importRepository.Create(import, cancellationToken);
 
-        return import.AddJob(request.Title, request.Location, request.Content, request.Company, request.OtherDetails);
+        //TODO: Change client hard coded
+        return import.AddJob(Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0178D"), request.Title, request.Location, request.Content, request.Company, request.OtherDetails);
     }
 
     public async Task<Job> UpdateExternalJob(Job importedJob, JobResult request, CancellationToken cancellationToken)

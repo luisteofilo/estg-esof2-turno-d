@@ -20,19 +20,13 @@ public class ExternalJobRepository(ApplicationDbContext _dbContext) : BaseReposi
     public async Task Update(Job job, CancellationToken cancellationToken)
     {
         await _dbContext.Jobs
-        .Where(j => j.JobId == job.JobId)
-        .ExecuteUpdateAsync(setters => setters
-            .SetProperty(j => j.Position, job.Position)
-            .SetProperty(j => j.Localization, job.Localization)
-            .SetProperty(j => j.Description, job.Description)
-            .SetProperty(j => j.Company, job.Company)
-            .SetProperty(j => j.OtherDetails, job.OtherDetails)
-            .SetProperty(j => j.EndDate, job.EndDate)
-            .SetProperty(j => j.Experience, job.Experience)
-            .SetProperty(j => j.Commitment, job.Commitment)
-            .SetProperty(j => j.Remote, job.Remote)
-            .SetProperty(j => j.Education, job.Education)
-            .SetProperty(j => j.JobSkills, job.JobSkills)
-            .SetProperty(j => j.UpdatedAt, job.UpdatedAt), cancellationToken);
+         .Where(j => j.JobId == job.JobId)
+         .ExecuteUpdateAsync(setters => setters
+             .SetProperty(j => j.Position, job.Position)
+             .SetProperty(j => j.Localization, job.Localization)
+             .SetProperty(j => j.Description, job.Description)
+             .SetProperty(j => j.Company, job.Company)
+             .SetProperty(j => j.OtherDetails, job.OtherDetails)
+             .SetProperty(j => j.UpdatedAt, job.UpdatedAt), cancellationToken);
     }
 }

@@ -1,4 +1,4 @@
-namespace ESOF.WebApp.WebAPI.Contracts.Job;
+namespace Common.Contracts.Job;
 
 public record ExternalJobResponse
 (
