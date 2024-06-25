@@ -37,18 +37,20 @@ else {
             </div>
         </div>
 
-        <div class="dashboard-graph">
-            <h4>Most Common Skills</h4>
-            <canvas id="commonSkills"></canvas>
-        </div>
+        <div class="dashboard-graphs">
+            <div class="dashboard-graph">
+                <h4 style="text-align: center">Most Common Skills on Candidates</h4>
+                <canvas id="commonSkills"></canvas>
+            </div>
 
-        <div class="dashboard-graph">
-            <h4>Most Common Skills on Jobs</h4>
-            <canvas id="commonSkillsJobs"></canvas>
+            <div class="dashboard-graph">
+                <h4 style="text-align: center">Most Common Skills on Jobs</h4>
+                <canvas id="commonSkillsJobs"></canvas>
+            </div>
         </div>
         
         <div class="dashboard-graph">
-            <h4>Application Received by Source</h4>
+            <h4>Job locations</h4>
             <canvas id="applicationSourceChart"></canvas>
         </div>
 
@@ -66,31 +68,42 @@ else {
                 <h1 class="stat-value">24</h1>
             </div>
         </div>
+        
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
-        <div>
-            <label for="statusSelector">Select Status:</label>
-            <select id="statusSelector" @onchange="OnStatusChanged">
-                <option value="All">All</option>
-                <option value="0">Scheduled</option>
-                <option value="1">Missed</option>
-                <option value="2">On Going</option>
-                <option value="3">Completed</option>
-                <option value="4">Canceled</option>
-            </select>
+        <h3 class="mb-3">Applicants</h3>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="statusSelector">Select Status:</label>
+                <select id="statusSelector" class="form-control" @onchange="OnStatusChanged">
+                    <option value="All">All</option>
+                    <option value="0">Scheduled</option>
+                    <option value="1">Missed</option>
+                    <option value="2">On Going</option>
+                    <option value="3">Completed</option>
+                    <option value="4">Canceled</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="searchBox">Search candidates:</label>
+                <input type="text" id="searchBox" class="form-control" placeholder="Search candidates..." @bind="searchText" @oninput="OnSearchTextChanged">
+            </div>
         </div>
 
         <div class="applicant-table">
-            <h4>Applicants</h4>
+            
             <table>
                 <thead>
                 <tr>
                     <th>Candidate</th>
                     <th>Location</th>
                     <th>Interview State</th>
+                    <th>Date/Hour Start</th>
+                    <th>Date/Hour End</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var candidate in FilteredCandidates.Take(10))
+                @foreach (var candidate in FilteredCandidates)
                 { 
                     var interviewsForCandidate = interviews.Where(i => i.CandidateId == candidate.CandidateId && 
                                                                         (selectedStatus == "All" || (int?)i.InterviewState == int.Parse(selectedStatus))).ToList();
@@ -98,7 +111,7 @@ else {
                     {
                         var stateClass = GetInterviewStateClass((int?)interview?.InterviewState);
                         var stateText = GetInterviewStateText((int?)interview?.InterviewState);
-
+                        
                         <tr>
                             <td>@candidate.Name</td>
                             <td>@(interview?.Location ?? "Unknown")</td>
@@ -107,6 +120,8 @@ else {
                                     @(stateText)
                                 </span>
                             </td>
+                            <td>@interview.DateHourStart</td>
+                            <td>@interview.DateHourEnd</td>
                         </tr>
                     }
                 }
@@ -126,6 +141,7 @@ else {
     private int totalCandidates;
     private int totalJobs;
     private string selectedStatus = "All";
+    private string searchText = "";
     private List<CandidateDto> FilteredCandidates => GetFilteredCandidates();
 
     private void OnStatusChanged(ChangeEventArgs e)
@@ -134,22 +150,7 @@ else {
         StateHasChanged(); // Trigger a re-render
     }
 
-    private List<CandidateDto> GetFilteredCandidates()
-    {
-        if (selectedStatus == "All")
-        {
-            return candidates.ToList();
-        }
-
-        if (int.TryParse(selectedStatus, out int status))
-        {
-            var filteredInterviews = interviews.Where(i => (int)i.InterviewState == status).ToList();
-            var candidateIds = filteredInterviews.Select(i => i.CandidateId).ToHashSet();
-            return candidates.Where(c => candidateIds.Contains(c.CandidateId)).ToList();
-        }
-
-        return candidates.ToList();
-    }
+    
 
     private string GetInterviewStateText(int? state)
     {
@@ -206,10 +207,11 @@ else {
     {
         if (module != null && skillNames != null && jobSkillNames != null)
         {
-            await module.InvokeVoidAsync("Dashboard.initCharts", "#commonSkills", skillNames);
-            await module.InvokeVoidAsync("Dashboard.initCommonJobSkillsChart", "#commonSkillsJobs", jobSkillNames);
+            await module.InvokeVoidAsync("Dashboard.initChart", "#commonSkills", skillNames, "pie");
+            await module.InvokeVoidAsync("Dashboard.initChart", "#commonSkillsJobs", jobSkillNames, "pie");
         }
     }
+
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
@@ -234,7 +236,8 @@ else {
             
             var jobSkills = await DashboardService.GetJobSkills();
             jobSkillNames = jobSkills.Select(js => js.SkillName).ToList();
-
+            Console.WriteLine("Skill names : "  + skillNames);
+            Console.WriteLine("Skill JOB names :"  +  jobSkillNames);
             totalCandidates = candidates.Count();
             totalJobs = jobs.Count();
 

@@ -11,6 +11,18 @@
     text-align: center;
     color: #333;
 }
+.dashboard-graph {
+    flex: 1 1 50%; 
+    margin-bottom: 20px;
+    padding: 10px; 
+}
+
+
+.dashboard-container .dashboard-graphs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+}
 
 .dashboard-stats {
     display: flex;
