@@ -22,4 +22,8 @@
       <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Services\Contracts\IInterviewFeedbackService.cs" />
+    </ItemGroup>
+
 </Project>

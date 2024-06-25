@@ -1,7 +1,8 @@
-﻿namespace Frontend.Services.Contracts;
+﻿using ESOF.WebApp.DBLayer.Entities;
 
+namespace ESOF.WebApp.WebAPI.Repositories.Contracts;
 
-public class IInterviewFeedbackService
+public interface IInterviewFeedback
 {
     Task<ICollection<InterviewFeedback>> GetInterviewsFeedbackAsync();
     Task<InterviewFeedback> GetInterviewFeedbackAsync(Guid id);

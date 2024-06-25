@@ -1,6 +1,7 @@
 ﻿
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.WebAPI.Repositories;
+using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Controllers
@@ -9,9 +10,9 @@ namespace ESOF.WebApp.WebAPI.Controllers
     [ApiController]
     public class InterviewFeedbackController : ControllerBase
     {
-        private readonly iInterviewFeedbackRepository _interviewFeedbackRepository;
+        private readonly IInterviewFeedback _interviewFeedbackRepository;
 
-        public InterviewFeedbackController(iInterviewFeedbackRepository interviewFeedbackRepository)
+        public InterviewFeedbackController(IInterviewFeedback interviewFeedbackRepository)
         {
             _interviewFeedbackRepository = interviewFeedbackRepository;
         }
@@ -34,16 +35,16 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpGet("{InterviewFeedbackId:guid}")]
         [ProducesResponseType(200, Type = typeof(InterviewFeedback))]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetInterviewFeedback(Guid InterviewFeedbackId)
+        public async Task<IActionResult> GetInterviewFeedback(Guid interviewFeedbackId)
         {
             try
             {
-                if (!await _interviewFeedbackRepository.InterviewFeedbackExistsAsync(InterviewFeedbackId))
+                if (!await _interviewFeedbackRepository.InterviewFeedbackExistsAsync(interviewFeedbackId))
                 {
                     return NotFound();
                 }
 
-                var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackAsync(InterviewFeedbackId);
+                var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackAsync(interviewFeedbackId);
                 return Ok(interviewFeedback);
             }
             catch (Exception ex)

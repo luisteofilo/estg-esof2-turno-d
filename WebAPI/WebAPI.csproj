@@ -32,6 +32,7 @@
 
     <ItemGroup>
       <Compile Remove="Repositories\iInterviewFeedback.cs" />
+      <Compile Remove="Repositories\Contracts\iInterviewFeedbackRepository.cs" />
     </ItemGroup>
 
 </Project>

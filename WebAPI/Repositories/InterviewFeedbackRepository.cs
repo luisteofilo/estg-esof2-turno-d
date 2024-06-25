@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.WebAPI.Repositories.Contracts;
 
-public class InterviewFeedbackRepository : iInterviewFeedbackRepository
+public class InterviewFeedbackRepository : IInterviewFeedback
 {
      private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
 
