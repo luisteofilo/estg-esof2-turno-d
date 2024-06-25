@@ -18,12 +18,10 @@ namespace ESOF.WebApp.WebAPI.Repositories
 
             try
             {
-                // Primeiro, adicione o usuário e salve as mudanças para que o UserId seja gerado
                 var entityEntry = await _dbContext.Users.AddAsync(user);
                 await _dbContext.SaveChangesAsync();
                 Console.WriteLine(entityEntry.Entity.UserId + " " + adminRole.RoleId);
                 
-                // Agora adicione a entidade UserRole com o UserId gerado
                 await _dbContext.UserRoles.AddAsync(new UserRole
                 {
                     RoleId = adminRole.RoleId,
