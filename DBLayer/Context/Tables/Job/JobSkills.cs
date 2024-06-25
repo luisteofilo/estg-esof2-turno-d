@@ -9,6 +9,15 @@ public partial class ApplicationDbContext
     {
         modelBuilder.Entity<JobSkill>()
             .HasKey(js => new { js.JobId, js.SkillId });
-    }
 
+        modelBuilder.Entity<JobSkill>()
+            .HasOne(js => js.Job)
+            .WithMany(j => j.JobSkills)
+            .HasForeignKey(js => js.JobId);
+
+        modelBuilder.Entity<JobSkill>()
+            .HasOne(js => js.Skill)
+            .WithMany(s => s.JobSkills)
+            .HasForeignKey(js => js.SkillId);
+    }
 }

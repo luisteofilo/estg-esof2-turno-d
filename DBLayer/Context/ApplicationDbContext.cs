@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.DBLayer.Context;
 
-public partial class ApplicationDbContext : DbContext, IUnitOfWork
+public partial class ApplicationDbContext : DbContext
 {
     private static readonly DbContextOptions DefaultOptions = new Func<DbContextOptions>(() =>
     {
@@ -28,7 +28,7 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         optionsBuilder.UseNpgsql(connectionString);
         return optionsBuilder.Options;
     })();
-
+    
     public ApplicationDbContext()
         : base(DefaultOptions)
     {
@@ -44,6 +44,8 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
+    
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<Education> Educations { get; set; }
@@ -51,19 +53,20 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<ProfileSkill> ProfileSkills { get; set; }
     public DbSet<Skill> Skills { get; set; }
     
-    public DbSet<Job> Jobs { get; set; }
-    public DbSet<Position> Positions { get; set; }
-    public DbSet<Timesheet> Timesheets { get; set; }
-
     // Interview Features
     public DbSet<Interview> Interviews { get; set; }
     public DbSet<Interviewer> Interviewers { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
 
     // Job Features
+    
     public DbSet<Job> Jobs { get; set; }
     public DbSet<Import> Imports { get; set; }
     public DbSet<JobSkill> JobSkills { get; set; }
+
+    // Position Features
+    public DbSet<Entities.Position> Positions { get; set; }
+    public DbSet<Timesheet> Timesheets { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -77,23 +80,28 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
-
+        
         // Profile Features 
         BuildProfiles(modelBuilder);
         BuildExperiences(modelBuilder);
         BuildEducations(modelBuilder);
         BuildProfileSkills(modelBuilder);
         BuildSkills(modelBuilder);
+        
 
         // Job Features
         BuildJobs(modelBuilder);
         BuildImports(modelBuilder);
         BuildJobSkills(modelBuilder);
-
+        
         // Interview Features 
         BuildInterviews(modelBuilder);
         BuildInterviewer(modelBuilder);
         BuildCandidates(modelBuilder);
+
+        // Position Features
+        BuildPositions(modelBuilder);
+        BuildTimesheets(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
     }

@@ -21,10 +21,10 @@ else
     </div>
     <form @onsubmit="CreateJob">
 
-        <div>
-            <label for="position">Position:</label>
-            <input type="text" id="position" @bind="JobNew.Position" />
-        </div>
+    <div>
+        <label for="position">Position:</label>
+        <input type="text"  id="position" @bind="JobNew.Positions"/>
+    </div>
 
         <div>
             <label for="date">End Date:</label>
@@ -126,3 +126,4 @@ else
         </div>
     </div>
 }
+
