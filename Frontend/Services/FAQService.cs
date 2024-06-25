@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Common.Dtos.FAQ;
 using ESOF.WebApp.DBLayer.Entities.FAQ;
 using Frontend.Helpers;
@@ -19,9 +21,17 @@ public class FAQService(HttpClient _httpClient) : IFAQService
         throw new NotImplementedException();
     }
 
-    public Task<Question> CreateQuestion(Question question)
+    public async Task CreateQuestion(string jobId, string question)
     {
-        throw new NotImplementedException();
+        var content = new QuestionDto
+        {
+            QuestionText = question
+        };
+        
+        var response = await _httpClient
+            .PostAsJsonAsync($"api/JobFAQ/{jobId}/questions", content);
+        response.EnsureSuccessStatusCode();
+        
     }
 
     public Task<Question> UpdateQuestion(Guid questionId, Question updatedQuestion)
@@ -36,7 +46,6 @@ public class FAQService(HttpClient _httpClient) : IFAQService
 
     public async Task<IEnumerable<AnswerDto>> GetAnswersForQuestion(string jobId, string questionId)
     {
-        Console.Out.WriteLine($"api/JobFAQ/{jobId}/questions/{questionId}/answers");
         var response = await _httpClient.GetAsync($"api/JobFAQ/{jobId}/questions/{questionId}/answers");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<IEnumerable<AnswerDto>>();

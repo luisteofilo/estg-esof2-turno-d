@@ -29,9 +29,11 @@ public class JobFAQRepository
 
     public async Task AddQuestion(Guid jobId, string questionText)
     {
+        var Job = await _db.Jobs.FindAsync(jobId);
         var question = new Question
         {
             QuestionText = questionText,
+            Job = Job
         };
         _db.FAQQuestions.Add(question);
         await _db.SaveChangesAsync();
@@ -39,15 +41,26 @@ public class JobFAQRepository
     
     public async Task AnswerQuestion(Guid questionId, User author, string answerText)
     {
+        // USING ROOT FOR NOW
+        User? _author = await _db.Users.FindAsync(new Guid("d78ae1d8-ac3f-4b37-83d6-bb51d725fd7b"));
+        var question = await _db.FAQQuestions.FindAsync(questionId);
+
         var answer = new Answer
         {
             AnswerText = answerText,
-            Author = author,
+            Author = _author,
+            Question = question
         };
-        _db.FAQAnswers.Add(answer);
         
-        var question = await _db.FAQQuestions.FindAsync(questionId);
-        question?.Answers.Add(answer);
+        _db.FAQAnswers.Add(answer);
+
+        if (question != null)
+        {
+            if (question.Answers == null)
+            {
+                question.Answers = new List<Answer>();
+            }
+        }
 
         await _db.SaveChangesAsync();
     }

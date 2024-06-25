@@ -11,6 +11,7 @@ public static class DtoConversion
         q.QuestionText = question.QuestionText;
         q.VerifiedAnswer = question.VerifiedAnswer?.AnswerText;
         q.Verifier = question.Verifier?.UserId ?? Guid.Empty;
+        q.Answers = AnswerConvertToDto(question.Answers);
 
         return q;
     }
@@ -21,6 +22,7 @@ public static class DtoConversion
         a.AnswerId = answer.AnswerId;
         a.AnswerText = answer.AnswerText;
         a.AuthorEmail = answer.Author.Email;
+        a.QuestionId = answer.Question.QuestionId;
 
         return a;
     }

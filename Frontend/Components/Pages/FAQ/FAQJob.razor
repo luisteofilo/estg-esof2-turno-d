@@ -62,9 +62,22 @@ class="form-control mb-3" placeholder="Your Question"></textarea>
         _questions = (await FaqService.GetQuestions(JobId)).ToList();
     }
 
-    private void SubmitQuestion()
+    private async void fetchQuestions()
     {
-        Console.Out.WriteLine("Submitting question");
+        _questions = (await FaqService.GetQuestions(JobId)).ToList();
+    }
+
+    private async void SubmitQuestion()
+    {
+        if (string.IsNullOrWhiteSpace(QuestionInput))
+        {
+            return;
+        }
+
+        await FaqService.CreateQuestion(JobId, QuestionInput);
+        Console.WriteLine("Question submitted");
+        QuestionInput = string.Empty;
+        fetchQuestions();
     }
 
 }

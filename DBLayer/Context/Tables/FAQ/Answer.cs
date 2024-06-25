@@ -12,6 +12,9 @@ public partial class ApplicationDbContext
             .HasOne(a => a.Author);
 
         modelBuilder.Entity<Answer>()
+            .HasOne(q => q.Question);
+
+        modelBuilder.Entity<Answer>()
             .Property(a => a.AnswerId)
             .HasDefaultValueSql("gen_random_uuid()");
     }
