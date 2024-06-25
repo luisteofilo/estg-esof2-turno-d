@@ -12,14 +12,14 @@ public class JobPositionService
 
     public async Task<Position> ConvertJobToPosition(int jobId, DateTime startDate, DateTime endDate, string billingType)
     {
-        // Retrieve the job
+        // ir buscar o job
         var job = await _context.Jobs.FindAsync(jobId);
         if (job == null)
         {
             throw new Exception("Job not found");
         }
 
-        // Create a new position
+        // Criar uma nova posição
         var position = new Position
         {
             JobId = job.JobId,
@@ -28,11 +28,11 @@ public class JobPositionService
             BillingType = billingType
         };
 
-        // Add the new position to the database
+        // adicionar uma nova posição à bd
         _context.Positions.Add(position);
         await _context.SaveChangesAsync();
 
-        // Create initial timesheets for the position (example logic)
+        // criar temesheet inicial
         CreateInitialTimesheets(position);
 
         return position;
@@ -40,7 +40,7 @@ public class JobPositionService
 
     private void CreateInitialTimesheets(Position position)
     {
-        // Example logic to create initial timesheets for the position
+        // criar timesheet para a position
         for (var date = position.StartDate; date <= position.EndDate; date = date.AddDays(1))
         {
             var timesheet = new Timesheet

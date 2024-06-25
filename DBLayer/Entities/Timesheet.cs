@@ -7,9 +7,7 @@ public class Timesheet
     public int HoursWorked { get; set; }
     public string TaskDescription { get; set; }
     
-    // Foreign key
     public int PositionId { get; set; }
-    
-    // Navigation property
+
     public Position Position { get; set; }
 }
