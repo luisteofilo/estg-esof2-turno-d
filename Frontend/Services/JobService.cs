@@ -24,4 +24,18 @@ public class JobService(HttpClient _httpClient) : IJobService
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<JobSkillDto>();
     }
+    
+    public async Task<IEnumerable<JobDto>> GetJobsAsync()
+    {
+        var response = await _httpClient.GetAsync("api/Job");
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Error Getting Jobs");
+        }
+    }
 }
