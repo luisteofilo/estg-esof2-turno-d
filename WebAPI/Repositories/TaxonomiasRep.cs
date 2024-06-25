@@ -36,18 +36,18 @@ public class TaxonomiasRep : ITaxonomias
     }
 
     public async Task Update(Vertical vertical)
-    {
-        _db.Entry(vertical).State = EntityState.Modified;
-        await _db.SaveChangesAsync();
+    {var db3 = new ApplicationDbContext();
+        db3.Entry(vertical).State = EntityState.Modified;
+        await db3.SaveChangesAsync();
     }
 
     public async Task Delete(Guid id)
-    {
-        var vertical = await _db.Verticals.FindAsync(id);
+    {  var db2 = new ApplicationDbContext();
+        var vertical = await db2.Verticals.FindAsync(id);
         if (vertical != null)
         {
-            _db.Verticals.Remove(vertical);
-            await _db.SaveChangesAsync();
+            db2.Verticals.Remove(vertical);
+            await db2.SaveChangesAsync();
         }
     }
 

@@ -1,4 +1,5 @@
 using Common.Dtos.Taxonomias;
+using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -76,9 +77,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
 
                 // Update related entities (roles and skills)
                 UpdateRolesAndSkills(existingTaxonomia, taxonomiaDto.RoleVerticals);
-
-                // Update related entities (users)
-                UpdateVerticalUsers(existingTaxonomia, taxonomiaDto.VerticalUsers);
+                
 
                 // Update entity in DbContext
                 taxonomiasRepository.Update(existingTaxonomia);
@@ -144,22 +143,8 @@ namespace ESOF.WebApp.WebAPI.Controllers
             }
         }
 
-        private void UpdateVerticalUsers(Vertical existingVertical, List<VerticalUserDto> verticalUserDtos)
-        {
-            // Clear existing vertical users (if any)
-            existingVertical.VerticalsUsers.Clear();
-
-            // Add new vertical users from DTO
-            foreach (var userDto in verticalUserDtos)
-            {
-                var userEntity = new verticalsUser
-                {
-                    UserId = userDto.UserId,
-                    VerticalId = existingVertical.VerticalId // Ensure VerticalId is set
-                };
-                existingVertical.VerticalsUsers.Add(userEntity);
-            }
-        }
+        
+        
 
         [HttpPost]
         public async Task<ActionResult<VerticalDto>> CreateTaxonomia(VerticalDto taxonomiaDto)
