@@ -77,13 +77,26 @@
     font-weight: bold;
 }
 
-.applicant-table .status.approved {
-    background-color: #4CAF50;
+.applicant-table .status.scheduled {
+    background-color: #4CAF50; /* Green */
 }
 
-.applicant-table .status.pending {
-    background-color: #FFA500;
+.applicant-table .status.missed {
+    background-color: #FFA500; /* Orange */
 }
-.applicant-table .status.rejected {
-    background-color: #FF0000;
+
+.applicant-table .status.on-going {
+    background-color: #1E90FF; /* DodgerBlue */
+}
+
+.applicant-table .status.completed {
+    background-color: #008000; /* DarkGreen */
+}
+
+.applicant-table .status.canceled {
+    background-color: #FF0000; /* Red */
+}
+
+.applicant-table .status.no-interview {
+    background-color: #A9A9A9; /* DarkGray */
 }
