@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.DBLayer.Persistence.Repositories;
 
-public class JobRepository(ApplicationDbContext _dbContext) : BaseRepository(_dbContext), IJobRepository
+public class ExternalJobRepository(ApplicationDbContext _dbContext) : BaseRepository(_dbContext), IExternalJobRepository
 {
     public async Task Create(Job job, CancellationToken cancellationToken)
     {
@@ -22,11 +22,17 @@ public class JobRepository(ApplicationDbContext _dbContext) : BaseRepository(_db
         await _dbContext.Jobs
         .Where(j => j.JobId == job.JobId)
         .ExecuteUpdateAsync(setters => setters
-            .SetProperty(j => j.Title, job.Title)
-            .SetProperty(j => j.Location, job.Location)
-            .SetProperty(j => j.Content, job.Content)
+            .SetProperty(j => j.Position, job.Position)
+            .SetProperty(j => j.Localization, job.Localization)
+            .SetProperty(j => j.Description, job.Description)
             .SetProperty(j => j.Company, job.Company)
             .SetProperty(j => j.OtherDetails, job.OtherDetails)
+            .SetProperty(j => j.EndDate, job.EndDate)
+            .SetProperty(j => j.Experience, job.Experience)
+            .SetProperty(j => j.Commitment, job.Commitment)
+            .SetProperty(j => j.Remote, job.Remote)
+            .SetProperty(j => j.Education, job.Education)
+            .SetProperty(j => j.JobSkills, job.JobSkills)
             .SetProperty(j => j.UpdatedAt, job.UpdatedAt), cancellationToken);
     }
 }

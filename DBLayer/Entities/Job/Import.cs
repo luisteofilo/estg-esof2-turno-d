@@ -21,9 +21,9 @@ public class Import
     {
         var job = new Job
         {
-            Title = title,
-            Location = location,
-            Content = content,
+            Position = title,
+            Localization = location,
+            Description = content,
             Company = company,
             OtherDetails = otherDetails,
             ImportId = this.ImportId,

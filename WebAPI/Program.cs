@@ -9,6 +9,8 @@ using ESOF.WebApp.Scraper;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Repositories;
+using WebAPI.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +32,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetService<ApplicationDbContext>()!);
-builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IImportRepository, ImportRepository>();
 builder.Services.AddScoped<ExternalJobService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
@@ -38,6 +39,16 @@ builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 builder.Services.AddScraperDependencyInjection();
+
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
+builder.Services.AddScoped<IExternalJobRepository, ExternalJobRepository>();
+
+//Interview Repository
+builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
+builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
+builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
+
 
 
 var app = builder.Build();

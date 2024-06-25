@@ -9,5 +9,10 @@ public class Skill
     public string Name { get; set; }
     public ICollection<ProfileSkill> ProfileSkills { get; set; }
     
+    public ICollection<JobSkill> JobSkills { get; set; }
+
+    public IQueryable RequiredJobSkills => JobSkills.Where(js => js.IsRequired).AsQueryable();
+    
+    public IQueryable NtHJobSkills => JobSkills.Where(js => !js.IsRequired).AsQueryable();
     
 }

@@ -8,7 +8,7 @@ using Hangfire;
 
 namespace ESOF.WebApp.WebAPI.Services;
 
-public class ExternalJobService(IJobRepository _jobRepository, IImportRepository _importRepository, IUnitOfWork _unitOfWork, ScraperFactory _scraper)
+public class ExternalJobService(IExternalJobRepository _jobRepository, IImportRepository _importRepository, IUnitOfWork _unitOfWork, ScraperFactory _scraper)
 {
     public async Task<Job> CreateExternalJob(string url, JobResult request, CancellationToken cancellationToken)
     {
@@ -24,9 +24,9 @@ public class ExternalJobService(IJobRepository _jobRepository, IImportRepository
 
     public async Task<Job> UpdateExternalJob(Job importedJob, JobResult request, CancellationToken cancellationToken)
     {
-        importedJob.Title = request.Title;
-        importedJob.Location = request.Location;
-        importedJob.Content = request.Content;
+        importedJob.Position = request.Title;
+        importedJob.Localization = request.Location;
+        importedJob.Description = request.Content;
         importedJob.Company = request.Company;
         importedJob.OtherDetails = request.OtherDetails;
         importedJob.UpdatedAt = DateTimeOffset.UtcNow;

@@ -1,4 +1,5 @@
 using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Entities.Interviews;
 using ESOF.WebApp.DBLayer.Persistence;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -44,16 +45,22 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
 
-    // Job Features
-    public DbSet<Job> Jobs { get; set; }
-    public DbSet<Import> Imports { get; set; }
-
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<Education> Educations { get; set; }
     public DbSet<Experience> Experiences { get; set; }
     public DbSet<ProfileSkill> ProfileSkills { get; set; }
     public DbSet<Skill> Skills { get; set; }
+
+    // Interview Features
+    public DbSet<Interview> Interviews { get; set; }
+    public DbSet<Interviewer> Interviewers { get; set; }
+    public DbSet<Candidate> Candidates { get; set; }
+
+    // Job Features
+    public DbSet<Job> Jobs { get; set; }
+    public DbSet<Import> Imports { get; set; }
+    public DbSet<JobSkill> JobSkills { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -75,9 +82,15 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         BuildProfileSkills(modelBuilder);
         BuildSkills(modelBuilder);
 
-        //Jobs Features
-        BuildImports(modelBuilder);
+        // Job Features
         BuildJobs(modelBuilder);
+        BuildImports(modelBuilder);
+        BuildJobSkills(modelBuilder);
+
+        // Interview Features 
+        BuildInterviews(modelBuilder);
+        BuildInterviewer(modelBuilder);
+        BuildCandidates(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
     }

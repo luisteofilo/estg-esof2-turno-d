@@ -3,6 +3,7 @@ using System;
 using ESOF.WebApp.DBLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240625014726_job-creation-1")]
+    partial class jobcreation1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,29 +89,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("Experiences");
-                });
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
-                {
-                    b.Property<Guid>("ImportId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("ImportId");
-
-                    b.ToTable("Imports", (string)null);
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate", b =>
@@ -190,9 +170,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Property<int?>("Commitment")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Company")
-                        .HasColumnType("text");
-
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -211,14 +188,8 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Property<string>("Experience")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ImportId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Localization")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OtherDetails")
                         .HasColumnType("text");
 
                     b.Property<string>("Position")
@@ -232,8 +203,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("JobId");
-
-                    b.HasIndex("ImportId");
 
                     b.ToTable("Jobs");
                 });
@@ -463,15 +432,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Interviewer");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Import", "Import")
-                        .WithMany("Jobs")
-                        .HasForeignKey("ImportId");
-
-                    b.Navigation("Import");
-                });
-
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.JobSkill", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Job", "Job")
@@ -557,11 +517,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
-                {
-                    b.Navigation("Jobs");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate", b =>

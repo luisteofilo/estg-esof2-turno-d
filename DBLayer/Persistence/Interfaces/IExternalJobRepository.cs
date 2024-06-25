@@ -3,7 +3,7 @@ using ESOF.WebApp.DBLayer.Entities;
 
 namespace ESOF.WebApp.DBLayer.Persistence.Interfaces;
 
-public interface IJobRepository
+public interface IExternalJobRepository
 {
     Task Create(Job job, CancellationToken cancellationToken);
 
