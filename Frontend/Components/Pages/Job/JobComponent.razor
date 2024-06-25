@@ -12,6 +12,24 @@
     </button>
 </div>
 
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success m-1" role="alert">
+        @SuccessMessage
+    </div>
+}
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="row alert alert-danger m-1 d-flex justify-content-around align-items-center" role="alert">
+        <div class="col-10">
+            @ErrorMessage
+        </div>
+        <button type="button" class="col-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#urlModal">
+            Try Again
+        </button>
+    </div>
+}
+
 <div class="modal fade" id="register" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -54,26 +72,13 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    @if (!string.IsNullOrEmpty(SuccessMessage))
-                    {
-                        <div class="alert alert-success" role="alert">
-                            @SuccessMessage
-                        </div>
-                    }
-
-                    @if (!string.IsNullOrEmpty(ErrorMessage))
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            @ErrorMessage
-                        </div>
-                    }
                     <label for="urlInput" class="form-label m-2">Insert the URL of a job offer detail from LinkedIn or
                         Wellfound.</label>
                     <input type="url" class="form-control" id="urlInput" @bind="UrlInput"
                         placeholder="Your Job Offer Detail Link!">
                 </div>
                 <div class="col-12 d-flex justify-content-center align-items-center">
-                    <button class="btn btn-primary" @onclick="SubmitURL">Submit</button>
+                    <button class="btn btn-primary" data-bs-dismiss="modal" @onclick="SubmitURL">Submit</button>
                 </div>
             </div>
         </div>
@@ -109,12 +114,13 @@
                         <td>@job.Company</td>
                         <td>
                             <div class="col-12 d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal">
+                                <button type="button" class="btn btn-primary d-flex justify-content-center align-items-center"
+                                    data-bs-toggle="modal" data-bs-target="#detailModal">
                                     <i class="bi bi-info-circle"></i>
                                 </button>
                             </div>
                         </td>
-                        @* TODO: Only appear if Admin *@
+                        @* TODO: Only appears if Admin *@
                         <td>
                             <div class="col-12 d-flex justify-content-center align-items-center">
                                 <button type="button" class="btn btn-primary d-flex justify-content-center align-items-center"

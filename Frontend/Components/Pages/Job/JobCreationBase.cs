@@ -9,6 +9,7 @@ public class JobCreationBase : ComponentBase
 {
     [Inject] IProfileService ProfileService { get; set; }
     [Inject] IJobService JobService { get; set; }
+    [Inject] protected NavigationManager Navigation { get; set; }
 
     protected string? ErrorMessage { get; set; }
 
@@ -33,6 +34,10 @@ public class JobCreationBase : ComponentBase
         }
     }
 
+    protected void GoBack()
+    {
+        Navigation.NavigateTo("/jobs");
+    }
 
     protected async Task CreateJob()
     {
