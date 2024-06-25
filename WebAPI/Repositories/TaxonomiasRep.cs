@@ -9,24 +9,14 @@ namespace ESOF.WebApp.WebAPI.Repositories
     public class TaxonomiasRep : ITaxonomias
     {
         
-        public async Task<Vertical> GetTaxonomias()
-        { var db = new ApplicationDbContext();
-            try
-            {
-                var Id = Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0155f");
-
-                var vertical = await db.Verticals
-                    .Include(v => v.Roles_verticals)
-                    .Include(v => v.VerticalsUsers)
-                    .FirstOrDefaultAsync(v => v.VerticalId == Id);
-
-                return vertical;
-            }
-            catch (Exception ex)
-            {
-                // Log or handle exceptions as needed
-                throw new Exception("Error retrieving taxonomias from the database.", ex);
-            }
+        public async Task<IEnumerable<Vertical>> GetTaxonomias()
+        {var db = new ApplicationDbContext();
+            return await db.Verticals
+                .Include(p => p.Roles_verticals)
+                .ThenInclude(r => r.Skills_verticals)
+                .Include(p => p.VerticalsUsers)
+                .ThenInclude(vu => vu.User) // Assuming you have a User entity
+                .ToListAsync();
         }
 
         public async Task<Vertical> GetTaxonomiaById(Guid id)

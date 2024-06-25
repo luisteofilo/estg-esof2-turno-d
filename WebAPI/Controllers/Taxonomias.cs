@@ -10,19 +10,19 @@ namespace ESOF.WebApp.WebAPI.Controllers
     [ApiController]
     public class TaxonomiasController(ITaxonomias taxonomiasRepository) : ControllerBase
     {
-[HttpGet]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<VerticalDto>>> GetTaxonomias()
         {
             try
             {
                 var taxonomias = await taxonomiasRepository.GetTaxonomias();
 
-                if (taxonomias == null)
+                if (taxonomias == null || !taxonomias.Any())
                 {
                     return NotFound();
                 }
 
-                var taxonomiasDto = taxonomias.ToDto();
+                var taxonomiasDto = taxonomias.Select(v => v.ToDto()).ToList();
                 return Ok(taxonomiasDto);
             }
             catch (Exception)
@@ -216,7 +216,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
                     {
                         var newUser = new verticalsUser
                         {
-                           //UserId = userDto.UserId,
+                           UserId = userDto.UserId,
                             VerticalId = newVertical.VerticalId
                         };
                         newVertical.VerticalsUsers.Add(newUser);

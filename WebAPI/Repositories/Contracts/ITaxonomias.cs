@@ -4,7 +4,7 @@ namespace ESOF.WebApp.WebAPI.Repositories.Contracts;
 
 public interface ITaxonomias
 {
-    Task<Vertical> GetTaxonomias();
+    Task<IEnumerable<Vertical>> GetTaxonomias();
     Task<Vertical> GetTaxonomiaById(Guid id);
     void Update(Vertical vertical); 
     Task SaveAsync(); 
