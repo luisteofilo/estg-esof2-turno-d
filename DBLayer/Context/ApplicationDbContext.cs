@@ -2,7 +2,9 @@ using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.DBLayer.Entities.Interviews;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
+
 namespace ESOF.WebApp.DBLayer.Context;
+
 public partial class ApplicationDbContext : DbContext
 {
     private static readonly DbContextOptions DefaultOptions = new Func<DbContextOptions>(() =>
@@ -13,12 +15,14 @@ public partial class ApplicationDbContext : DbContext
         var password = EnvFileHelper.GetString("POSTGRES_PASSWORD");
         var port = EnvFileHelper.GetString("POSTGRES_PORT");
         var host = EnvFileHelper.GetString("POSTGRES_HOST");
+
         if (string.IsNullOrEmpty(db) || string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password) ||
             string.IsNullOrEmpty(port) || string.IsNullOrEmpty(host))
         {
             throw new InvalidOperationException(
                 "Database connection information not fully specified in environment variables.");
         }
+
         var connectionString = $"Host={host};Port={port};Database={db};Username={user};Password={password}";
         optionsBuilder.UseNpgsql(connectionString);
         return optionsBuilder.Options;
@@ -28,6 +32,7 @@ public partial class ApplicationDbContext : DbContext
         : base(DefaultOptions)
     {
     }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
@@ -38,6 +43,7 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
     
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
@@ -52,14 +58,15 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Candidate> Candidates { get; set; }
 
     // Job Features
-
+    
     public DbSet<Job> Jobs { get; set; }
     public DbSet<JobSkill> JobSkills { get; set; }
-
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         BuildUsers(modelBuilder);
@@ -74,18 +81,18 @@ public partial class ApplicationDbContext : DbContext
         BuildEducations(modelBuilder);
         BuildProfileSkills(modelBuilder);
         BuildSkills(modelBuilder);
-
+        
 
         // Job Features
         BuildJobs(modelBuilder);
         BuildJobSkills(modelBuilder);
-
+        
         // Interview Features 
         BuildInterviews(modelBuilder);
         BuildInterviewer(modelBuilder);
         BuildCandidates(modelBuilder);
 
-
+        
         base.OnModelCreating(modelBuilder);
     }
 }
