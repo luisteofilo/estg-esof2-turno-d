@@ -1,0 +1,72 @@
+﻿@page "/AddCompany"
+@using ESOF.WebApp.DBLayer.Entities
+@inject HttpClient Http
+
+<h3>Adicionar Empresa</h3>
+
+<EditForm Model="@newCompany" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Nome da Empresa:</label>
+        <InputText id="name" class="form-control" @bind-Value="newCompany.Name" />
+        <ValidationMessage For="@(() => newCompany.Name)" />
+    </div>
+
+    <div class="form-group">
+        <label for="location">Localização:</label>
+        <InputText id="location" class="form-control" @bind-Value="newCompany.Location" />
+        <ValidationMessage For="@(() => newCompany.Location)" />
+    </div>
+
+    <div class="form-group">
+        <label for="minFunc">Número mínimo de funcionários:</label>
+        <InputNumber id="minFunc" class="form-control" @bind-Value="newCompany.MinFunc" />
+        <ValidationMessage For="@(() => newCompany.MinFunc)" />
+    </div>
+
+    <div class="form-group">
+        <label for="maxFunc">Número máximo de funcionários:</label>
+        <InputNumber id="maxFunc" class="form-control" @bind-Value="newCompany.MaxFunc" />
+        <ValidationMessage For="@(() => newCompany.MaxFunc)" />
+    </div>
+
+    <div class="form-group">
+        <label for="site">Site:</label>
+        <InputText id="site" class="form-control" @bind-Value="newCompany.Site" />
+        <ValidationMessage For="@(() => newCompany.Site)" />
+    </div>
+
+    <div class="form-group">
+        <label for="urlImage">URL da Imagem:</label>
+        <InputText id="urlImage" class="form-control" @bind-Value="newCompany.UrlImage" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Adicionar Empresa</button>
+</EditForm>
+
+@code {
+    private Companies newCompany = new Companies();
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            var response = await Http.PostAsJsonAsync("/companies", newCompany);
+            response.EnsureSuccessStatusCode();
+
+            // Limpar o formulário após o sucesso
+            newCompany = new Companies();
+
+            // Exibir mensagem de sucesso (substitua por um mecanismo de feedback adequado)
+            Console.WriteLine("Empresa adicionada com sucesso!");
+        }
+        catch (Exception ex)
+        {
+            // Lidar com o erro - exibir mensagem de erro ou log (substitua por um mecanismo de feedback adequado)
+            Console.WriteLine($"Erro ao adicionar empresa: {ex.Message}");
+        }
+    }
+}

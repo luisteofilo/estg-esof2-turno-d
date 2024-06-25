@@ -74,21 +74,25 @@ app.MapGet("/users/emails", (ApplicationDbContext db) =>
 
 // New endpoint to get all companies
 app.MapGet("/companies", async (ApplicationDbContext dbContext) =>
-{
-    return await dbContext.Companies.ToListAsync();
-})
-.WithName("GetCompanies")
-.WithOpenApi();
+    {
+        return await dbContext.Companies.ToListAsync();
+    })
+    .WithName("GetCompanies")
+    .WithOpenApi();
 
 // New endpoint to add a company
 app.MapPost("/companies", async (ApplicationDbContext dbContext, Companies company) =>
-{
-    dbContext.Companies.Add(company);
-    await dbContext.SaveChangesAsync();
-    return Results.Created($"/companies/{company.CompanieId}", company);
-})
-.WithName("CreateCompany")
-.WithOpenApi();
+    {
+        Console.WriteLine($"Recebida requisição para adicionar empresa: {company.Name}");
+    
+        dbContext.Companies.Add(company);
+        await dbContext.SaveChangesAsync();
+        return Results.Created($"/companies/{company.CompanieId}", company);
+    })
+    .WithName("CreateCompany")
+    .WithOpenApi();
+
+
 
 app.Run();
 
