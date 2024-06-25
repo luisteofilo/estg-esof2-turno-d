@@ -88,16 +88,20 @@ else {
                 </tr>
                 </thead>
                 <tbody>
-                <!--Mostra até 10 perfis - onclick vai para o perfil (trocar para candidatos quando tiver funcionalidade)-->
-                
-                @foreach (var profile in profiles.Take(10))
-                {
+                @foreach (var candidate in FilteredCandidates.Take(10))
+                { 
+                    var interview = interviews.FirstOrDefault(i => i.CandidateId == candidate.CandidateId); 
+                    var stateClass = GetInterviewStateClass((int?)interview?.InterviewState);
+                    var stateText = GetInterviewStateText((int?)interview?.InterviewState);
+                    
                     <tr>
-                        <td>@profile.FirstName @profile.LastName</td>
-                        <td>@profile.Location</td>
-                        <td><span class="status approved">Approved</span></td>
-                        <td><a href="profile/@profile.ProfileId">More</a></td>
-                        <td><a href="@profile.UrlProfile">More</a></td>
+                        <td>@candidate.Name</td>
+                        <td>@(interview?.Location ?? "Unknown")</td>
+                        <td>
+                            <span class="status @(stateClass)">
+                                @(stateText)
+                            </span>
+                        </td>
                     </tr>
                 }
                 </tbody>
@@ -171,12 +175,6 @@ else {
             4 => "canceled",
             _ => "no-interview"
         };
-    }
-
-    
-    private void OnStatusChanged(ChangeEventArgs e)
-    {
-        selectedStatus = e.Value.ToString();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
