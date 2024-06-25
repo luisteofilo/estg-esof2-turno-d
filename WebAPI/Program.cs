@@ -56,8 +56,6 @@ builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
-builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
-
 var app = builder.Build();
 
 app.UseHangfireDashboard("/hangfire");

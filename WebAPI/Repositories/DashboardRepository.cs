@@ -56,8 +56,5 @@ namespace ESOF.WebApp.WebAPI.Repositories;
             return experiences;
         }
 
-        public async Task<IEnumerable<Skill>> GetListOfSkillsAsync()
-        {
-            return await _dbContext.Skills.ToListAsync();
-        }
+
     }
