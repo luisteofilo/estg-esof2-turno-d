@@ -1,4 +1,5 @@
 ﻿
+using Common.Dtos.Job;
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
@@ -11,6 +12,8 @@ namespace ESOF.WebApp.WebAPI.Controllers
     public class InterviewFeedbackController : ControllerBase
     {
         private readonly IInterviewFeedback _interviewFeedbackRepository;
+        private readonly JobRepository jobRepository;
+
 
         public InterviewFeedbackController(IInterviewFeedback interviewFeedbackRepository)
         {
@@ -105,6 +108,35 @@ namespace ESOF.WebApp.WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating profile: {ex.Message}");
             }
         }
+        
+        
+        
+        [HttpPut("{JobId:guid}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateProfile(Guid JobId, [FromBody] JobDto jobDto)
+        {
+            try
+            {
+                if (jobDto == null || jobDto.JobId != JobId)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                
+                var updatedProfile = jobDto.DtoConvertToJob();
+                await jobRepository.UpdateJobAsync(updatedProfile);
+
+                return Ok(jobDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating profile: {ex.Message}");
+            }
+        }
+        
+        
 
         [HttpDelete("{InterviewFeedbackId:guid}")]
         [ProducesResponseType(204)]

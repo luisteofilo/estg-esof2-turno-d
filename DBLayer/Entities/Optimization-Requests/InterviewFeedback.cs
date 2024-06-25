@@ -6,9 +6,9 @@ namespace ESOF.WebApp.DBLayer.Entities
     public class InterviewFeedback
     {
         public Guid InterviewFeedbackId { get; set; }
-        public Candidate Candidate { get; set; }
-        public Interview Interview { get; set; }
-        public Interviewer Interviewer { get; set; }
+        public Guid Candidate { get; set; }
+        public Guid Interview { get; set; }
+        public Guid Interviewer { get; set; }
         
         public string Feedback { get; set; }
         public string RejectionReason { get; set; }

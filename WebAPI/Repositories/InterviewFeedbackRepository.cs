@@ -38,17 +38,17 @@ public class InterviewFeedbackRepository : IInterviewFeedback
     
     public async Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByCandidate(Guid candidateId)
     {
-        return await _dbContext.InterviewFeedbacks.Where(e => e.Candidate.CandidateId == candidateId).ToListAsync();
+        return await _dbContext.InterviewFeedbacks.Where(e => e.Candidate == candidateId).ToListAsync();
     }
 
     public async Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByInterview(Guid interview)
     {
-        return await _dbContext.InterviewFeedbacks.Where(e => e.Interview.InterviewId == interview).ToListAsync();
+        return await _dbContext.InterviewFeedbacks.Where(e => e.Interview == interview).ToListAsync();
     }
 
     public async Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByInterviewer(Guid interviewerId)
     {
-        return await _dbContext.InterviewFeedbacks.Where(e => e.Interviewer.InterviewerId == interviewerId).ToListAsync();
+        return await _dbContext.InterviewFeedbacks.Where(e => e.Interviewer == interviewerId).ToListAsync();
     }
     
     public async Task DeleteInterviewFeedbackAsync(Guid InterviewFeedbackId)
@@ -66,5 +66,13 @@ public class InterviewFeedbackRepository : IInterviewFeedback
     {
         await _dbContext.InterviewFeedbacks.AddAsync(interviewfeedback);
         await _dbContext.SaveChangesAsync();
+    }
+
+
+    public async Task<int> UpdateJobRequisits(Job job)
+    {
+        job.UpdatedAt = DateTimeOffset.UtcNow;
+        _dbContext.Jobs.Update(job);
+        return await _dbContext.SaveChangesAsync();
     }
 }
