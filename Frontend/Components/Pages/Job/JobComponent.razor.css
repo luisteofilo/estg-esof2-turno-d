@@ -40,3 +40,28 @@
 .button:hover {
     background-color: #0056b3;
 }
+
+/* Estilos para a seção de filtros e tabela */
+.filter-section {
+    background-color: #f8f9fa;
+    border: 1px solid #e3e6f0;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.filter-section .form-label {
+    font-weight: bold;
+}
+
+.filter-section .form-control {
+    border-radius: 0.25rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgb(248,249,250);
+}
+
+.table {
+    margin-top: 20px;
+}

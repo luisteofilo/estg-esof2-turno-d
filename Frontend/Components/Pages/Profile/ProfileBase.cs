@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Common.Dtos.Profile;
 using ESOF.WebApp.DBLayer.Context;
 using Frontend.Services.Contracts;
@@ -30,6 +29,7 @@ public class ProfileBase : ComponentBase
     protected List<ExperienceDto> EditableExperiences { get; set; }
     protected List<EducationDto> EditableEducations { get; set; }
     
+
     protected override async Task OnInitializedAsync()
     {
         
