@@ -11,8 +11,15 @@ public static class DtoConversion
         q.QuestionText = question.QuestionText;
         q.VerifiedAnswer = question.VerifiedAnswer?.AnswerText;
         q.Verifier = question.Verifier?.UserId ?? Guid.Empty;
-        q.Answers = AnswerConvertToDto(question.Answers);
-
+        if (question.Answers == null)
+        {
+            q.Answers = new List<AnswerDto>();
+        }
+        else
+        {
+            q.Answers = AnswerConvertToDto(question.Answers);
+        }
+        
         return q;
     }
     
@@ -21,8 +28,9 @@ public static class DtoConversion
         AnswerDto a = new AnswerDto();
         a.AnswerId = answer.AnswerId;
         a.AnswerText = answer.AnswerText;
-        a.AuthorEmail = answer.Author.Email;
-        a.QuestionId = answer.Question.QuestionId;
+        a.AuthorEmail = answer.AuthorEmail;
+        a.QuestionId = answer.Question?.QuestionId;
+        a.CreatedAt = answer.CreatedAt.ToString("yyyy-MM-dd HH:mm");
 
         return a;
     }

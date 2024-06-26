@@ -10,10 +10,20 @@
 <PageTitle>Jobs FAQ</PageTitle>
 
 <div class="d-flex justify-content-between">
-<h1>Job Name FAQ</h1>
+    <h1>Job Name FAQ</h1>
     
 </div>
 <hr/>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/faqs">FAQs</a></li>
+      @if (!string.IsNullOrWhiteSpace(JobId))
+      {
+          <li class="breadcrumb-item"><a href="/faqs/@JobId">Job</a></li>
+      }
+  </ol>
+</nav>
 
 <div>
     <div class="card shadow-sm mb-4">
@@ -36,7 +46,7 @@ class="form-control mb-3" placeholder="Your Question"></textarea>
             {
                 foreach (var question in _questions)
                 {
-                    <QuestionPreview Question="@question" jobId="@JobId" />
+                    <QuestionPreview Question="@question" />
                 }
             }
             else

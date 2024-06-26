@@ -1,47 +1,108 @@
-@page "/faqs/{text?}/question/{questionId?}"
+@page "/faqs/{jobId?}/{questionId?}"
 @using Frontend.Helpers
 @using ESOF.WebApp.DBLayer.Entities.FAQ
 @using ESOF.WebApp.DBLayer.Entities
 @using Common.Dtos.FAQ
+@using Frontend.Services.Contracts
 @attribute [StreamRendering]
 @inject ApiHelper ApiHelper
+@inject IFAQService FaqService
+@rendermode InteractiveServer
 
 <PageTitle>Jobs FAQ</PageTitle>
 
-<div class="d-flex justify-content-between">
-<h1>Job Name FAQ</h1>
-    
-</div>
+<div class="d-flex justify-content-between"> 
+    @if (_question != null)
+        {
+            <h1 >@_question.QuestionText</h1>
+        }
+        else
+        {
+            <h1 >Loading...</h1>
+        }
+    </div>
 <hr/>
 
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/faqs">FAQs</a></li>
+      @if (!string.IsNullOrWhiteSpace(JobId))
+      {
+          <li class="breadcrumb-item"><a href="/faqs/@JobId">Job</a></li>
+      }
+      @if (!string.IsNullOrWhiteSpace(QuestionId))
+      {
+          <li class="breadcrumb-item active" aria-current="page">Question</li>
+        }
+  </ol>
+</nav>
+
 <div>
-    <div class="card shadow-lg mb-4">
-        <div class="card-body">
-            
+    <h3>Answers</h3>
+            @if (_question != null && _question.Answers != null && _question.Answers.Any())
+            {
+                foreach (var answer in _question.Answers)
+                {
+        <div class="card shadow mb-2">
+            <div class="card-body">
+                
+                <h5 class="card-text">@answer.AnswerText</h5>
+                <div class="d-flex justify-content-between mb-0">
+                    <span class="card-text text-muted">Answered by: @answer.AuthorEmail</span>
+                    <span class="card-text text-muted">@answer.CreatedAt</span>
+                </div>
+                </div>
         </div>
-    </div>
-    
+                    }
+            }
+            else
+            {
+                <p class="card-text">No answers yet</p>
+            }
+
     <div>
-        
-            
+        <hr/>
+        <!-- Answer input -->
+        <div class="form-group mb-3 card">
+            <textarea
+                @bind="_answerText" 
+class="form-control" id="answer" rows="3"></textarea>
+        </div>
+        <!-- Submit button -->
+        <button
+            placeholder="Answer the question"
+            type="submit" class="btn btn-primary" @onclick="SubmitQuestionAsync">Submit</button>
+
     </div>
 </div>
 
 @code {
     [Parameter]
-    public string? Text { get; set; }
+    public string? JobId { get; set; }
     [Parameter]
     public string? QuestionId { get; set; }
     
     private string[]? _userEmails;
     private QuestionDto _question;
     private string _selectedJobId = "1";
+    
+    private string _answerText = "";
 
     protected override async Task OnInitializedAsync()
     {
+        _question = await FaqService.GetQuestion(QuestionId);
     }
 
-    private void SubmitQuestion()
+    private async Task SubmitQuestionAsync()
     {
+        Console.Out.WriteLine("Submitted");
+        if (string.IsNullOrWhiteSpace(_answerText))
+        {
+            return;
+        }
+        await FaqService.CreateAnswerForQuestion(QuestionId, _answerText);
+        _question = await FaqService.GetQuestion(QuestionId);
+        _answerText = "";
+        StateHasChanged();
     }
 }
