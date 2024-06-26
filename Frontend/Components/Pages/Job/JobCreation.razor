@@ -5,8 +5,6 @@
 
 <PageTitle>Job Creation</PageTitle>
 
-
-
 @if (ErrorMessage != null)
 {
     <DisplayError ErrorMessage="@ErrorMessage" />
@@ -20,22 +18,18 @@ else
         <h3 class="col-10 d-flex justify-content-center">Job Creation</h3>
     </div>
     <form @onsubmit="CreateJob">
-
         <div>
             <label for="position">Position:</label>
             <input type="text" id="position" @bind="JobNew.Position" />
         </div>
-
         <div>
             <label for="date">End Date:</label>
             <input type="date" id="date" @bind="JobNew.EndDate" />
         </div>
-
         <div>
             <label for="experience">Experience:</label>
             <input type="text" id="experience" @bind="JobNew.Experience" />
         </div>
-
         <div>
             <label for="commitment">Commitment:</label>
             <InputSelect id="commitment" @bind-Value="JobNew.Commitment">
@@ -45,12 +39,10 @@ else
                 <option value="@CommitmentType.FullTime">Full Time</option>
             </InputSelect>
         </div>
-
         <div>
             <label for="localization">Localization:</label>
             <input type="text" id="localization" @bind="JobNew.Localization" />
         </div>
-
         <div>
             <label for="remote">Remote:</label>
             <InputSelect id="remote" @bind-Value="JobNew.Remote">
@@ -60,7 +52,10 @@ else
                 <option value="@RemoteType.Office">Office</option>
             </InputSelect>
         </div>
-
+        <div>
+            <label for="company">Company:</label>
+            <input type="text" id="company" @bind="JobNew.Company" />
+        </div>
         <div>
             <label for="education">Education:</label>
             <InputSelect id="education" @bind-Value="JobNew.Education">
@@ -72,10 +67,9 @@ else
                 <option value="@EducationLevel.Doctoral">Doctoral</option>
             </InputSelect>
         </div>
-
         <!-- Required Skills -->
         <div class="skills-label">
-            <label for="skills">Required Skills:</label>
+            <label for="skills">Required Skills (Optional):</label>
         </div>
         <div class="skills-input">
             <div class="checkbox-container">
@@ -88,10 +82,9 @@ else
                 }
             </div>
         </div>
-
         <!-- Nice to Have Skills -->
         <div class="nice-to-have-skills-label">
-            <label for="niceToHaveSkills">Nice to Have Skills:</label>
+            <label for="niceToHaveSkills">Nice to Have Skills (Optional):</label>
         </div>
         <div class="nice-to-have-skills-input">
             <div class="checkbox-container">
@@ -104,14 +97,12 @@ else
                 }
             </div>
         </div>
-
         <div class="description-label">
-            <label for="description">Description:</label>
+            <label for="description">Description (Optional):</label>
         </div>
         <div class="description-input">
             <input type="text" Area id="description" @bind="JobNew.Description" />
         </div>
-
         <button type="submit">Submit</button>
     </form>
 }
@@ -123,6 +114,17 @@ else
             <span class="close" @onclick="CloseModal">&times;</span>
             <p>Job was created successfully!</p>
             <button @onclick="CloseModal">Ok</button>
+        </div>
+    </div>
+}
+
+@if (showWarningModal)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <span class="close" @onclick="CloseWarningModal">&times;</span>
+            <p>@WarningMessage</p>
+            <button @onclick="CloseWarningModal">Ok</button>
         </div>
     </div>
 }

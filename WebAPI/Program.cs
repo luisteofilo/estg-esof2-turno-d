@@ -48,6 +48,10 @@ builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
 builder.Services.AddScoped<IExternalJobRepository, ExternalJobRepository>();
 
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
+
+
 //Interview Repository
 builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
