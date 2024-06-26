@@ -1,21 +1,22 @@
-@page "/search/people"
+@page "/search/job"
 @using Frontend.Services.Contracts
 @using Microsoft.AspNetCore.Components
 @inherits SearchBase
 @inject NavigationManager Navigation
 
-@if ( Profiles != null && Profiles.Any())
+
+@if ( Jobs != null && Jobs.Any())
 {
-    <p>Profiles</p>
+    <p>Jobs</p>
 
     <div class="search-results-container">
-        @foreach (var profile in Profiles)
+        @foreach (var job in Jobs)
         {
             <div class="person-entry">
-                <img src="@profile.UrlProfile" alt="Profile Image" class="profile-image"/>
+                
                 <div class="text-container">
-                    <p class="person-name">@profile.FirstName @profile.LastName</p>
-                    <p class="person-details">@profile.Bio - @profile.Location</p>
+                    <p class="person-name">@job.Position</p>
+                    <p class="person-details">@job.Description - @job.Experience</p>
 
                 </div>
 
@@ -27,7 +28,7 @@ else
 {
     
     <div class="search-results-container">
-      No Results Found
+        No Results Found
     </div> 
     
     
@@ -38,6 +39,5 @@ else
     [Parameter]
     [SupplyParameterFromQuery(Name= "searchText")]
     public string searchText { get; set; }
-    
     
 }

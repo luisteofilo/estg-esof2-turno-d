@@ -1,45 +1,32 @@
-input:invalid {
-    box-shadow: none;
-}
-
 .search-container {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
-
 .search-form {
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-}
-
-.input-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
     width: 70%;
-    margin-bottom: 10px; 
 }
 
 .search-input {
-    padding: 10px;
-    font-size: 16px;
+    padding: 5px;
+    font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-right: 10px; 
+    margin-right: 10px;
+    flex-grow: 1;
 }
 
 .submit-button {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 5px 10px;
+    font-size: 14px;
     color: white;
     background-color: #007bff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, box-shadow 0.3s;
+    margin-left: 10px;
 }
 
 .submit-button:hover {
@@ -51,18 +38,49 @@ input:invalid {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
+.button-and-filter-row {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.button-row {
+    display: flex;
+    margin-right: 10px;
+}
+
+.toggle-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin-right: 10px;
+}
+
+.toggle-button.selected {
+    background-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.toggle-button:hover {
+    background-color: #0056b3;
+}
+
 .select-row {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px; 
-    width: 100%;
+    gap: 10px;
+    width: 50%;
 }
 
 .custom-select {
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 10px;
+    padding: 5px;
     background-color: #fff;
     color: #000;
     cursor: pointer;
@@ -74,7 +92,6 @@ input:invalid {
     background-repeat: no-repeat;
     background-position: right 0.75rem center;
     background-size: 8px 10px;
-    flex-grow: 1; 
 }
 
 .custom-select:hover {

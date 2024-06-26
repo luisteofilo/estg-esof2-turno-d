@@ -8,69 +8,127 @@
 @inherits SearchBase
 
 <div class="search-container">
-    <form method="get" action="/search/people" class="search-form">
-        <div class="input-row">
-            <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input" required/>
-            @if (action == "people")
-            {
-                <input type="hidden" name="action" value="@action" />
-            }
-            
-            
-            <button type="submit" class="submit-button">Ok</button>
-        </div>
+         <form method="get" action="/search/@action/" class="search-form">
+             <div class="input-row">
+                 @if (action == "people")
+                 {
+                     <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input" required/>
+                 }
+
+                 @if (action == "job")
+                 {
+                     <input type="text" @bind="searchText" placeholder="Search Text" name="position" class="search-input" required/>
+                 }
+                 <button type="submit" class="submit-button">Ok</button>
+             </div>
+
         @if (SearchService.searchPerformed)
         {
-            <button type="submit" name="action" value="people" class="btn-primary">
-                People
-            </button>
-            <button type="submit" name="action" value="jobs" class="btn-primary">
-                Jobs
-            </button>
-            <div class="select-row">
+            <div class="button-and-filter-row">
+                <div class="button-row">
+                    <button type="submit" value="people" @bind="action"  name="action"  class="toggle-button @(action == "people" ? "selected" : "")">
+                        People
+                    </button>
+                    <button type="submit" value="job" @bind="action"  name="action" class="toggle-button @(action == "job" ? "selected" : "")">
+                        Jobs
+                    </button>
+                </div>
                 @if (action == "people")
                 {
-                    <select name="skill" @bind="skill" class="custom-select">
-                        <option value="">Skills</option>
+                    <div class="select-row">
+                        <select name="skill" @bind="skillParam" class="custom-select">
+                            <option value="">Skills</option>
+                            @if (Skills != null && Skills.Any())
+                            {
+                                @foreach (var skill in Skills)
+                                {
+                                    <option value="@skill.Name">@skill.Name</option>
+                                }
+                            }
+                        </select>
+
+                        <select name="location" @bind="locationParam" class="custom-select">
+                            <option value="">Location</option>
+                            @if (Locations != null && Locations.Any())
+                            {
+                                @foreach (var location in Locations)
+                                {
+                                    <option value="@location">@location</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                }
+
+                @if (action == "job")
+                {
+                <div class="select-row">
+                    <select name="skill" @bind="skillParam" class="custom-select">
+                        <option value="">SkillsJob</option>
                         @if (Skills != null && Skills.Any())
                         {
-                            @foreach (var skill in Skills)
-                            {
-                                <option value="@skill.Name">@skill.Name</option>
-                            }
+                        @foreach (var skill in Skills)
+                        {
+                        <option value="@skill.Name">@skill.Name</option>
+                        }
                         }
                     </select>
 
-                    <select name="location" class="custom-select">
-                        <option value="">Location</option>
+                    <select name="location" @bind="locationParam" class="custom-select">
+                        <option value="">LocationJob</option>
                         @if (Locations != null && Locations.Any())
                         {
-                            @foreach (var location in Locations)
-                            {
-                                <option value="@location">@location</option>
-                            }
+                        @foreach (var location in Locations)
+                        {
+                        <option value="@location">@location</option>
+                        }
                         }
                     </select>
+                </div>
                 }
+                
+               
             </div>
         }
     </form>
+    
 </div>
 
 @code {
     [SupplyParameterFromQuery(Name = "searchText")]
     private string searchText { get; set; } = string.Empty;
-
+    
+    [SupplyParameterFromQuery(Name = "position")]
+    private string positionParam { get; set; } = string.Empty;
+    
     [SupplyParameterFromQuery(Name = "action")]
-    private string action { get; set; } = string.Empty;
+    private string action { get; set; } = "people";
 
-    private string skill { get; set; } = string.Empty;
+    [SupplyParameterFromQuery(Name = "skill")]
+    private string skillParam { get; set; } = string.Empty;
+
+    [SupplyParameterFromQuery(Name = "location")]
+    private string locationParam { get; set; } = string.Empty;
 
     [Inject] public ISearchService SearchService { get; set; }
 
     protected override void OnParametersSet()
     {
         
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(action))
+        {
+            action = "people";
+        }
+        
+        if(!string.IsNullOrEmpty(positionParam))
+        searchText = positionParam;
+        
+    Skills = await ProfileService.GetSkills();
+    Locations = await SearchService.GetLocations();
     }
     
     public async ValueTask DisposeAsync()

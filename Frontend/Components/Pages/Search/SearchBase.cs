@@ -14,24 +14,24 @@ namespace Frontend.Components.Pages
         [Inject] protected IProfileService ProfileService { get; set; }
         
         [SupplyParameterFromQuery(Name= "searchText")]
-        public string firstName { get; set; } 
+        public string Name { get; set; } 
         
         protected IEnumerable<ProfileDto> Profiles { get; set; }
      //   protected IEnumerable<ProfileDto> ProfilesSkill { get; set; }
         protected IEnumerable<SkillDto> Skills { get; set; }
         
-      //  protected IEnumerable<JobDto> Jobs { get; set; }
+        protected IEnumerable<JobDto> Jobs { get; set; }
         
      //   protected IEnumerable<JobDto> ResultJobs { get; set; }
         protected IEnumerable<string> Locations { get; set; }
         
         [SupplyParameterFromQuery(Name= "location")]
-        public string location { get; set; }
+        public string Location { get; set; }
         
         [SupplyParameterFromQuery(Name= "skill")]
-        public string skill { get; set; }
+        public string Skill { get; set; }
         
-        [SupplyParameterFromQuery(Name= "job")]
+        [SupplyParameterFromQuery(Name= "position")]
         public string Position { get; set; }
         
 
@@ -86,23 +86,31 @@ namespace Frontend.Components.Pages
 
             */
 
-          if (firstName != null)
+          if (!string.IsNullOrEmpty(Name))
           {
                SearchService.searchPerformed = true;
+               Profiles = await SearchService.GetResultsProfile(Name, Skill, Location);
           }
           
-            Skills = await ProfileService.GetSkills();
-            Locations = await SearchService.GetLocations();
-           // Jobs = await SearchService.GetJobs();
+          Skills = await ProfileService.GetSkills();
+          Locations = await SearchService.GetLocations();
 
-            Profiles = await SearchService.GetResultsProfile(firstName, skill, location);
+            if (!string.IsNullOrEmpty(Position))
+            {
+                SearchService.searchPerformed = true;
+                Jobs = await SearchService.GetJobs(Position, Skill, Location);
+            }
+            
+
+            
 
         }
         
         public async ValueTask DisposeAsync()
         {
-            firstName = string.Empty;
-            skill = string.Empty;
+            
+            Skill = string.Empty;
+            Location = string.Empty;
             SearchService.searchPerformed = false;
             
             await Task.CompletedTask;
