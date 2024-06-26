@@ -9,6 +9,8 @@ public interface ISearchService
     Task<IEnumerable<ProfileDto>> GetResultsProfile(string firstName, string skill, string location);
 
     Task<IEnumerable<string>> GetLocations();
+
+    Task<IEnumerable<JobDto>> GetJobs(string position, string skill, string location);
 /*
     Task<IEnumerable<ProfileDto>> GetResultsBySkill(string skill);
 

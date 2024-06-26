@@ -34,6 +34,13 @@ public class SearchService(HttpClient httpClient) : ISearchService
         return await response.Content.ReadFromJsonAsync<IEnumerable<string>>();
     }
     
+    public async Task<IEnumerable<JobDto>> GetJobs(string position, string skill, string location)
+    {
+        var response = await httpClient.GetAsync($"api/Search/job?postion={position}&skill={skill}Java&location={location}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
+    }
+    
   /*  public async Task<IEnumerable<ProfileDto>> GetResultsBySkill(string skill)
     {
         var response = await httpClient.GetAsync($"api/Search/skills/{skill}");
@@ -83,12 +90,7 @@ public class SearchService(HttpClient httpClient) : ISearchService
         return await response.Content.ReadFromJsonAsync<IEnumerable<string>>();
     }
     
-    public async Task<IEnumerable<JobDto>> GetJobs()
-    {
-        var response = await httpClient.GetAsync($"api/Job");
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
-    }
+    
 
     public async Task<IEnumerable<JobDto>> GetJobsBySkill(string skill)
     {
