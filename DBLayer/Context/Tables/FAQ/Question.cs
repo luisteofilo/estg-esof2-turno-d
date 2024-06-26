@@ -6,7 +6,7 @@ namespace ESOF.WebApp.DBLayer.Context;
 
 public partial class ApplicationDbContext 
 {
-    private void BuildQuestions(ModelBuilder modelBuilder)
+    private void BuildFAQQuestions(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Question>()
             .HasMany(q => q.Answers);

@@ -12,7 +12,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Jobs",
+                name: "FAQJobs",
                 columns: table => new
                 {
                     JobId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
@@ -20,7 +20,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Jobs", x => x.JobId);
+                    table.PrimaryKey("PK_FAQJobs", x => x.JobId);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,9 +36,9 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 {
                     table.PrimaryKey("PK_FAQQuestions", x => x.QuestionId);
                     table.ForeignKey(
-                        name: "FK_FAQQuestions_Jobs_JobId",
+                        name: "FK_FAQQuestions_FAQJobs_JobId",
                         column: x => x.JobId,
-                        principalTable: "Jobs",
+                        principalTable: "FAQJobs",
                         principalColumn: "JobId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -55,7 +55,9 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     AnswerId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     AuthorUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     AnswerText = table.Column<string>(type: "text", nullable: false),
-                    QuestionId = table.Column<Guid>(type: "uuid", nullable: false)
+                    QuestionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    AuthorEmail = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,7 +107,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 name: "FAQQuestions");
 
             migrationBuilder.DropTable(
-                name: "Jobs");
+                name: "FAQJobs");
         }
     }
 }

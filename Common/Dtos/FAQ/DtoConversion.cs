@@ -35,7 +35,7 @@ public static class DtoConversion
         return a;
     }
 
-    public static JobDto JobConvertToDto(Job job)
+    public static JobDto JobConvertToDto(ESOF.WebApp.DBLayer.Entities.FAQ.Job job)
     {
         JobDto j = new JobDto();
         j.JobId = job.JobId;
@@ -43,7 +43,7 @@ public static class DtoConversion
         return j;
     }
     
-    public static IEnumerable<JobDto> JobConvertToDto(IEnumerable<Job> jobs)
+    public static IEnumerable<JobDto> JobConvertToDto(IEnumerable<ESOF.WebApp.DBLayer.Entities.FAQ.Job> jobs)
     {
         return jobs.Select(JobConvertToDto);
     }

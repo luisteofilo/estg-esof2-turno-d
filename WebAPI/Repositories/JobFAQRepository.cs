@@ -3,6 +3,7 @@ using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.DBLayer.Entities.FAQ;
 using Microsoft.EntityFrameworkCore;
+using Job = ESOF.WebApp.DBLayer.Entities.FAQ.Job;
 
 namespace ESOF.WebApp.WebAPI.Services;
 
@@ -35,7 +36,7 @@ public class JobFAQRepository
 
     public async Task AddQuestion(Guid jobId, string questionText)
     {
-        var Job = await _db.Jobs.FindAsync(jobId);
+        var Job = await _db.FAQJobs.FindAsync(jobId);
         var question = new Question
         {
             QuestionText = questionText,
@@ -97,12 +98,12 @@ public class JobFAQRepository
     
     public async Task<IEnumerable<Job>> GetFaqJobsAsync()
     {
-        return await _db.Jobs.ToListAsync();
+        return await _db.FAQJobs.ToListAsync();
     }
     
     public async Task<string> GetJobTitle(string jobId)
     {
-        var job = await _db.Jobs.FindAsync(new Guid(jobId));
+        var job = await _db.FAQJobs.FindAsync(new Guid(jobId));
         return job.JobTitle;
     }
     

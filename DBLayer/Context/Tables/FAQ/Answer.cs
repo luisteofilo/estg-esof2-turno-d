@@ -6,7 +6,7 @@ namespace ESOF.WebApp.DBLayer.Context;
 
 public partial class ApplicationDbContext
 {
-    private void BuildAnswers(ModelBuilder modelBuilder)
+    private void BuildFAQAnswers(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Answer>()
             .HasOne(a => a.Author);

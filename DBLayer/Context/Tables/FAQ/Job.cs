@@ -6,7 +6,7 @@ namespace ESOF.WebApp.DBLayer.Context;
 
 public partial class ApplicationDbContext
 {
-    private void BuildJobs(ModelBuilder modelBuilder)
+    private void BuildFAQJobs(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Entities.FAQ.Job>()
             .Property(a => a.JobId)
