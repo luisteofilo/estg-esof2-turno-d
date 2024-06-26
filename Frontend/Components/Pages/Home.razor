@@ -1,28 +1,7 @@
-@layout MainLayout
-@page "/"
-@using Frontend.Components.Layout
+﻿@page "/"
 
 <PageTitle>Home</PageTitle>
 
-<div class="row">
-    <div class="col-12">
-        <h2 class="fw-bolder">Welcome to <span class="text-danger">Smart Recruitment</span></h2>
-    </div>
-    <div class="col-12">
-        <p class="text-muted">The best place to find the best talents for your company.</p>
-    </div>
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <AuthorizeView>
-                    <NotAuthorized>
-                        <span>You are not logged in. Please <a class="fw-bolder" href="/login">Click here</a> to login.</span>
-                    </NotAuthorized>
-                    <Authorized>
-                        <span>Logged in as <b>@context.User.Identity?.Name</b>. <a class="fw-bolder" href="/logout">Click here</a> to logout.</span>
-                    </Authorized>
-                </AuthorizeView>
-            </div>
-        </div>
-    </div>
-</div>
+<h1>Hello, world!</h1>
+
+Welcome to your new app.

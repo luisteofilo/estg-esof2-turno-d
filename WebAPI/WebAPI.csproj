@@ -30,11 +30,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
-      <ProjectReference Include="..\Frontend\Frontend.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Controllers\UserController.cs" />
       <ProjectReference Include="..\Scraper\Scraper.csproj" />
     </ItemGroup>
 

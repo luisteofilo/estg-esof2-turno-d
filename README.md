@@ -1,4 +1,4 @@
-   # Software Engineering II - Base Code #
+# Software Engineering II - Base Code #
 
 ## Requirements ## 
 
