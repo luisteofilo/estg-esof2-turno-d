@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common.Dtos.Interview;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using Common.Dtos.Job;
 using Common.Dtos.Optimization_Requests;
+using ESOF.WebApp.DBLayer.Entities;
+using WebAPI.Repositories.Contracts;
 
 namespace ESOF.WebApp.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InterviewFeedbackController : ControllerBase
+    public class InterviewFeedbackController(
+        IInterviewFeedback _interviewFeedbackRepository,
+        IJobRepository _jobRepository,
+        ICandidateRepository _candidateRepository,
+        IInterviewerRepository interviewerRepository,
+        IInterviewRepository interviewRepository) : ControllerBase
     {
-        private readonly IInterviewFeedback _interviewFeedbackRepository;
-        private readonly IJobRepository _jobRepository;
 
-        public InterviewFeedbackController(IInterviewFeedback interviewFeedbackRepository, IJobRepository jobRepository)
-        {
-            _interviewFeedbackRepository = interviewFeedbackRepository ??
-                                           throw new ArgumentNullException(nameof(interviewFeedbackRepository));
-            _jobRepository = jobRepository ??
-                             throw new ArgumentNullException(nameof(jobRepository));
-        }
+
 
         [HttpGet]
+        [Route("feedbacks")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
         public async Task<IActionResult> GetInterviewsFeedback()
         {
@@ -158,82 +159,10 @@ namespace ESOF.WebApp.WebAPI.Controllers
             }
         }
 
-        [HttpGet("job/{jobId:guid}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetInterviewFeedbackByJob(Guid jobId)
-        {
-            try
-            {
-                var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackByJob(jobId);
-                var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
+      
 
-                return Ok(interviewFeedbackDto);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Error retrieving interview feedback: {ex.Message}");
-            }
-        }
 
-        [HttpGet("candidate/{candidateId:guid}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetInterviewFeedbackByCandidate(Guid candidateId)
-        {
-            try
-            {
-                var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackByCandidate(candidateId);
-                var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
 
-                return Ok(interviewFeedbackDto);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Error retrieving interview feedback: {ex.Message}");
-            }
-        }
-
-        [HttpGet("interviewer/{interviewerId:guid}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetInterviewFeedbackByInterviewer(Guid interviewerId)
-        {
-            try
-            {
-                var interviewFeedback =
-                    await _interviewFeedbackRepository.GetInterviewFeedbackByInterviewer(interviewerId);
-                var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
-
-                return Ok(interviewFeedbackDto);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Error retrieving interview feedback: {ex.Message}");
-            }
-        }
-
-        [HttpGet("interview/{interviewId:guid}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewFeedbackDTO>))]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetInterviewFeedbackByInterview(Guid interviewId)
-        {
-            try
-            {
-                var interviewFeedback = await _interviewFeedbackRepository.GetInterviewFeedbackByInterview(interviewId);
-                var interviewFeedbackDto = interviewFeedback.InterviewsçFeesbackConvertToDto();
-
-                return Ok(interviewFeedbackDto);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    $"Error retrieving interview feedback: {ex.Message}");
-            }
-        }
 
         [HttpPut("update-job/{jobId:guid}")]
         [ProducesResponseType(204)]
@@ -280,6 +209,75 @@ namespace ESOF.WebApp.WebAPI.Controllers
             }
         }
 
+        [HttpGet("jobs-from-feedback")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<JobDto>))]
+        public async Task<IActionResult> GetJobByInterviewFeedback()
+        {
+            try
+            {
+                var jobs = await _jobRepository.GetJobsAsync();
+                var jobsDto = jobs.JobsConvertToDto();
+                return Ok(jobsDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving jobs from interview feedback: {ex.Message}");
+            }
+        }
+        
+        [HttpGet("Candidates-from-feedback")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<CandidateDto>))]
+        public async Task<IActionResult> GetCandidates()
+        {
+            try
+            {
+                var candidates = await _candidateRepository.GetAllAsync();
+                
+                return Ok(candidates.Select(c => c.CandidateConvertToDto()));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving jobs from interview feedback: {ex.Message}");
+            }
+        }
+        
+        
+        [HttpGet("Interviews-from-feedback")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewDto>))]
+        public async Task<IActionResult> GetInterviews()
+        {
+            try
+            {
+                var interviews = await interviewRepository.GetAllAsync();
+                
+                return Ok(interviews.Select(c => c.InterviewConvertToDto()));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving jobs from interview feedback: {ex.Message}");
+            }
+        }
+        
+        
+        [HttpGet("Interviewers-from-feedback")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewerDto>))]
+        public async Task<IActionResult> GetInterviewers()
+        {
+            try
+            {
+                var interviews = await interviewerRepository.GetAllAsync();
+                
+                return Ok(interviews.Select(c => c.InterviewerConvertToDto()));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Error retrieving jobs from interview feedback: {ex.Message}");
+            }
+        }
 
     }
 }

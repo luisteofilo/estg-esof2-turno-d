@@ -1,6 +1,8 @@
 ﻿using System.Net.Http.Json;
+using Common.Dtos.Interview;
 using Common.Dtos.Job;
 using Common.Dtos.Optimization_Requests;
+using ESOF.WebApp.DBLayer.Entities.Interviews;
 using Frontend.Services.Contracts;
 
 namespace Frontend.Services
@@ -75,6 +77,27 @@ namespace Frontend.Services
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<InterviewFeedbackDTO>();
         }
+        public async Task<IEnumerable<CandidateDto>> GetCandidates()
+        {
+            var response = await _httpClient.GetAsync("api/InterviewFeedback/Candidates-from-feedback");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<CandidateDto>>();
+        }
+        
+        public async Task<IEnumerable<InterviewDto>> GetInterviews()
+        {
+            var response = await _httpClient.GetAsync("api/InterviewFeedback/Interviews-from-feedback");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<InterviewDto>>();
+        }
+        
+        public async Task<IEnumerable<InterviewerDto>> GetInterviewers()
+        {
+            var response = await _httpClient.GetAsync("api/InterviewFeedback/Interviewers-from-feedback");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<InterviewerDto>>();
+        }
+
 
         public async Task<InterviewFeedbackDTO?> GetInterviewFeedbackByInterviewer(Guid interviewer)
         {
@@ -82,6 +105,7 @@ namespace Frontend.Services
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<InterviewFeedbackDTO>();
         }
+     
 
         public async Task<JobDto?> UpdateJob(Guid JobId, JobDto jobDto)
         {

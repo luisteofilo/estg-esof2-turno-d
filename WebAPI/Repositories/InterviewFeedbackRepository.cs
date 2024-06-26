@@ -1,4 +1,5 @@
-﻿using ESOF.WebApp.DBLayer.Context;
+﻿using Common.Dtos.Job;
+using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.DBLayer.Entities.Interviews;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ namespace ESOF.WebApp.WebAPI.Repositories.Contracts;
 public class InterviewFeedbackRepository : IInterviewFeedback
 {
      private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
+     private readonly JobRepository _repository;
 
     public async Task<ICollection<InterviewFeedback>> GetInterviewsFeedbackAsync()
     {
@@ -31,26 +33,13 @@ public class InterviewFeedbackRepository : IInterviewFeedback
         return await _dbContext.SaveChangesAsync();
     }
     
-    public async Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByJob(Guid JobId)
-    {
-        return await _dbContext.InterviewFeedbacks.Where(e => e.Job.JobId == JobId).ToListAsync();
-    }
+
     
-    public async Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByCandidate(Guid candidateId)
+    public async Task<ICollection<Job>> GetJobByInterviewFeedback()
     {
-        return await _dbContext.InterviewFeedbacks.Where(e => e.Candidate == candidateId).ToListAsync();
+        return (ICollection<Job>)await _repository.GetJobsAsync();
     }
 
-    public async Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByInterview(Guid interview)
-    {
-        return await _dbContext.InterviewFeedbacks.Where(e => e.Interview == interview).ToListAsync();
-    }
-
-    public async Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByInterviewer(Guid interviewerId)
-    {
-        return await _dbContext.InterviewFeedbacks.Where(e => e.Interviewer == interviewerId).ToListAsync();
-    }
-    
     public async Task DeleteInterviewFeedbackAsync(Guid InterviewFeedbackId)
     {
         var interviewfeedback = await _dbContext.InterviewFeedbacks.FindAsync(InterviewFeedbackId);

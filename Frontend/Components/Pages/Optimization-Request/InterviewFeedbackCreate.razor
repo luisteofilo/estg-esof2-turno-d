@@ -1,9 +1,8 @@
 ﻿@page "/create-interview-feedback"
+@rendermode InteractiveServer
 @inherits InterviewFeesbackCreate
 
-
-
-<h3>Create Interview Feedback</h3>
+<PageTitle>Create Interview Feedback</PageTitle>
 
 @if (ShowError)
 {
@@ -11,80 +10,84 @@
         @ErrorMessage
     </div>
 }
+else
+{
+    <h3>Create Interview Feedback</h3>
+    <form @onsubmit="CreateInterviewFeedback">
+        <div class="form-group">
+            <label for="inputCandidateId">Candidate:</label>
+            <select class="form-control" id="inputCandidateId" @bind="NewCandidate.CandidateId">
+                <option value="">Select Candidate</option>
+                @if (AvaiableCandidates != null && AvaiableCandidates.Any())
+                {
+                    @foreach (var candidate in AvaiableCandidates)
+                    {
+                        <option value="@candidate.CandidateId">@candidate.Name</option>
+                    }
+                }
+            </select>
+        </div>
 
-<div class="form-group">
-    <label for="inputInterviewId">Interview:</label>
-    <select class="form-control" id="inputInterviewId" @bind="@NewInterview.InterviewId">
-        <option value="">Select Interview</option>
-        @if (Interviews != null)
-        {
-            @foreach (var interview in Interviews)
-            {
-                <option value="@interview.InterviewId">@interview.InterviewId</option>
-            }
-        }
-    </select>
-</div>
+        <div class="form-group">
+            <label for="inputInterviewId">Interview:</label>
+            <select class="form-control" id="inputInterviewId" @bind="NewInterview.InterviewId">
+                <option value="">Select Interview</option>
+                @if (AvaiableInteviews != null && AvaiableInteviews.Any())
+                {
+                    @foreach (var interview in AvaiableInteviews)
+                    {
+                        <option value="@interview.InterviewId">@interview.InterviewId</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="inputInterviewerId">Interviewer:</label>
+            <select class="form-control" id="inputInterviewerId" @bind="NewInterviewer.InterviewerId">
+                <option value="">Select Interviewer</option>
+                @if (AvaiableInterviwers != null && AvaiableInterviwers.Any())
+                {
+                    @foreach (var interviewer in AvaiableInterviwers)
+                    {
+                        <option value="@interviewer.InterviewerId">@interviewer.Name</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="inputFeedback">Feedback:</label>
+            <textarea class="form-control" id="inputFeedback" @bind="Feedback"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="inputRejectionReason">Rejection Reason:</label>
+            <textarea class="form-control" id="inputRejectionReason" @bind="RejectionReason"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="inputOptimizationSuggestions">Optimization Suggestions:</label>
+            <textarea class="form-control" id="inputOptimizationSuggestions" @bind="OptimizationSuggestions"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="inputJobId">Job:</label>
+            <select class="form-control" id="inputJobId" @bind="NewJobDto.JobId">
+                <option value="">Select Job</option>
+                @if (Jobs != null && Jobs.Any())
+                {
+                    @foreach (var job in Jobs)
+                    {
+                        <option value="@job.JobId">@job.JobId</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+}
 
 
-<div class="form-group">
-    <label for="inputCandidateId">Candidate:</label>
-    <select class="form-control" id="inputCandidateId" @bind="@NewCandidate.CandidateId">
-        <option value="">Select Candidate</option>
-        @if (Candidates != null)
-        {
 
-            @foreach (var candidate in Candidates)
-            {
-                <option value="@candidate.CandidateId">@candidate.Name</option>
-            }
-        }
-    </select>
-</div>
-
-<div class="form-group">
-    <label for="inputInterviewerId">Interviewer:</label>
-    <select class="form-control" id="inputInterviewerId" @bind="@NewInterviewer.InterviewerId">
-        <option value="">Select Interviewer</option>
-                @if (Interviewers != null)
-        {
-
-            @foreach (var interviewer in Interviewers)
-            {
-                <option value="@interviewer.InterviewerId">@interviewer.Name</option>
-            }
-        }
-    </select>
-</div>
-
-<div class="form-group">
-    <label for="inputFeedback">Feedback:</label>
-    <textarea class="form-control" id="inputFeedback" @bind="@Feedback"></textarea>
-</div>
-
-<div class="form-group">
-    <label for="inputRejectionReason">Rejection Reason:</label>
-    <textarea class="form-control" id="inputRejectionReason" @bind="@RejectionReason"></textarea>
-</div>
-
-<div class="form-group">
-    <label for="inputOptimizationSuggestions">Optimization Suggestions:</label>
-    <textarea class="form-control" id="inputOptimizationSuggestions" @bind="@OptimizationSuggestions"></textarea>
-</div>
-
-<div class="form-group">
-    <label for="inputJobId">Job:</label>
-    <select class="form-control" id="inputJobId" @bind="@NewJobDto.JobId">
-        <option value="">Select Job</option>
-        @if (Jobs != null)
-        {
-            @foreach (var job in Jobs)
-            {
-                <option value="@job.JobId">@job.JobId</option>
-            }
-        }
-    </select>
-</div>
-
-
-<button type="button" class="btn btn-primary" @onclick="CreateInterviewFeedback">Submit</button>

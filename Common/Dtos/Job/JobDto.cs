@@ -1,10 +1,11 @@
-﻿using ESOF.WebApp.DBLayer.Entities;
+﻿using System.Collections;
+using ESOF.WebApp.DBLayer.Entities;
 using Common.Dtos.Profile;
 using Helpers.Job;
 
 namespace Common.Dtos.Job;
 
-public class JobDto
+public class JobDto : IEnumerable
 {
     public Guid JobId { get; set; }
     
@@ -25,5 +26,9 @@ public class JobDto
     public String? Experience { get; set; }
     
     public String? Description { get; set; }
-    
+
+    public IEnumerator GetEnumerator()
+    {
+        throw new NotImplementedException();
+    }
 }

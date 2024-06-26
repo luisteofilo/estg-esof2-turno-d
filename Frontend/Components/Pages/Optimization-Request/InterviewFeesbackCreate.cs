@@ -1,6 +1,7 @@
 ﻿using Common.Dtos.Interview;
 using Common.Dtos.Job;
 using Common.Dtos.Optimization_Requests;
+using ESOF.WebApp.DBLayer.Entities.Interviews;
 using Frontend.Services;
 using Frontend.Services.Contracts;
 using Microsoft.AspNetCore.Components;
@@ -26,55 +27,46 @@ public class InterviewFeesbackCreate : ComponentBase
     protected InterviewerDto NewInterviewer { get; set; } = new InterviewerDto();
     protected JobDto NewJobDto { get; set; } = new JobDto();
 
-    protected IEnumerable<CandidateDto> Candidates { get; set; }
+    protected IEnumerable<Candidate> Candidates { get; set; }
     protected IEnumerable<InterviewerDto> Interviewers { get; set; }
     protected IEnumerable<InterviewDto> Interviews { get; set; }
     protected IEnumerable<JobDto> Jobs { get; set; }
+    protected IEnumerable<CandidateDto> AvaiableCandidates { get; set; } = new List<CandidateDto>();
+    protected IEnumerable<InterviewDto> AvaiableInteviews { get; set; } = new List<InterviewDto>();
+    protected IEnumerable<InterviewerDto> AvaiableInterviwers { get; set; } = new List<InterviewerDto>();
 
     protected string ErrorMessage { get; set; } = string.Empty;
     protected bool ShowError { get; set; } = false;
-    
+    protected bool showModal { get; set; }
+
     
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            await LoadDataAsync();
-        }
-        catch (Exception ex)
-        {
-            ShowError = true;
-            ErrorMessage = $"Error initializing data: {ex.Message}";
-        }
-    }
-    
-    
-    
-    protected async Task LoadDataAsync()
-    {
-        try
-        {
-            Candidates = await CandidateService.GetCandidatesAsync();
-            Interviewers = await InterviewerService.GetInterviewersAsync();
-            Jobs = await JobService.GetJobs();
-            Interviews = await InterviewService.GetInterviewsAsync();
-        }
-        catch (HttpRequestException ex)
-        {
-            ShowError = true;
-            ErrorMessage = $"Error initializing data: {ex.Message}";
+            AvaiableCandidates = await InterviewFeedbackService.GetCandidates();
+            Console.WriteLine($"Candidates loaded: {AvaiableCandidates.Count()}");
 
-            if (ex.InnerException != null)
-            {
-                ErrorMessage += $"\nInner Exception: {ex.InnerException.Message}";
-            }
+            AvaiableInteviews = await InterviewFeedbackService.GetInterviews();
+            Console.WriteLine($"Interviews loaded: {AvaiableInteviews.Count()}");
+
+            AvaiableInterviwers = await InterviewFeedbackService.GetInterviewers();
+            Console.WriteLine($"Interviewers loaded: {AvaiableInterviwers.Count()}");
+
+            Jobs = await JobService.GetJobs();
+            Console.WriteLine($"Jobs loaded: {Jobs.Count()}");
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
+            ErrorMessage = $"Error fetching data: {e.Message}";
             ShowError = true;
-            ErrorMessage = $"An unexpected error occurred: {ex.Message}";
+            Console.WriteLine(e.Message);
         }
     }
+
+    
+    
+    
 
     
     protected async Task CreateInterviewFeedback()
