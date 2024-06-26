@@ -7,7 +7,7 @@ public interface IDashboardRepository
 {
     Task<IEnumerable<ProfileSkillDto>> GetProfileSkillsAsync();
     
-    Task<IEnumerable<JobSkillDto>> GetJobSkillsAsync();
+    Task<IEnumerable<DashboardJobDTo>> GetJobSkillsAsync();
     
     Task<IEnumerable<ExperienceDto>> GetExperiencesAsync();
 }

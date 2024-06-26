@@ -26,11 +26,11 @@ public class DashboardRepository : IDashboardRepository
         return profileSkills;
     }
         
-    public async Task<IEnumerable<JobSkillDto>> GetJobSkillsAsync()
+    public async Task<IEnumerable<DashboardJobDTo>> GetJobSkillsAsync()
     {
         var jobSkills = await _dbContext.JobSkills
             .Include(js => js.Skill)
-            .Select(js => new JobSkillDto()
+            .Select(js => new DashboardJobDTo()
             {
                 JobId = js.JobId,
                 SkillId = js.SkillId,

@@ -24,11 +24,11 @@ namespace Frontend.Services
             return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileSkillDto>>();
         }
 
-        public async Task<IEnumerable<JobSkillDto>> GetJobSkills()
+        public async Task<IEnumerable<DashboardJobDTo>> GetJobSkills()
         {
             var response = await _httpClient.GetAsync("api/Dashboard/JobSkills");
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<IEnumerable<JobSkillDto>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<DashboardJobDTo>>();
         }
         
         public async Task<IEnumerable<ExperienceDto>> GetExperiences()
