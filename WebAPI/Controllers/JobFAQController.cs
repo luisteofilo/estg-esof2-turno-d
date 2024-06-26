@@ -55,7 +55,6 @@ public class JobFAQController : ControllerBase
         try
         {
             var questions = await _jobFaqRepository.GetQuestions(jobId);
-            Console.Out.WriteLine(questions.Select(q => q.Job.JobId.ToString()));
             var questionDtos = DtoConversion.QuestionConvertToDto(questions);
 
             return Ok(questionDtos);
@@ -108,7 +107,6 @@ public class JobFAQController : ControllerBase
     [HttpPost("{jobId}/questions")]
     public async Task<ActionResult> PostJobQuestion(Guid jobId, [FromBody] QuestionDto question)
     {
-        Console.Out.WriteLine(question);
         try
         {
             await _jobFaqRepository.AddQuestion(jobId, question.QuestionText);
@@ -137,10 +135,9 @@ public class JobFAQController : ControllerBase
     [HttpGet("{jobId}/questions/search/{query}")]
     public async Task<IActionResult> SearchQuestions(string jobId, string query)
     {
-            var questions = await _jobFaqRepository.SearchQuestions(jobId, query);
-            try
+        try
         {
-            
+            var questions = await _jobFaqRepository.SearchQuestions(jobId, query);
             var questionDtos = DtoConversion.QuestionConvertToDto(questions);
 
             return Ok(questionDtos);

@@ -95,7 +95,6 @@ class="form-control" id="answer" rows="3"></textarea>
 
     private async Task SubmitQuestionAsync()
     {
-        Console.Out.WriteLine("Submitted");
         if (string.IsNullOrWhiteSpace(_answerText))
         {
             return;

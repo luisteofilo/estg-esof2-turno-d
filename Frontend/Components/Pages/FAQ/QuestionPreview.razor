@@ -50,14 +50,8 @@ else
     
     private List<AnswerDto> _answers = new List<AnswerDto>();
 
-    protected override async Task OnInitializedAsync()
-    {
-        // TODO: fix this _answers = (await FaqService.GetAnswersForQuestion(jobId, question.QuestionId.ToString())).ToList();
-    }
-
     void NavigateToQuestionPage()
     {
-        Console.Out.WriteLine("Navigating to question page");
         if (small)
         {
             Navigation.NavigateTo($"{Navigation.Uri}/{jobId}/{question.QuestionId}");
