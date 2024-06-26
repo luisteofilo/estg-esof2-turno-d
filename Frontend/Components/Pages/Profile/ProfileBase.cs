@@ -1,4 +1,6 @@
-﻿using Common.Dtos.Profile;
+﻿using System.Reflection.Metadata;
+using Common.Dtos.Profile;
+using ESOF.WebApp.WebAPI.Services;
 using Frontend.Services.Contracts;
 using Helpers;
 using Microsoft.AspNetCore.Components;
@@ -15,6 +17,8 @@ public class ProfileBase : ComponentBase
     protected readonly string ApiUrl = EnvFileHelper.GetString("API_URL");
 
     protected string? ErrorMessage { get; set; }
+    
+    protected string Url { get; set; }
 
     protected bool IsEditingProfile { get; set; }
     protected bool IsEditingExperiences { get; set; }
@@ -257,7 +261,6 @@ public class ProfileBase : ComponentBase
             Console.WriteLine($"Error saving new experience: {ex.Message}");
         }
     }
-    
     protected void EditExperiences(bool edit)
     {
         IsEditingExperiences = edit;
@@ -277,5 +280,20 @@ public class ProfileBase : ComponentBase
             Console.WriteLine($"Error deleting experience: {ex.Message}");
         }
         
+    }
+
+    protected async void ImportProfile(String url)
+    {
+        try
+        {
+            Profile = await ProfileService.ImportProfile(Profile.ProfileId, url);
+            IsEditingProfile = false;
+            
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage += "Error importing profile ";
+        }
     }
 }

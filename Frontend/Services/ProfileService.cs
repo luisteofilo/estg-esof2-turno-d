@@ -140,4 +140,11 @@ public class ProfileService(HttpClient _httpClient) : IProfileService
         var response = await _httpClient.DeleteAsync($"api/Profile/{profileId}/educations/{educationId}");
         response.EnsureSuccessStatusCode();
     }
+
+    public async Task<ProfileDto> ImportProfile(Guid profileId, string url)
+    {
+        var response = await _httpClient.PostAsJsonAsync($"api/Profile/{profileId}/import", url);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<ProfileDto>();
+    }
 }

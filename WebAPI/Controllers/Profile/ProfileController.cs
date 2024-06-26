@@ -1,5 +1,9 @@
 ﻿using Common.Dtos.Profile;
+using ESOF.WebApp.WebAPI.Contracts.Job;
+using ESOF.WebApp.WebAPI.Errors;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+using ESOF.WebApp.WebAPI.Services;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Controllers;
@@ -10,7 +14,8 @@ public class ProfileController(
     IProfileRepository _profileRepository,
     ISkillRepository _skillRepository,
     IEducationRepository _educationRepository,
-    IExperienceRepository _experienceRepository): ControllerBase
+    IExperienceRepository _experienceRepository,
+    ExternalProfileService _externalProfileService): ControllerBase
 {
 
     [HttpGet]
@@ -646,6 +651,24 @@ public class ProfileController(
             
             await _experienceRepository.DeleteExperienceAsync(experienceId);
             return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error deleting profile experience: {ex.Message}");
+        }
+    }
+    
+    [HttpPost("{profileId:guid}/import")]
+    public async Task<IActionResult> ImportProfile(Guid profileId,[FromBody] string url)
+    {
+        try
+        {
+            var profile = await _externalProfileService.AddExternalProfileAsync(profileId, url);
+
+            var updatedProfile = profile.ProfileConvertToDto();
+            return Ok(updatedProfile);
+            
+            
         }
         catch (Exception ex)
         {

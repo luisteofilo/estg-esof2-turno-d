@@ -33,6 +33,7 @@ builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetService<Applicat
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IImportRepository, ImportRepository>();
 builder.Services.AddScoped<ExternalJobService>();
+builder.Services.AddScoped<ExternalProfileService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();

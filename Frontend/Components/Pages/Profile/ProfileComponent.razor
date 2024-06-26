@@ -95,6 +95,11 @@
                         }
                     </div>
                     <button class="btn btn-primary" @onclick="() => EditProfile(true)">Edit Profile</button>
+                    <div class="form-group mt-4">
+                        <label for="Url">Import Profile URL:</label>
+                        <input type="text" id="Url" @bind="Url" class="form-control" placeholder="Enter the profile URL" />
+                        <button class="btn btn-secondary mt-2" @onclick="() => ImportProfile(Url)">Import Profile</button>
+                    </div>
                 </div>
             </div>
         }
@@ -293,3 +298,4 @@
         }
     }
 </div>
+

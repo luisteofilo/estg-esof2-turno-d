@@ -21,6 +21,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
       <ProjectReference Include="..\Helpers\Helpers.csproj" />
+      <ProjectReference Include="..\WebAPI\WebAPI.csproj" />
     </ItemGroup>
 
 </Project>
