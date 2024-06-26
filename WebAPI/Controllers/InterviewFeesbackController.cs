@@ -188,7 +188,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
                     return NotFound(new { message = "Job not found." });
                 }
 
-                // Update the existing job with the new values
+                
                 existingJob.ClientId = jobDto.ClientId;
                 existingJob.EndDate = jobDto.EndDate;
                 existingJob.Position = jobDto.Position;

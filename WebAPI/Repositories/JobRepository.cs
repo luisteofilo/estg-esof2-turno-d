@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.WebAPI.Repositories;
     
+
 public class JobRepository : IJobRepository
 {
     private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
@@ -41,11 +42,5 @@ public class JobRepository : IJobRepository
             _dbContext.Jobs.Update(job);
             await _dbContext.SaveChangesAsync();
         }
-    }
-    
-    
-    public async Task<bool> JobExistsAsync(Guid JobId)
-    {
-        return await _dbContext.Jobs.AnyAsync(e => e.JobId == JobId);
     }
 }
