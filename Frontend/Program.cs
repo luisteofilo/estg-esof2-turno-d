@@ -26,6 +26,7 @@ builder.Services.AddAntiforgery(options =>
     });
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddRazorPages();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(EnvFileHelper.GetString("API_URL")) });
 builder.Services.AddScoped<ApiHelper>();

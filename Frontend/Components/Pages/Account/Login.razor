@@ -73,61 +73,62 @@
 
     private async Task Authenticate()
     {
-    if (Model.Password != null)
-    {
-    var userAccount = ApplicationDbContext.Users.FirstOrDefault(x => x.Email == Model.Email);
-    if (userAccount == null)
-    {
-    _errorMessage = "Invalid email or password";
-    return;
-    }
+        if (Model.Password != null)
+        {
+            var userAccount = ApplicationDbContext.Users.FirstOrDefault(x => x.Email == Model.Email);
+            if (userAccount == null)
+            {
+                _errorMessage = "Invalid email or password";
+                return;
+            }
 
-    if (!VerifyPasswordHash(Model.Password, userAccount.PasswordHash, userAccount.PasswordSalt))
-    {
-    _errorMessage = "Invalid email or password";
-    return;
-    }
+            if (!VerifyPasswordHash(Model.Password, userAccount.PasswordHash, userAccount.PasswordSalt))
+            {
+                _errorMessage = "Invalid email or password";
+                return;
+            }
 
-    var userRole = ApplicationDbContext.UserRoles
-    .Where(ur => ur.UserId == userAccount.UserId)
-    .Select(ur => ur.Role)
-    .FirstOrDefault();
+            var userRole = ApplicationDbContext.UserRoles
+                .Where(ur => ur.UserId == userAccount.UserId)
+                .Select(ur => ur.Role)
+                .FirstOrDefault();
 
-    if (userRole == null)
-    {
-    _errorMessage = "User has no role";
-    return;
-    }
+            if (userRole == null)
+            {
+                _errorMessage = "User has no role";
+                return;
+            }   
 
-    var role = ApplicationDbContext.Roles
-    .Where(r => r.RoleId == userRole.RoleId)
-    .Select(r => r.Name)
-    .FirstOrDefault();
+            var role = ApplicationDbContext.Roles
+                .Where(r => r.RoleId == userRole.RoleId)
+                .Select(r => r.Name)
+                .FirstOrDefault();
 
-    if(role == null)
-    {
-    _errorMessage = "Role not found";
-    return;
-    }
+            if(role == null)
+            {
+                _errorMessage = "Role not found";
+                return;
+            }
 
-    var claims = new List<Claim>
-    {
-    new(ClaimTypes.Name, userAccount.Email),
-    new(ClaimTypes.Role, role)
-    };
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, userAccount.UserId.ToString()),
+                new(ClaimTypes.Name, userAccount.Email),
+                new(ClaimTypes.Role, role)
+            };
 
-    var identiy = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-    var principal = new ClaimsPrincipal(identiy);
-    if (HttpContext != null) await HttpContext.SignInAsync(principal);
+            var identiy = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identiy);
+            if (HttpContext != null) await HttpContext.SignInAsync(principal);
 
-    NavigationManager.NavigateTo("/");
-    }
+            NavigationManager.NavigateTo("/");
+        }
     }
 
     private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
     {
-    using var hmac = new HMACSHA512(storedSalt);
-    var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-    return computedHash.SequenceEqual(storedHash);
+        using var hmac = new HMACSHA512(storedSalt);
+        var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        return computedHash.SequenceEqual(storedHash);
     }
 }

@@ -46,6 +46,12 @@ public partial class ApplicationDbContext
             .WithOne(u => u.Talent)
             .HasForeignKey<Talent>(t => t.UserId)
             .IsRequired();
+
+        modelBuilder.Entity<Talent>()
+            .HasOne(t => t.Profile)
+            .WithOne(p => p.Talent)
+            .HasForeignKey<Talent>(t => t.ProfileId)
+            .IsRequired();
     }
     
 }

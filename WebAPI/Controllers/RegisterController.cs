@@ -44,9 +44,6 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpPost("client")]
         public async Task<ActionResult<ClientDto>> RegisterClient(ClientUserDto clientUserDto)
         {
-            Console.WriteLine($"Received Client DTO: {JsonSerializer.Serialize(clientUserDto.ClientDto)}");
-            Console.WriteLine($"Received User DTO: {JsonSerializer.Serialize(clientUserDto.UserDto)}");
-
             var client = clientUserDto.ClientDto.DtoConvertToClient();
             var user = clientUserDto.UserDto.DtoConvertToUser();
 
@@ -72,30 +69,39 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpPost("talent")]
         public async Task<ActionResult<TalentDto>> RegisterTalent(TalentUserDto talentUserDto)
         {
-            Console.WriteLine($"Received Client DTO: {JsonSerializer.Serialize(talentUserDto.TalentDto)}");
-            Console.WriteLine($"Received User DTO: {JsonSerializer.Serialize(talentUserDto.UserDto)}");
-
             var talent = talentUserDto.TalentDto.DtoConvertToTalent();
             var user = talentUserDto.UserDto.DtoConvertToUser();
 
             try
             {
                 var registeredTalent = await _registerRepository.RegisterTalentWithUserAsync(talent, user);
+        
                 if (registeredTalent == null)
                 {
-                    Console.WriteLine("Failed to register client in the repository");
-                    return BadRequest("Failed to register client");
+                    Console.WriteLine("Failed to register talent in the repository");
+                    return BadRequest("Failed to register talent");
                 }
 
                 var registeredTalentDto = registeredTalent.TalentConvertToDto();
                 return CreatedAtAction(nameof(GetUser), new { id = registeredTalentDto.TalentId }, registeredTalentDto);
             }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine($"ArgumentNullException occurred: {ex.Message}");
+                return BadRequest($"Failed to register talent: {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"InvalidOperationException occurred: {ex.Message}");
+                return BadRequest($"Failed to register talent: {ex.Message}");
+            }
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception occurred: {ex.Message}");
-                return BadRequest($"Failed to register client: {ex.Message}");
+                return BadRequest($"Failed to register talent: {ex.Message}");
             }
         }
+
         
         
     }

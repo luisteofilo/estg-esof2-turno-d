@@ -1,3 +1,6 @@
+using System.Text.Json;
+using Common.Dtos.Profile;
+using Common.Dtos.Users;
 using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.DBLayer.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -98,19 +101,60 @@ namespace ESOF.WebApp.WebAPI.Repositories
                     RoleId = talentRole.RoleId,
                     UserId = user.UserId
                 });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while registering the user role", ex);
+            }
+
+            var profile = new Profile
+                {
+                    ProfileId = Guid.NewGuid(),
+                    Talent = talent,
+                    User = user,
+                    UserId = user.UserId,
+                    FirstName = talent.Name.Split(" ")[0],
+                    LastName = talent.Name.Split(" ")[1],
+                    Bio = "placeholder",
+                    Avatar = "placeholder",
+                    Location = talent.Address + ", " + talent.PostalCode + ", " + talent.City + ", " + talent.Country,
+                    UrlBackground = "placeholder",
+                    UrlProfile = "placeholder",
+                    ProfileSkills = new List<ProfileSkill>(),
+                    Educations = new List<Education>(),
+                    Experiences = new List<Experience>()
+                };
+        
+        
+                var profileDto = profile.ProfileConvertToDto();
+
+                Console.WriteLine(profile.ProfileId);
+                Console.WriteLine(JsonSerializer.Serialize(profileDto, new JsonSerializerOptions { WriteIndented = true }));
+
                 talent.UserId = user.UserId;
                 talent.User = user;
-
+                talent.Profile = profile;
+                talent.ProfileId = profile.ProfileId;
+                
+                var talentDto = talent.TalentConvertToDto();
+                
+                Console.WriteLine(talent.TalentId);
+                Console.WriteLine(JsonSerializer.Serialize(talentDto, new JsonSerializerOptions { WriteIndented = true }));
+                
+                try
+                {
+                    await _dbContext.Profiles.AddAsync(profile);
+                    Console.WriteLine($"Profile registered successfully: {profile.ProfileId}");
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Erro ao criar perfil", e);
+                }
+                
                 var entityEntry = await _dbContext.Talents.AddAsync(talent);
                 await _dbContext.SaveChangesAsync();
                 Console.WriteLine($"Talent registered successfully: {talent.TalentId}");
                 return entityEntry.Entity;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception occurred while registering the talent: {ex.Message}");
-                throw new Exception("An error occurred while registering the talent", ex);
-            }
         }
         
         public async Task<User?> GetUserByIdAsync(Guid id)

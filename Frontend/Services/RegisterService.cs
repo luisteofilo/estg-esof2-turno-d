@@ -1,3 +1,4 @@
+using Common.Dtos.Profile;
 using ESOF.WebApp.DBLayer.Entities;
 using Common.Dtos.Users;
 using Frontend.Services.Contracts;
