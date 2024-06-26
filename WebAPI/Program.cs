@@ -1,7 +1,15 @@
 using ESOF.WebApp.DBLayer.Context;
+using ESOF.WebApp.DBLayer.Persistence;
+using ESOF.WebApp.DBLayer.Persistence.Interfaces;
+using ESOF.WebApp.DBLayer.Persistence.Repositories;
+using ESOF.WebApp.Scraper;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+using ESOF.WebApp.WebAPI.Services;
+using Hangfire;
 using Microsoft.Extensions.FileProviders;
+using WebAPI.Repositories;
+using WebAPI.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
