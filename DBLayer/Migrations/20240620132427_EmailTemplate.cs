@@ -5,11 +5,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ESOF.WebApp.DBLayer.Migrations
 {
-    /// <inheritdoc />
     public partial class EmailTemplate : Migration
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
+        protected  void right(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_Education_Profiles_ProfileId",
@@ -211,8 +209,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 onDelete: ReferentialAction.Cascade);
         }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
+        protected void left(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_Educations_Profiles_ProfileId",
@@ -336,7 +333,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 oldClrType: typeof(string),
                 oldType: "text");
 
-            migrationBuilder.AddPrimaryKey(
+                            migrationBuilder.AddPrimaryKey(
                 name: "PK_Skill",
                 table: "Skill",
                 column: "SkillId");
