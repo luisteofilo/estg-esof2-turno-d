@@ -1,5 +1,6 @@
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.DBLayer.Entities.Interviews;
+using ESOF.WebApp.DBLayer.Entities.Emails;
 using ESOF.WebApp.DBLayer.Persistence;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +57,8 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<Interview> Interviews { get; set; }
     public DbSet<Interviewer> Interviewers { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
-
+    // Email Template
+    public DbSet<EmailTemplate> EmailTemplates { get; set; }
     // Job Features
     public DbSet<Job> Jobs { get; set; }
     public DbSet<Import> Imports { get; set; }
