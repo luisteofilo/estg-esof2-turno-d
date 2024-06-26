@@ -7,6 +7,11 @@
     private bool _isChatOpen = false;
     private string _message = string.Empty;
     private List<MessageDto> _messages = new List<MessageDto>();
+    
+    private List<string> commands = new List<string> { "/jobs", "/interviews", "/help" };
+    private List<string> jobParams = new List<string> { "company", "location", "title" };
+    private List<string> interviewParams = new List<string> { "candidate", "date", "position" };
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -48,14 +53,17 @@
         switch (command)
         {
             case "/jobs":
-                await HandleJobsCommand();
+                await HandleJobsCommand(message);
                 break;
-            case "/interview":
-                await HandleInterviewCommand();
+
+            case "/interviews":
+                await HandleInterviewsCommand(message);
                 break;
+
             case "/help":
                 await HandleHelpCommand();
                 break;
+
             default:
                 var aiMessage = new MessageDto("ai", "Comando não reconhecido. Use /help para ver a lista de comandos.", TIPO.ERRO);
                 _messages.Add(aiMessage);
@@ -65,22 +73,42 @@
         await ScrollToBottom();
     }
     
-    private async Task HandleJobsCommand()
+    private Dictionary<string, string> ParseParameters(string message)
     {
-        // TODO: Implementar lógica para obter e enviar informações sobre vagas de emprego.
+        var parts = message.Split(' ');
+        var parameters = new Dictionary<string, string>();
+
+        for (int i = 1; i < parts.Length; i++)
+        {
+            var param = parts[i].Split(':');
+            if (param.Length == 2)
+            {
+                parameters[param[0].ToLower()] = param[1];
+            }
+        }
+
+        return parameters;
+    }
+    
+    private async Task HandleJobsCommand(MessageDto message)
+    {
+        var parameters = ParseParameters(message.message);
+        // TODO: Implementar lógica para obter e enviar informações sobre vagas de emprego com base nos parâmetros.
         var aiMessage = new MessageDto("ai", "Aqui estão as vagas disponíveis: [Exemplo de vaga]", TIPO.SUCESSO);
+        _messages.Add(aiMessage);
+    }
+
+    private async Task HandleInterviewsCommand(MessageDto message)
+    {
+        var parameters = ParseParameters(message.message);
+        // TODO: Implementar lógica para obter e enviar informações sobre entrevistas com base nos parâmetros.
+        var aiMessage = new MessageDto("ai", "Aqui estão as entrevistas disponíveis: [Exemplo de entrevista]", TIPO.SUCESSO);
         _messages.Add(aiMessage);
     }
 
     private async Task HandleHelpCommand()
     {
-        var aiMessage = new MessageDto("ai", "Comandos disponíveis:<br/>/Interview - Lista de interviews<br/>/jobs - Lista de vagas <br/>/help - Lista de comandos", TIPO.SUCESSO);
-        _messages.Add(aiMessage);
-    }
-
-    private async Task HandleInterviewCommand()
-    { 
-        var aiMessage = new MessageDto("ai", "Aqui estão as interviews disponíveis: [Exemplo de interview]", TIPO.SUCESSO);
+        var aiMessage = new MessageDto("ai", "Comandos disponíveis:<br/>/Interview - Lista de interviews<br/>/jobs - Lista de vagas <br/>/help - Lista de comandos", TIPO.AVISO);
         _messages.Add(aiMessage);
     }
     
@@ -88,6 +116,108 @@
     {
         await JS.InvokeVoidAsync("scrollToBottom", "chat-body");
     }
+    
+    private List<string> _suggestions = new List<string>();
+
+    private void ShowSuggestions(ChangeEventArgs e)
+    {
+        var input = e.Value.ToString();
+        _suggestions.Clear();
+
+        var parts = input.Split(' ');
+        if (parts.Length == 1)
+        {
+            HandleSuggestionFirstPart(input);
+        }
+        else if (parts.Length > 1)
+        {
+            var command = parts[0].ToLower();
+            var lastPart = parts[parts.Length - 1].ToLower();
+            HandleSuggestionSecondPart(command, lastPart);
+        }
+
+        StateHasChanged();
+    }
+    
+    private void HandleSuggestionFirstPart(string input)
+    {
+        if (input.StartsWith('/'))
+        {
+            _suggestions.AddRange(commands.Where(c => c.StartsWith(input, StringComparison.OrdinalIgnoreCase)));
+        }
+    }
+
+    private void HandleSuggestionSecondPart(string command, string lastPart)
+    {
+        var paramInput = lastPart.Contains(":") ? lastPart.Split(':')[0] : lastPart;
+        if (!lastPart.Contains(":"))
+        {
+            SuggestParameter(command, paramInput);
+        }
+        else
+        {
+            var paramValue = lastPart.Split(':')[1];
+            SuggestParameterValue(command, paramInput, paramValue);
+        }
+    }
+
+    private void SuggestParameter(string command, string paramInput)
+    {
+        if (command == "/jobs")
+        {
+            _suggestions.AddRange(jobParams.Where(p => p.StartsWith(paramInput, StringComparison.OrdinalIgnoreCase)));
+        }
+        else if (command == "/interviews")
+        {
+            _suggestions.AddRange(interviewParams.Where(p => p.StartsWith(paramInput, StringComparison.OrdinalIgnoreCase)));
+        }
+    }
+
+    private void SuggestParameterValue(string command, string paramName, string paramValue)
+    {
+        if (command == "/jobs" && paramName == "company")
+        {
+            // Exemplo de chamada fictícia para obter valores da base de dados
+            var companies = GetCompaniesFromDatabase();
+            _suggestions.AddRange(companies.Where(c => c.Contains(paramValue, StringComparison.OrdinalIgnoreCase)));
+        }
+        // Adicione outras condições conforme necessário
+    }
+
+    private List<string> GetCompaniesFromDatabase()
+    {
+        // Simulação de obtenção de dados da base de dados
+        return new List<string> { "CompanyA", "CompanyB", "CompanyC" };
+    }
+
+
+    private void SelectSuggestion(string suggestion)
+    {
+        var parts = _message.Split(' ');
+        if (parts.Length > 1)
+        {
+            var lastPart = parts[parts.Length - 1];
+            if (lastPart.Contains(":"))
+            {
+                var paramName = lastPart.Split(':')[0];
+                parts[parts.Length - 1] = $"{paramName}:{suggestion}";
+            }
+            else
+            {
+                parts[parts.Length - 1] = suggestion + ':';
+                SuggestParameterValue(parts[0], suggestion, "");
+            }
+            _message = string.Join(" ", parts);
+        }
+        else
+        {
+            _message = suggestion;
+        }
+
+        _suggestions.Clear();
+        StateHasChanged();
+    }
+    
 }
 
 <div class="chat-container">
@@ -95,20 +225,32 @@
     {
         <div class="chatbot-chat">
             <div class="chat-header">
-                <span>Olá! 👋</span>
+                <span>Chatbot 🤖</span>
                 <button class="close-button" @onclick="ToggleChat">X</button>
             </div>
             <div id="chat-body" class="chat-body">
                 <div class="message ai">Hi there! How can we help you today?</div>
+                <div class="message ai">If this is your first time I recomend to write <b> '/help'</b></div>
                 @foreach (var msg in _messages)
                 {
-                    <div class="message @(msg.sender == "person" ? "person" : "ai") @(msg.sender != "person" ? (msg.type == TIPO.ERRO ? "bg-danger" : msg.type == TIPO.AVISO ? "bg-warning" : msg.type == TIPO.SUCESSO ? "bg-success" : "") : "")">
+                    <div class="message @(msg.sender == "person" ? "person" : "ai") @(msg.sender != "person" ? (msg.type == TIPO.ERRO ? "bg-danger" : msg.type == TIPO.AVISO ? "bg-warning" : "") : "")">
                         <span>@((MarkupString)msg.message)</span>
                     </div>
                 }
             </div>
             <div class="chat-footer">
-                <input type="text" @bind="_message" placeholder="Type your message..." />
+                <input type="text" @bind="_message" @oninput="ShowSuggestions" placeholder="Type your message..." />
+                <div class="suggestions">
+                    @if (_suggestions?.Any() == true)
+                    {
+                    <ul>
+                        @foreach (var suggestion in _suggestions)
+                        {
+                        <li @onclick="() => SelectSuggestion(suggestion)">@suggestion</li>
+                        }
+                    </ul>
+                    }
+                </div>
                 <button class="chatbot-button" @onclick="SendMessage">
                     📨
                 </button>

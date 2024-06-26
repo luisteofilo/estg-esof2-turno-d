@@ -134,3 +134,31 @@
     margin-right: 10px;
     text-align: right;
 }
+
+.suggestions {
+    position: absolute;
+    background-color: white;
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 100%;
+    bottom: 40px;
+    margin-bottom: 10px;
+    z-index: 1000;
+}
+
+.suggestions ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+}
+
+.suggestions li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.suggestions li:hover {
+    background-color: #f0f0f0;
+}
