@@ -1,0 +1,89 @@
+﻿@using Common.Dtos.Message
+@inject IJSRuntime JS
+@namespace ChatBot
+@rendermode InteractiveServer
+
+@code {
+    private bool _isChatOpen = false;
+    private string _message = string.Empty;
+    private List<MessageDto> _messages = new List<MessageDto>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_isChatOpen)
+        {
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task ToggleChat()
+    {
+        _isChatOpen = !_isChatOpen;
+        if (_isChatOpen)
+        {
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task SendMessage()
+    {
+        if (!string.IsNullOrEmpty(_message))
+        {
+            var message = new MessageDto("person", _message);
+            _messages.Add(message);
+            _message = string.Empty;
+
+            var aiMessage = new MessageDto("ai", "Respondi!");
+            _messages.Add(aiMessage);
+            
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task ScrollToBottom()
+    {
+        await JS.InvokeVoidAsync("scrollToBottom", "chat-body");
+    }
+}
+
+<div class="chat-container">
+    @if (_isChatOpen)
+    {
+        <div class="chatbot-chat">
+            <div class="chat-header">
+                <span>Olá! 👋</span>
+                <button class="close-button" @onclick="ToggleChat">X</button>
+            </div>
+            <div id="chat-body" class="chat-body">
+                <div class="message ai">Hi there! How can we help you today?</div>
+                @foreach (var msg in _messages)
+                {
+                    <div class="message @(msg.sender == "person" ? "person" : "ai")">
+                        <span>@msg.message</span>
+                    </div>
+                }
+            </div>
+            <div class="chat-footer">
+                <input type="text" @bind="_message" placeholder="Type your message..." />
+                <button class="chatbot-button" @onclick="SendMessage">
+                    📨
+                </button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <button class="chatbot-button" @onclick="ToggleChat">
+            🤖
+        </button>
+    }
+</div>
+
+<script>
+        function scrollToBottom(elementId) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.scrollTop = element.scrollHeight;
+            }
+        }
+</script>

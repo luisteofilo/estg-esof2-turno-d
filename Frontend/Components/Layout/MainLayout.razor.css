@@ -94,3 +94,26 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+/* ChatBot.razor.css */
+.chatbot-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #800080; /* Cor roxa */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.chatbot-button:hover {
+    background-color: #4b0082; /* Cor roxa escura ao passar o mouse */
+}
