@@ -5,12 +5,24 @@ using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
+using ESOF.WebApp.WebAPI.Services;
+using Hangfire;
+using Hangfire.PostgreSql;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+var dbContext = new ApplicationDbContext();
+var connectionString = dbContext.Database.GetDbConnection().ConnectionString;
+
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
+
+builder.Services.AddHangfireServer();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
@@ -29,8 +41,18 @@ builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 
+
 //Dashboard
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+
+//Email Template
+builder.Services.AddScoped<EmailTemplateService>();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+
 
 var app = builder.Build();
 
@@ -61,6 +83,14 @@ app.MapGet("/weatherforecast", () =>
         return forecast;
     })
     .WithName("GetWeatherForecast")
+    .WithOpenApi();
+
+app.MapGet("/users/emails", () =>
+    {
+        var db = new ApplicationDbContext();
+        return db.Users.Select(u => u.Email);
+    })
+    .WithName("GetUsersNames")
     .WithOpenApi();
 
 app.MapControllers();
