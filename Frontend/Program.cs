@@ -33,6 +33,11 @@ builder.Services.AddScoped<ApiHelper>();
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IJobService, JobService>();
+
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IRegisterService, RegisterService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<IExternalJobService, ExternalJobService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();

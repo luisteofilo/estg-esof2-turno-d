@@ -1,4 +1,5 @@
 using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Entities.Emails;
 using ESOF.WebApp.DBLayer.Entities.FAQ;
 using ESOF.WebApp.DBLayer.Entities.Interviews;
 
