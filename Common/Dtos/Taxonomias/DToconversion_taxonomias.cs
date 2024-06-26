@@ -84,33 +84,5 @@ namespace Common.Dtos.Taxonomias
                
             };
         }
-        }
     }
-
-    public class VerticalDto
-    {
-        public Guid VerticalId { get; set; }
-        public string VerticalName { get; set; }
-        public List<RoleVerticalDto> RoleVerticals { get; set; }
-        public List<VerticalUserDto> VerticalUsers { get; set; }
-    }
-
-    public class RoleVerticalDto
-    {
-        public Guid RoleVerticalId { get; set; }
-        public string RoleVerticalName { get; set; }
-        public List<SkillVerticalDto> SkillVerticals { get; set; }
-    }
-
-    public class SkillVerticalDto
-    {
-        public Guid SkillVerticalId { get; set; }
-        public string SkillVerticalName { get; set; }
-        public int SkillVerticalExperience { get; set; }
-    }
-
-    public class VerticalUserDto
-    {
-        public Guid UserId { get; set; }
-        
-    }
+}

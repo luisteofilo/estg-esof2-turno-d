@@ -1,0 +1,45 @@
+﻿@page "/taxonomias"
+@using Frontend.Services
+@using Common.Dtos.Taxonomias
+@inject ITaxonomiasService TaxonomiasService
+
+<h3>Taxonomias</h3>
+
+@if (taxonomias == null)
+{
+    <p>Loading...</p>
+}
+else if (!taxonomias.Any())
+{
+    <p>Sem taxonomias disponíveis.</p>
+}
+else
+{
+    <ul>
+        @foreach (var taxonomia in taxonomias)
+        {
+            <li>
+                <h4>@taxonomia.VerticalName</h4>
+                <p>@taxonomia.RoleVerticals.Count roles, @taxonomia.VerticalUsers.Count users</p>
+            </li>
+        }
+    </ul>
+    <label for="verticals">Escolha uma vertical:</label>
+    <select id="verticals" @bind="selectedVerticalId">
+        <option value="">--Selecione--</option>
+        @foreach (var vertical in taxonomias)
+        {
+            <option value="@vertical.VerticalId">@vertical.VerticalName</option>
+        }
+    </select>
+}
+
+@code {
+    private List<VerticalDto> taxonomias;
+    private Guid selectedVerticalId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        taxonomias = await TaxonomiasService.GetTaxonomiasAsync();
+    }
+}

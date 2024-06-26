@@ -15,6 +15,9 @@ builder.Services.AddScoped<ApiHelper>();
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
 
+//Taxonomias Services
+builder.Services.AddScoped<ITaxonomiasService, TaxonomiasService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
