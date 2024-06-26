@@ -22,8 +22,13 @@ builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IInterviewerService, InterviewerService>();
 builder.Services.AddScoped<ICandidateService, CandidateService>();
 
+
+//Dashboard
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
 //FAQ Services
 builder.Services.AddScoped<IFAQService, FAQService>();
+
 
 var app = builder.Build();
 
