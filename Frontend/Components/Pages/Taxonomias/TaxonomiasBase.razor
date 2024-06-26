@@ -2,6 +2,7 @@
 @using Frontend.Services
 @using Common.Dtos.Taxonomias
 @inject ITaxonomiasService TaxonomiasService
+@inject NavigationManager Navigation
 
 <h3>Taxonomias</h3>
 
@@ -24,62 +25,21 @@ else
             </li>
         }
     </ul>
-    <div>
-        <label for="verticalName">Vertical:</label>
-        <input type="text" id="verticalName" @bind="newVerticalName" />
-    </div>
-    <br>
-    <div>
-        <label for="roleName">Role:</label>
-        <input type="text" id="roleName" @bind="newRoleName" />
-    </div>
-    <br>
-    <div>
-        <label for="skillName">Skill:</label>
-        <input type="text" id="skillName" @bind="newSkillName" />
-    </div>
-    <br>
-    <button @onclick="CreateTaxonomia">Create</button>
 }
+
+<a @onclick="NavigateToCreate">Create New Taxonomia</a>
 
 @code {
     private List<VerticalDto> taxonomias;
-    private string newVerticalName;
-    private string newRoleName;
-    private string newSkillName;
 
     protected override async Task OnInitializedAsync()
     {
         taxonomias = await TaxonomiasService.GetTaxonomiasAsync();
     }
 
-    private async Task CreateTaxonomia()
+    private void NavigateToCreate()
     {
-        var newVertical = new VerticalDto
-        {
-            VerticalId = Guid.NewGuid(),
-            VerticalName = newVerticalName,
-            RoleVerticals = new List<RoleVerticalDto>
-            {
-                new RoleVerticalDto
-                {
-                    RoleVerticalId = Guid.NewGuid(),
-                    RoleVerticalName = newRoleName,
-                    SkillVerticals = new List<SkillVerticalDto>
-                    {
-                        new SkillVerticalDto
-                        {
-                            SkillVerticalId = Guid.NewGuid(),
-                            SkillVerticalName = newSkillName,
-                            SkillVerticalExperience = 0
-                        }
-                    }
-                }
-            }
-        };
-
-        await TaxonomiasService.CreateVerticalAsync(newVertical);
-        taxonomias.Add(newVertical);
-        newVerticalName = newRoleName = newSkillName = string.Empty;
+        Navigation.NavigateTo("/taxonomias/create");
     }
 }
+
