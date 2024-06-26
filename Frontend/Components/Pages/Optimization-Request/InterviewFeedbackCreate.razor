@@ -1,93 +1,97 @@
 ﻿@page "/create-interview-feedback"
 @rendermode InteractiveServer
-@inherits InterviewFeesbackCreate
+@using Frontend.Helpers
+@using Common.Dtos.Optimization_Requests
+@using System.Text.Json
+@using System.Text
+@attribute [StreamRendering]
+@inject HttpClient HttpClient
 
 <PageTitle>Create Interview Feedback</PageTitle>
 
-@if (ShowError)
-{
-    <div class="alert alert-danger">
-        @ErrorMessage
+<h1>Create Interview Feedback</h1>
+
+<p>Fill out the form below to create interview feedback:</p>
+
+<form @onsubmit="HandleSubmit">
+    <div class="form-group">
+        <label for="InterviewFeedbackId">Interview Feedback ID:</label>
+        <input id="InterviewFeedbackId" class="form-control" @bind="@newFeedback.InterviewFeedbackId" />
     </div>
-}
-else
+    <div class="form-group">
+        <label for="candidate">Candidate Name:</label>
+        <input id="candidate" class="form-control" @bind="@newFeedback.Candidate" />
+    </div>
+    <div class="form-group">
+        <label for="interviewer">Interviewer Name:</label>
+        <input id="interviewer" class="form-control" @bind="@newFeedback.Interviewer" />
+    </div>
+    <div class="form-group">
+        <label for="interview">Interview Name:</label>
+        <input id="interview" class="form-control" @bind="@newFeedback.Interview" />
+    </div>
+    <div class="form-group">
+        <label for="Job">Job Position:</label>
+        <input id="Job" class="form-control" @bind="@newFeedback.JobId" />
+    </div>
+    <div class="form-group">
+        <label for="feedback">Feedback:</label>
+        <textarea id="feedback" class="form-control" @bind="@newFeedback.Feedback"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="rejectionReason">Rejection Reason:</label>
+        <input id="rejectionReason" class="form-control" @bind="@newFeedback.RejectionReason" />
+    </div>
+    <div class="form-group">
+        <label for="optimization">Optimization Suggestions:</label>
+        <input id="optimization" class="form-control" @bind="@newFeedback.OptimizationSuggestions" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@if (isSubmitting)
 {
-    <h3>Create Interview Feedback</h3>
-    <form @onsubmit="CreateInterviewFeedback">
-        <div class="form-group">
-            <label for="inputCandidateId">Candidate:</label>
-            <select class="form-control" id="inputCandidateId" @bind="NewCandidate.CandidateId">
-                <option value="">Select Candidate</option>
-                @if (AvaiableCandidates != null && AvaiableCandidates.Any())
-                {
-                    @foreach (var candidate in AvaiableCandidates)
-                    {
-                        <option value="@candidate.CandidateId">@candidate.Name</option>
-                    }
-                }
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="inputInterviewId">Interview:</label>
-            <select class="form-control" id="inputInterviewId" @bind="NewInterview.InterviewId">
-                <option value="">Select Interview</option>
-                @if (AvaiableInteviews != null && AvaiableInteviews.Any())
-                {
-                    @foreach (var interview in AvaiableInteviews)
-                    {
-                        <option value="@interview.InterviewId">@interview.InterviewId</option>
-                    }
-                }
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="inputInterviewerId">Interviewer:</label>
-            <select class="form-control" id="inputInterviewerId" @bind="NewInterviewer.InterviewerId">
-                <option value="">Select Interviewer</option>
-                @if (AvaiableInterviwers != null && AvaiableInterviwers.Any())
-                {
-                    @foreach (var interviewer in AvaiableInterviwers)
-                    {
-                        <option value="@interviewer.InterviewerId">@interviewer.Name</option>
-                    }
-                }
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="inputFeedback">Feedback:</label>
-            <textarea class="form-control" id="inputFeedback" @bind="Feedback"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="inputRejectionReason">Rejection Reason:</label>
-            <textarea class="form-control" id="inputRejectionReason" @bind="RejectionReason"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="inputOptimizationSuggestions">Optimization Suggestions:</label>
-            <textarea class="form-control" id="inputOptimizationSuggestions" @bind="OptimizationSuggestions"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="inputJobId">Job:</label>
-            <select class="form-control" id="inputJobId" @bind="NewJobDto.JobId">
-                <option value="">Select Job</option>
-                @if (Jobs != null && Jobs.Any())
-                {
-                    @foreach (var job in Jobs)
-                    {
-                        <option value="@job.JobId">@job.JobId</option>
-                    }
-                }
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    <p>
+        <em>Submitting...</em>
+    </p>
 }
 
+@if (submitError != null)
+{
+    <p class="text-danger">@submitError</p>
+}
 
+@code {
+    private InterviewFeedbackDTO newFeedback = new InterviewFeedbackDTO();
+    private bool isSubmitting = false;
+    private string? submitError;
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            isSubmitting = true;
+
+            var jsonPayload = JsonSerializer.Serialize(newFeedback);
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            var response = await HttpClient.PostAsync("http://localhost:5295/api/InterviewFeedback", content);
+
+            response.EnsureSuccessStatusCode(); 
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            
+            newFeedback = new InterviewFeedbackDTO();
+        }
+        catch (Exception ex)
+        {
+            submitError = $"Error submitting feedback: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}
 
