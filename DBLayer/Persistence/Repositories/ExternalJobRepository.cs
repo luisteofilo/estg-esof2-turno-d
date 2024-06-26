@@ -22,7 +22,7 @@ public class ExternalJobRepository(ApplicationDbContext _dbContext) : BaseReposi
         await _dbContext.Jobs
          .Where(j => j.JobId == job.JobId)
          .ExecuteUpdateAsync(setters => setters
-             .SetProperty(j => j.Position, job.Position)
+             .SetProperty(j => j.Positions, job.Positions)
              .SetProperty(j => j.Localization, job.Localization)
              .SetProperty(j => j.Description, job.Description)
              .SetProperty(j => j.Company, job.Company)
