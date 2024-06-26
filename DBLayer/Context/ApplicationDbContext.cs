@@ -61,6 +61,7 @@ public partial class ApplicationDbContext : DbContext
     // Job Features
     
     public DbSet<Job> Jobs { get; set; }
+    public DbSet<Import> Imports{ get; set; }
     public DbSet<JobSkill> JobSkills { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -86,13 +87,14 @@ public partial class ApplicationDbContext : DbContext
 
         // Job Features
         BuildJobs(modelBuilder);
+        BuildImports(modelBuilder);
         BuildJobSkills(modelBuilder);
         
         // Interview Features 
         BuildInterviews(modelBuilder);
         BuildInterviewer(modelBuilder);
         BuildCandidates(modelBuilder);
-
+        
         
         base.OnModelCreating(modelBuilder);
     }
