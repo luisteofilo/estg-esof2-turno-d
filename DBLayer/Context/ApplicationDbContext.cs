@@ -1,4 +1,5 @@
 using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Entities.Emails;
 using ESOF.WebApp.DBLayer.Entities.FAQ;
 using ESOF.WebApp.DBLayer.Entities.Interviews;
 
@@ -50,6 +51,12 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
 
+    
+    public DbSet<Client> Clients { get; set; } // DbSet para armazenar clientes
+    public DbSet<Talent> Talents { get; set; } // DbSet para armazenar talentos
+    
+    public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
+    
     // Profile Features
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<Education> Educations { get; set; }
@@ -89,6 +96,9 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
+        BuildClients(modelBuilder);
+        BuildTalents(modelBuilder);
+        
 
         // Profile Features 
         BuildProfiles(modelBuilder);

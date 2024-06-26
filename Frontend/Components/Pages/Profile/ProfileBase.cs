@@ -1,12 +1,18 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using Common.Dtos.Profile;
+using ESOF.WebApp.DBLayer.Context;
 using Frontend.Services.Contracts;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 
 namespace Frontend.Components.Pages.Profile;
 
 public class ProfileBase : ComponentBase
 {
+    [Inject] private IHttpContextAccessor HttpContextAccessor { get; set; }
+    private ApplicationDbContext DbContext = new();
+    
     [Inject] protected IProfileService ProfileService { get; set; }
 
     protected bool IsEditingProfile { get; set; }
@@ -24,11 +30,26 @@ public class ProfileBase : ComponentBase
     protected List<ExperienceDto> EditableExperiences { get; set; }
     protected List<EducationDto> EditableEducations { get; set; }
     
-
     protected override async Task OnInitializedAsync()
     {
-        // TODO : HARD CODED PROFILE 
-        var profileId = Guid.Parse("e69a1fad-6acd-4566-9de9-e95ac88d118a");
+        
+        var userId = HttpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        
+        if (userId == null)
+        {
+            Console.WriteLine("User is not logged in");
+            return;
+        }
+        
+        var profile = await DbContext.Profiles.FirstOrDefaultAsync(p => p.UserId == Guid.Parse(userId));
+        
+        if (profile == null)
+        {
+            Console.WriteLine("Profile for the logged-in user not found");
+            return;
+        }
+        
+        var profileId = profile.ProfileId;
         
         Profile = await ProfileService.GetProfile(profileId);
         Skills = await ProfileService.GetSkillsForProfile(profileId);

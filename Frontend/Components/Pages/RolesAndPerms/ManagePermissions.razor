@@ -1,0 +1,130 @@
+@page "/manage-permissions/{roleId:guid}"
+@layout MainLayout
+@using ESOF.WebApp.DBLayer.Entities
+@using Frontend.Components.Layout
+@using Frontend.Services.Contracts
+@inject IRoleService RoleService
+@rendermode InteractiveServer
+
+<PageTitle>Manage Permissions</PageTitle>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h3 class="text-center mb-4">Manage Permissions for Role</h3>
+
+            @if (_role == null) 
+            { 
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <h4 class="text-center">@_role.Name</h4>
+
+                <ul class="list-group mt-4 mb-4">
+                    @if (_role.Permissions != null && _role.Permissions.Count > 0)
+                    {
+                        @foreach (var permission in _role.Permissions)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @permission.Name
+                                <button class="btn btn-danger btn-sm" @onclick="() => RemovePermission(permission.PermissionId)">Remove</button>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item">No permissions assigned.</li>
+                    }
+                </ul>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" @bind="_newPermissionName" placeholder="Permission name" />
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" @onclick="AddPermission">Add Permission</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid RoleId { get; set; }
+
+    private RoleWithPermissionsModel? _role;
+    private string _newPermissionName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRolePermissions();
+    }
+
+    private async Task LoadRolePermissions()
+    {
+        try
+        {
+            var role = await RoleService.GetRoleByIdAsync(RoleId);
+            var permissions = await RoleService.GetRolePermissionsAsync(RoleId);
+
+            _role = new RoleWithPermissionsModel
+            {
+                RoleId = role.RoleId,
+                Name = role.Name,
+                Permissions = permissions
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading role permissions: {ex.Message}");
+        }   
+    }
+
+    private async Task AddPermission()
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(_newPermissionName))
+            {
+                var newPermission = new Permission
+                {
+                    PermissionId = Guid.NewGuid(),
+                    Name = _newPermissionName
+                };
+
+                await RoleService.AddPermissionToRoleAsync(RoleId, newPermission);
+                await LoadRolePermissions();
+                _newPermissionName = string.Empty;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding permission 1: {ex.Message}");
+        }
+    }
+
+    private async Task RemovePermission(Guid permissionId)
+    {
+        try
+        {
+            await RoleService.RemovePermissionFromRoleAsync(RoleId, permissionId);
+            await LoadRolePermissions(); 
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error removing permission: {ex.Message}");
+        }
+    }
+
+    public class RoleWithPermissionsModel
+    {
+        public Guid RoleId { get; set; }
+        public string? Name { get; set; }
+        public List<Permission>? Permissions { get; set; }
+    }
+}

@@ -28,7 +28,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
         public async Task<ActionResult<EmailTemplate>> GetTemplateById(int id)
         {
             var template = await _reademailTemplateService.GetTemplateByIdAsync(id);
-            
+
             if (template == null)
             {
                 return NotFound();
@@ -80,4 +80,4 @@ namespace ESOF.WebApp.WebAPI.Controllers
             }
         }
     }
-}
+

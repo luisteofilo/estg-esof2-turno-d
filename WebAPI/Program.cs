@@ -1,6 +1,10 @@
 using ESOF.WebApp.DBLayer.Context;
+using Helpers.Models;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+
+using ESOF.WebApp.WebAPI.Services;
+
 using ESOF.WebApp.DBLayer.Persistence;
 using ESOF.WebApp.DBLayer.Persistence.Interfaces;
 using ESOF.WebApp.DBLayer.Persistence.Repositories;
@@ -8,6 +12,7 @@ using ESOF.WebApp.WebAPI.Services;
 using ESOF.WebApp.Scraper;
 using Hangfire;
 using Hangfire.PostgreSql;
+
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
@@ -31,6 +36,14 @@ builder.Services.AddHangfireServer();
 
 // Add services to the container.
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+builder.Services.AddScoped<EmailTemplateService>();
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
@@ -38,15 +51,21 @@ builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetService<ApplicationDbContext>()!);
 builder.Services.AddScoped<IImportRepository, ImportRepository>();
 builder.Services.AddScoped<ExternalJobService>();
+
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+
+builder.Services.AddScoped<RoleRepository>();
+builder.Services.AddScoped<RegisterRepository>();
+
 builder.Services.AddScraperDependencyInjection();
 
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
 builder.Services.AddScoped<IExternalJobRepository, ExternalJobRepository>();
+
 
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
@@ -122,6 +141,7 @@ app.MapGet("/users/emails", () =>
     .WithOpenApi();
 
 app.MapControllers();
+
 
 app.Run();
 
