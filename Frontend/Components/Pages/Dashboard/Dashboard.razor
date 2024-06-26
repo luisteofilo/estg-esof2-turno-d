@@ -47,24 +47,24 @@ else {
             </div>
         </div>
 
-        <div class="dashboard-graphs" style="margin-bottom: 20px">
+        <div class="dashboard-graphs" style="margin-top: 40px; margin-bottom: 40px">
             <div class="dashboard-graph">
-                <h4 style="text-align: center">Most Common Skills on Candidates</h4>
+                <h4 style="text-align: center; margin-bottom: 20px">Most Common Skills on Candidates</h4>
                 <canvas id="commonSkills"></canvas>
             </div>
 
             <div class="dashboard-graph">
-                <h4 style="text-align: center">Most Common Skills on Jobs</h4>
+                <h4 style="text-align: center;margin-bottom: 20px">Most Common Skills on Jobs</h4>
                 <canvas id="commonSkillsJobs"></canvas>
             </div>
         </div>
         
         <div class="dashboard-graph">
-            <h4>Most Common Experiences</h4>
+            <h4 style="text-align: center; margin-bottom: 20px">Most Common Experiences</h4>
             <canvas id="applicationSourceChart"></canvas>
         </div>
 
-        <div class="dashboard-graph">
+        <div class="dashboard-graph" style="margin-top: 50px">
             <h4>Interviews Over Time</h4>
             <label for="yearSelector">Select Year:</label>
             <select id="yearSelector" class="form-control" @onchange="OnYearChanged">
