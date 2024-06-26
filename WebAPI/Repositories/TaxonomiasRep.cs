@@ -28,7 +28,17 @@ public class TaxonomiasRep : ITaxonomias
             .ThenInclude(vu => vu.User)
             .FirstOrDefaultAsync(v => v.VerticalId == id);
     }
-
+    public async Task<IEnumerable<Vertical>> GetTaxonomiasUsers(Guid id)
+    {
+        var db = new ApplicationDbContext();
+        return await db.Verticals
+            .Include(v => v.Roles_verticals)
+            .ThenInclude(rv => rv.Skills_verticals)
+            .Include(v => v.VerticalsUsers)
+            .ThenInclude(vu => vu.User)
+            .Where(v => v.VerticalsUsers.Any(vu => vu.UserId == id)) // Filtra as taxonomias pelo id do usuário
+            .ToListAsync();
+    }
     public async Task Add(Vertical vertical)
     {
         _db.Verticals.Add(vertical);

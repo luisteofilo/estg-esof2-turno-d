@@ -32,7 +32,27 @@ namespace ESOF.WebApp.WebAPI.Controllers
                     "Error retrieving data from the database.");
             }
         }
+        [HttpGet("user/{userId:guid}")]
+        public async Task<ActionResult<IEnumerable<VerticalDto>>> GetTaxonomias(Guid userId)
+        {
+            try
+            {
+                var taxonomias = await taxonomiasRepository.GetTaxonomiasUsers(userId);
 
+                if (taxonomias == null || !taxonomias.Any())
+                {
+                    return NotFound();
+                }
+
+                var taxonomiasDto = taxonomias.Select(v => v.ToDto()).ToList();
+                return Ok(taxonomiasDto);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error retrieving data from the database.");
+            }
+        }
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<VerticalDto>> GetTaxonomiaById(Guid id)
         {

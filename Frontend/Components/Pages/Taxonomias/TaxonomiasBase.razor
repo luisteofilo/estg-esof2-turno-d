@@ -20,66 +20,132 @@ else
         {
             <li>
                 <h4>@taxonomia.VerticalName</h4>
-                <p>@taxonomia.RoleVerticals.Count roles, @taxonomia.VerticalUsers.Count users</p>
+
+                @foreach (var role in taxonomia.RoleVerticals)
+                {
+                    <h5>@role.RoleVerticalName</h5>
+
+                    <ul>
+                        @foreach (var skill in role.SkillVerticals)
+                        {
+                            <li>
+                                <p>@skill.SkillVerticalName - Experience: @skill.SkillVerticalExperience</p>
+                            </li>
+                        }
+                    </ul>
+                }
+
+                <button @onclick="() => EditVertical(taxonomia)">Editar</button>
+                <button @onclick="() => RemoveVertical(taxonomia)">Remover</button>
+
+                @if (verticalSelecionada != null && verticalSelecionada.VerticalId == taxonomia.VerticalId)
+                {
+                    <div>
+                        <h4>Editando Vertical:</h4>
+                        <label for="editVerticalName">Nome da Vertical:</label>
+                        <input type="text" id="editVerticalName" @bind-value="verticalSelecionada.VerticalName" />
+
+                        @foreach (var role in verticalSelecionada.RoleVerticals)
+                        {
+                            <h5>Editando Role:</h5>
+                            <label for="editRoleName">Nome da Role:</label>
+                            <input type="text" id="editRoleName" @bind-value="role.RoleVerticalName" />
+
+                            @foreach (var skill in role.SkillVerticals)
+                            {
+                                <h6>Editando Skill:</h6>
+                                <label for="editSkillName">Nome da Skill:</label>
+                                <input type="text" id="editSkillName" @bind-value="skill.SkillVerticalName" />
+
+                                <label for="editSkillExperience">Anos de Experiência:</label>
+                                <input type="number" id="editSkillExperience" @bind-value="skill.SkillVerticalExperience" />
+                            }
+                        }
+
+                        <button @onclick="SaveVertical">Salvar</button>
+                        <button @onclick="CancelEdit">Cancelar</button>
+                    </div>
+                }
             </li>
         }
     </ul>
-    <div>
-        <label for="verticalName">Vertical:</label>
-        <input type="text" id="verticalName" @bind="newVerticalName" />
-    </div>
-    <br>
-    <div>
-        <label for="roleName">Role:</label>
-        <input type="text" id="roleName" @bind="newRoleName" />
-    </div>
-    <br>
-    <div>
-        <label for="skillName">Skill:</label>
-        <input type="text" id="skillName" @bind="newSkillName" />
-    </div>
-    <br>
-    <button @onclick="CreateTaxonomia">Create</button>
 }
 
 @code {
     private List<VerticalDto> taxonomias;
-    private string newVerticalName;
-    private string newRoleName;
-    private string newSkillName;
+    private VerticalDto verticalSelecionada;
 
     protected override async Task OnInitializedAsync()
     {
-        taxonomias = await TaxonomiasService.GetTaxonomiasAsync();
+        await LoadTaxonomiasAsync();
     }
 
-    private async Task CreateTaxonomia()
+    private async Task LoadTaxonomiasAsync()
     {
-        var newVertical = new VerticalDto
-        {
-            VerticalId = Guid.NewGuid(),
-            VerticalName = newVerticalName,
-            RoleVerticals = new List<RoleVerticalDto>
-            {
-                new RoleVerticalDto
-                {
-                    RoleVerticalId = Guid.NewGuid(),
-                    RoleVerticalName = newRoleName,
-                    SkillVerticals = new List<SkillVerticalDto>
-                    {
-                        new SkillVerticalDto
-                        {
-                            SkillVerticalId = Guid.NewGuid(),
-                            SkillVerticalName = newSkillName,
-                            SkillVerticalExperience = 0
-                        }
-                    }
-                }
-            }
-        };
+        taxonomias = await TaxonomiasService.GetTaxonomiasAsync();
+    }
+   // private async Task LoadTaxonomiasAsync()
+    //{
+   //     taxonomias = await TaxonomiasService.GetTaxonomiasUserAsync(Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa5"));
+    //}
 
-        await TaxonomiasService.CreateVerticalAsync(newVertical);
-        taxonomias.Add(newVertical);
-        newVerticalName = newRoleName = newSkillName = string.Empty;
+    private void EditVertical(VerticalDto vertical)
+    {
+        // Make a copy to avoid directly modifying the original data until saved
+        verticalSelecionada = new VerticalDto
+        {
+            VerticalId = vertical.VerticalId,
+            VerticalName = vertical.VerticalName,
+            RoleVerticals = vertical.RoleVerticals.Select(r => new RoleVerticalDto
+            {
+                RoleVerticalId = r.RoleVerticalId,
+                RoleVerticalName = r.RoleVerticalName,
+                SkillVerticals = r.SkillVerticals.Select(s => new SkillVerticalDto
+                {
+                    SkillVerticalId = s.SkillVerticalId,
+                    SkillVerticalName = s.SkillVerticalName,
+                    SkillVerticalExperience = s.SkillVerticalExperience
+                }).ToList()
+            }).ToList()
+        };
+    }
+
+    private async Task SaveVertical()
+    {
+        // Implement save logic here
+        if (verticalSelecionada != null)
+        {
+            await TaxonomiasService.UpdateVerticalAsync(verticalSelecionada);
+            await LoadTaxonomiasAsync(); // Refresh data after save
+        }
+        ClearSelection();
+    }
+
+    private void CancelEdit()
+    {
+        ClearSelection();
+    }
+
+    private async Task RemoveVertical(VerticalDto vertical)
+    {
+        try
+        {
+            var id = vertical.VerticalId;
+            if (await TaxonomiasService.DeleteVerticalAsync(id))
+            {
+                await LoadTaxonomiasAsync(); // Refresh data after deletion
+                ClearSelection();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting vertical: {ex.Message}");
+            
+        }
+    }
+
+    private void ClearSelection()
+    {
+        verticalSelecionada = null;
     }
 }

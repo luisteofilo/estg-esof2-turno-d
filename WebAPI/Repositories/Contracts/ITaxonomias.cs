@@ -10,4 +10,5 @@ public interface ITaxonomias
     Task SaveAsync(); 
     Task Add(Vertical vertical);
     Task Delete(Guid id);
+    Task<IEnumerable<Vertical>> GetTaxonomiasUsers(Guid id);
 }

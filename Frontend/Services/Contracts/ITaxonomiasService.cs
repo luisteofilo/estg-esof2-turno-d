@@ -9,5 +9,8 @@ namespace Frontend.Services
     {
         Task<List<VerticalDto>> GetTaxonomiasAsync();
         Task CreateVerticalAsync(VerticalDto newVertical);
+        Task<List<VerticalDto>> GetTaxonomiasUserAsync(Guid id);
+        Task UpdateVerticalAsync(VerticalDto updatedVertical);
+        Task<bool> DeleteVerticalAsync(Guid verticalId);
     }
 }
