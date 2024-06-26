@@ -21,7 +21,7 @@ builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IInterviewerService, InterviewerService>();
 builder.Services.AddScoped<ICandidateService, CandidateService>();
-builder.Services.AddScoped<IinterviewFeedback, InterviewFeedbackService>();
+builder.Services.AddScoped<IInterviewFeedbackService, InterviewFeedbackService>();
 
 var app = builder.Build();
 
@@ -33,7 +33,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();

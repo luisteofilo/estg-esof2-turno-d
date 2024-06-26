@@ -1,0 +1,39 @@
+﻿@page
+@model YourNamespace.Pages.InterviewFeedbacksModel
+@{
+    ViewData["Title"] = "Interview Feedbacks";
+}
+
+<h1>Interview Feedbacks</h1>
+
+@if (Model.InterviewFeedbacks == null || !Model.InterviewFeedbacks.Any())
+{
+    <p>No interview feedbacks found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Interview ID</th>
+            <th>Feedback</th>
+            <th>Interviewer Name</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var feedback in Model.InterviewFeedbacks)
+        {
+            <tr>
+                <td>@feedback.InterviewId</td>
+                <td>@feedback.Feedback</td>
+                <td>@feedback.InterviewerName</td>
+                <td>
+                    <a href="@($"edit-interview-feedback/{feedback.Id}")">Edit</a> |
+                    <a href="@($"delete-interview-feedback/{feedback.Id}")">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

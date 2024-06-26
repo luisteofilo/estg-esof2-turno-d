@@ -1,19 +1,20 @@
-﻿namespace Frontend.Services.Contracts;
+﻿using Common.Dtos.Job;
+using Common.Dtos.Optimization_Requests;
 
-
-public class IInterviewFeedbackService
+namespace Frontend.Services.Contracts
 {
-    Task<ICollection<InterviewFeedback>> GetInterviewsFeedbackAsync();
-    Task<InterviewFeedback> GetInterviewFeedbackAsync(Guid id);
-    Task<bool> InterviewFeedbackExistsAsync(Guid InterviewFeedbackId);
-    Task<int> UpdateInterviewFeedbackAsync(InterviewFeedback InterviewFeedback);
-    Task DeleteInterviewFeedbackAsync(Guid InterviewFeedbackId);
-    Task AddInterviewFeedbackAsync(InterviewFeedback InterviewFeedback);
-    Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByJob(Guid JobId);
-    Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByCandidate(Guid candidate);
-    Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByInterview(Guid interview);
-    Task<ICollection<InterviewFeedback>> GetInterviewFeedbackByInterviewer(Guid interview);
-
-
-
+    public interface IInterviewFeedbackService
+    {
+        Task<ICollection<InterviewFeedbackDTO>> GetInterviewsFeedback();
+        Task<InterviewFeedbackDTO> GetInterviewFeedback(Guid id);
+        Task<InterviewFeedbackDTO> InterviewFeedbackExistsAsync(Guid InterviewFeedbackId);
+        Task<InterviewFeedbackDTO> UpdateInterviewFeedbackAsync(InterviewFeedbackDTO interviewFeedbackDTO, Guid InterviewFeedbackId);
+        Task DeleteInterviewFeedbackAsync(Guid InterviewFeedbackId);
+        Task<InterviewFeedbackDTO> AddInterviewFeedbackAsync(InterviewFeedbackDTO interviewFeedbackDTO);
+        Task<InterviewFeedbackDTO> GetInterviewFeedbackByJob(Guid JobId);
+        Task<InterviewFeedbackDTO> GetInterviewFeedbackByCandidate(Guid candidate);
+        Task<InterviewFeedbackDTO> GetInterviewFeedbackByInterview(Guid interview);
+        Task<InterviewFeedbackDTO> GetInterviewFeedbackByInterviewer(Guid interview);
+        Task<JobDto?> UpdateJob(Guid JobId, JobDto jobDto);
+    }
 }
