@@ -20,6 +20,8 @@ public class JobCreationBase : ComponentBase
     protected JobDto JobNew { get; set; } = new JobDto();
 
     protected bool showModal { get; set; }
+    protected bool showWarningModal { get; set; }
+    protected string WarningMessage { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,18 +43,25 @@ public class JobCreationBase : ComponentBase
 
     protected async Task CreateJob()
     {
-        try
+        if (IsFormValid())
         {
-            //Hard Coded ClientId
-            var JobDto = await JobService.CreateJob(Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0153a"), JobNew);
-            await createSkillsForJob(JobDto.JobId);
-            showModal = true;
-            StateHasChanged();
+            try
+            {
+                // Hard Coded ClientId
+                var JobDto = await JobService.CreateJob(Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0153a"), JobNew);
+                await createSkillsForJob(JobDto.JobId);
+                showModal = true;
+                StateHasChanged();
+            }
+            catch (HttpRequestException ex)
+            {
+                ErrorMessage += "Error creating job";
+                Console.WriteLine($"Error creating job: {ex.Message}");
+            }
         }
-        catch (HttpRequestException ex)
+        else
         {
-            ErrorMessage += "Error creating job";
-            Console.WriteLine($"Error creating job: {ex.Message}");
+            showWarningModal = true;
         }
     }
 
@@ -62,12 +71,16 @@ public class JobCreationBase : ComponentBase
         ClearForm();
     }
 
+    protected void CloseWarningModal()
+    {
+        showWarningModal = false;
+    }
+
     private void ClearForm()
     {
         JobNew = new JobDto();
         StateHasChanged();
     }
-
 
     protected void UpdateSkills(ChangeEventArgs e, SkillDto skill, bool isRequired)
     {
@@ -98,7 +111,36 @@ public class JobCreationBase : ComponentBase
         StateHasChanged();
     }
 
-    // TODO : Implementing
+    private bool IsFormValid()
+    {
+        var missingFields = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(JobNew.Position))
+            missingFields.Add("Position");
+        if (string.IsNullOrWhiteSpace(JobNew.EndDate.ToString()) || JobNew.EndDate < DateTime.Today)
+            missingFields.Add("End Date (must be today or later)");
+        if (string.IsNullOrWhiteSpace(JobNew.Experience))
+            missingFields.Add("Experience");
+        if (string.IsNullOrWhiteSpace(JobNew.Commitment.ToString()))
+            missingFields.Add("Commitment");
+        if (string.IsNullOrWhiteSpace(JobNew.Localization))
+            missingFields.Add("Localization");
+        if (string.IsNullOrWhiteSpace(JobNew.Remote.ToString()))
+            missingFields.Add("Remote");
+        if (string.IsNullOrWhiteSpace(JobNew.Company))
+            missingFields.Add("Company");
+        if (string.IsNullOrWhiteSpace(JobNew.Education.ToString()))
+            missingFields.Add("Education");
+
+        if (missingFields.Count > 0)
+        {
+            WarningMessage = "Please fill in the following fields: " + string.Join(", ", missingFields);
+            return false;
+        }
+
+        return true;
+    }
+
     private Task createSkillsForJob(Guid jobId)
     {
         try
