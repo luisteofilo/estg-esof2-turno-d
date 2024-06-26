@@ -3,6 +3,7 @@ using System;
 using ESOF.WebApp.DBLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240625114830_job-import")]
+    partial class jobimport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,30 +24,8 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-            
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Emails.EmailTemplate", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("integer");
-
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                b.Property<string>("Body")
-                    .IsRequired()
-                    .HasColumnType("text");
-
-                b.Property<string>("Subject")
-                    .IsRequired()
-                    .HasColumnType("text");
-
-                b.HasKey("Id");
-
-                b.ToTable("EmailTemplates");
-
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
                 {
                     b.Property<Guid>("EducationId")
                         .ValueGeneratedOnAdd()
@@ -76,31 +57,8 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.ToTable("Educations");
                 });
-            
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Emails.EmailTemplate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-                    
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmailTemplates");
-                });
-            
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
-                
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
                 {
                     b.Property<Guid>("ExperienceId")
                         .ValueGeneratedOnAdd()
@@ -131,8 +89,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("Experiences");
-                }));
-                
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
@@ -304,8 +260,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
-
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
                 {
                     b.Property<Guid>("PermissionId")
                         .ValueGeneratedOnAdd()
@@ -319,9 +273,9 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasKey("PermissionId");
 
                     b.ToTable("Permissions");
-                }));
+                });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
                 {
                     b.Property<Guid>("ProfileId")
                         .ValueGeneratedOnAdd()
@@ -367,7 +321,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Profiles");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.ProfileSkill", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.ProfileSkill", b =>
                 {
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uuid");
@@ -382,7 +336,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("ProfileSkills");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Role", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Role", b =>
                 {
                     b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
@@ -398,7 +352,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Roles");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.RolePermission", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.RolePermission", b =>
                 {
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
@@ -413,7 +367,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("RolePermissions");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Skill", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Skill", b =>
                 {
                     b.Property<Guid>("SkillId")
                         .ValueGeneratedOnAdd()
@@ -429,7 +383,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Skills");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -456,7 +410,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Users");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserRole", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserRole", b =>
                 {
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
@@ -471,7 +425,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("UserRoles");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Profile", "Profile")
                         .WithMany("Educations")
@@ -482,7 +436,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Profile");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Profile", "Profile")
                         .WithMany("Experiences")
@@ -492,7 +446,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.Navigation("Profile");
                 });
-                
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interview", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate", "Candidate")
@@ -541,13 +495,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
-                
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
-                    
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
-
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
-
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
                         .WithOne()
@@ -556,9 +503,9 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                }))));
+                });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.ProfileSkill", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.ProfileSkill", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Profile", "Profile")
                         .WithMany("ProfileSkills")
@@ -577,7 +524,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Skill");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.RolePermission", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.RolePermission", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Permission", "Permission")
                         .WithMany("RolePermissions")
@@ -596,7 +543,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Role");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserRole", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserRole", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Role", "Role")
                         .WithMany("UserRoles")
@@ -614,7 +561,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.Navigation("User");
                 });
-                
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
                 {
                     b.Navigation("Jobs");
@@ -635,16 +582,12 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("JobSkills");
                 });
 
-
-           modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
                 });
-           
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission",
-                    b => { b.Navigation("RolePermissions"); });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
                 {
                     b.Navigation("Educations");
 
@@ -653,13 +596,13 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("ProfileSkills");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Role", b =>
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Role", b =>
                 {
                     b.Navigation("RolePermissions");
 
                     b.Navigation("UserRoles");
                 });
-                
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Skill", b =>
                 {
                     b.Navigation("JobSkills");
@@ -667,11 +610,11 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("ProfileSkills");
                 });
 
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Skill", b => { b.Navigation("ProfileSkills"); });
-
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b => { b.Navigation("UserRoles"); });
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
 #pragma warning restore 612, 618
-            }));
         }
     }
 }
