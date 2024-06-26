@@ -30,7 +30,7 @@
         <div class="card-body">
             <h3 class="mt-2">New Question</h3>
             <textarea
-                @onchange="e => QuestionInput = e.Value.ToString()" 
+                @bind="_questionInput" 
 class="form-control mb-3" placeholder="Your Question"></textarea>
             <button class="btn btn-primary" @onclick="SubmitQuestion">Submit</button>
         </div>
@@ -66,7 +66,7 @@ class="form-control mb-3" placeholder="Your Question"></textarea>
     private int _questionCount => _questions?.Count() ?? 0;
     private string _jobName = string.Empty;
     
-    private string QuestionInput { get; set; } = string.Empty;
+    private string _questionInput { get; set; } = string.Empty;
     
     protected override async Task OnInitializedAsync()
     {
@@ -76,20 +76,20 @@ class="form-control mb-3" placeholder="Your Question"></textarea>
 
     private async void fetchQuestions()
     {
-        _questions = (await FaqService.GetQuestions(JobId)).ToList();
+        
     }
 
-    private async void SubmitQuestion()
+    private async Task SubmitQuestion()
     {
-        if (string.IsNullOrWhiteSpace(QuestionInput))
+        if (string.IsNullOrWhiteSpace(_questionInput))
         {
             return;
         }
 
-        await FaqService.CreateQuestion(JobId, QuestionInput);
+        await FaqService.CreateQuestion(JobId, _questionInput);
         Console.WriteLine("Question submitted");
-        QuestionInput = string.Empty;
-        fetchQuestions();
+        _questionInput = string.Empty;
+        _questions = (await FaqService.GetQuestions(JobId)).ToList();
         StateHasChanged();
     }
 
