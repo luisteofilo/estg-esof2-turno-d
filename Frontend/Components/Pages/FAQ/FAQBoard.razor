@@ -1,0 +1,57 @@
+@page "/faqs"
+@inject IFAQService FaqService
+@inject NavigationManager Navigation
+@using Frontend.Helpers
+@using Frontend.Components.Pages.FAQ.SearchWindow
+@using Frontend.Services.Contracts
+@using Common.Dtos.FAQ
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
+
+<PageTitle>Job FAQs</PageTitle>
+
+<h1>Job FAQs</h1>
+<hr/>
+
+<button class="btn btn-primary" @onclick="ToggleFloatingWindow">
+    @(showFloatingWindow ? "Deactivate" : "Activate") Floating FAQ Window
+</button>
+
+<div class="list-group mt-3">
+    @if (_faqJobs.Any())
+    {
+        foreach (var job in _faqJobs)
+        {
+            <a href="@($"/faqs/{job.JobId}")" class="list-group-item list-group-item-action">
+                @job.JobTitle
+            </a>
+        }
+    }
+    else
+    {
+        <p>No FAQ topics available.</p>
+    }
+</div>
+
+@if (showFloatingWindow)
+{
+    <SearchWindow />
+}
+
+@code {
+    
+private List<JobDto> _faqJobs = new();
+private bool showFloatingWindow = false;
+
+protected override async Task OnInitializedAsync()
+{
+    _faqJobs = (await FaqService.GetFaqJobsAsync()).ToList();
+}
+
+private void ToggleFloatingWindow()
+{
+    showFloatingWindow = !showFloatingWindow;
+}
+    
+}

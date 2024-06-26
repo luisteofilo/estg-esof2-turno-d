@@ -1,0 +1,145 @@
+@page "/jobs"
+@inherits JobBase
+@rendermode InteractiveServer
+
+<PageTitle>Job Offers</PageTitle>
+
+<h1>Job Offers</h1>
+
+<div class="col-12 d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#register">
+        Register Job Offer
+    </button>
+</div>
+
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success m-1" role="alert">
+        @SuccessMessage
+    </div>
+}
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="row alert alert-danger m-1 d-flex justify-content-around align-items-center" role="alert">
+        <div class="col-10">
+            @ErrorMessage
+        </div>
+        <button type="button" class="col-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#urlModal">
+            Try Again
+        </button>
+    </div>
+}
+
+<div class="modal fade" id="register" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header col-12 d-flex justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center align-items-center m-1">
+                <div class="row w-100">
+                    <div
+                        class="col-5 p-0 d-flex flex-column align-items-center justify-content-around text-center modal-section">
+                        <div class="mb-4">
+                            <h2>Create a Job Offer Manually</h2>
+                        </div>
+                        <button class="btn btn-primary" @onclick="ManualRegister">Register</button>
+                    </div>
+                    <div class="col-2 d-flex justify-content-center align-items-center">
+                        <div class="vertical-line"></div>
+                    </div>
+                    <div
+                        class="col-5 p-0 d-flex flex-column align-items-center justify-content-around text-center modal-section">
+                        <div class="mb-4">
+                            <h2>Create through external sources</h2>
+                            <h5>(LinkedIn or Wellfound)</h5>
+                        </div>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#urlModal">Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="urlModal" tabindex="-1" aria-labelledby="urlModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header col-12 d-flex justify-content-around">
+                <h5 class="modal-title" id="urlModalLabel">External Source</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="urlInput" class="form-label m-2">Insert the URL of a job offer detail from LinkedIn or
+                        Wellfound.</label>
+                    <input type="url" class="form-control" id="urlInput" @bind="UrlInput"
+                        placeholder="Your Job Offer Detail Link!">
+                </div>
+                <div class="col-12 d-flex justify-content-center align-items-center">
+                    <button class="btn btn-primary" data-bs-dismiss="modal" @onclick="SubmitURL">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="m-3">
+    @if (Jobs == null)
+    {
+        <p>
+            <em>There are no job offers!</em>
+        </p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Localization</th>
+                    <th>Company</th>
+                    <th>Details</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in Jobs)
+                {
+                    <tr>
+                        <td>@job.Position</td>
+                        <td>@job.Localization</td>
+                        <td>@job.Company</td>
+                        <td>
+                            <div class="col-12 d-flex justify-content-center align-items-center">
+                                <button type="button" class="btn btn-primary d-flex justify-content-center align-items-center"
+                                    data-bs-toggle="modal" data-bs-target="#detailModal">
+                                    <i class="bi bi-info-circle"></i>
+                                </button>
+                            </div>
+                        </td>
+                        @* TODO: Only appears if Admin *@
+                        <td>
+                            <div class="col-12 d-flex justify-content-center align-items-center">
+                                <button type="button" class="btn btn-primary d-flex justify-content-center align-items-center"
+                                    data-bs-toggle="modal" data-bs-target="#editModal">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-12 d-flex justify-content-center align-items-center">
+                                <button type="button" class="btn btn-danger d-flex justify-content-center align-items-center"
+                                    @onclick="() => RemoveJob(job.JobId)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
