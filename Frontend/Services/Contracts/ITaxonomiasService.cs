@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common.Dtos.Taxonomias;
-using System;
 
 namespace Frontend.Services
 {

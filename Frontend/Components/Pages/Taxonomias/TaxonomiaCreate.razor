@@ -1,0 +1,76 @@
+﻿@page "/taxonomias/create"
+@using Frontend.Services
+@using Common.Dtos.Taxonomias
+@inject ITaxonomiasService TaxonomiasService
+@inject NavigationManager Navigation
+
+<h3>Create Taxonomia</h3>
+
+<div>
+    <label for="verticalName">Vertical:</label>
+    <input type="text" id="verticalName" @bind="newVerticalName" />
+</div>
+<br>
+<div>
+    <label for="roleName">Role:</label>
+    <input type="text" id="roleName" @bind="newRoleName" />
+</div>
+<br>
+<div>
+    <label for="skillName">Skill:</label>
+    <input type="text" id="skillName" @bind="newSkillName" />
+</div>
+<br>
+<button @onclick="CreateTaxonomia">Create</button>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <p>@message</p>
+}
+
+@code {
+    private string newVerticalName;
+    private string newRoleName;
+    private string newSkillName;
+    private string message;
+
+    private async Task CreateTaxonomia()
+    {
+        try
+        {
+            var newVertical = new VerticalDto
+            {
+                VerticalId = Guid.NewGuid(),
+                VerticalName = newVerticalName,
+                RoleVerticals = new List<RoleVerticalDto>
+                {
+                    new RoleVerticalDto
+                    {
+                        RoleVerticalId = Guid.NewGuid(),
+                        RoleVerticalName = newRoleName,
+                        SkillVerticals = new List<SkillVerticalDto>
+                        {
+                            new SkillVerticalDto
+                            {
+                                SkillVerticalId = Guid.NewGuid(),
+                                SkillVerticalName = newSkillName,
+                                SkillVerticalExperience = 0
+                            }
+                        }
+                    }
+                }
+            };
+
+            await TaxonomiasService.CreateVerticalAsync(newVertical);
+            message = "Taxonomia created successfully!";
+            newVerticalName = newRoleName = newSkillName = string.Empty;
+
+            // Optionally navigate back to the list page
+            Navigation.NavigateTo("/taxonomias");
+        }
+        catch (Exception ex)
+        {
+            message = $"Error creating taxonomia: {ex.Message}";
+        }
+    }
+}
