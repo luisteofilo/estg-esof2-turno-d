@@ -6,8 +6,6 @@ namespace ESOF.WebApp.WebAPI.Services
 {
     public class EmailTemplateService
     {
-        
-
         private readonly ApplicationDbContext _db = new ApplicationDbContext();
 
         // Método para obter todos os templates
