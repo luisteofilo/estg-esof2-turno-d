@@ -2,26 +2,70 @@ using ESOF.WebApp.DBLayer.Context;
 using Helpers.Models;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+
 using ESOF.WebApp.WebAPI.Services;
+
+using ESOF.WebApp.DBLayer.Persistence;
+using ESOF.WebApp.DBLayer.Persistence.Interfaces;
+using ESOF.WebApp.DBLayer.Persistence.Repositories;
+using ESOF.WebApp.WebAPI.Services;
+using ESOF.WebApp.Scraper;
+using Hangfire;
+using Hangfire.PostgreSql;
+
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
+using ESOF.WebApp.WebAPI.Services;
+using Hangfire;
+using Hangfire.PostgreSql;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+var dbContext = new ApplicationDbContext();
+var connectionString = dbContext.Database.GetDbConnection().ConnectionString;
+
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
+
+builder.Services.AddHangfireServer();
+
 // Add services to the container.
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<EmailTemplateService>();
+
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetService<ApplicationDbContext>()!);
+builder.Services.AddScoped<IImportRepository, ImportRepository>();
+builder.Services.AddScoped<ExternalJobService>();
+
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
-builder.Services.AddScoped<IEducationRepository, EducationRepository >();
+builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+
 builder.Services.AddScoped<RoleRepository>();
 builder.Services.AddScoped<RegisterRepository>();
+
+builder.Services.AddScraperDependencyInjection();
+
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
+builder.Services.AddScoped<IExternalJobRepository, ExternalJobRepository>();
+
 
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
@@ -33,8 +77,24 @@ builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 
 
+//Dashboard
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+
+//Email Template
+builder.Services.AddScoped<EmailTemplateService>();
+
+// Faq Repository
+builder.Services.AddScoped<JobFAQRepository>();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+
 
 var app = builder.Build();
+
+app.UseHangfireDashboard("/hangfire");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -45,6 +105,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseExceptionHandler("/error");
+
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -52,6 +114,11 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", () =>
     {
+        var summaries = new[]
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+
         var forecast = Enumerable.Range(1, 5).Select(index =>
                 new WeatherForecast
                 (
@@ -73,25 +140,6 @@ app.MapGet("/users/emails", () =>
     .WithName("GetUsersNames")
     .WithOpenApi();
 
-
-
-app.MapGet("/users/with_permissions", () =>
-    {
-        var db = new ApplicationDbContext();
-        return db.Users.Select(u => new UserWithPermissionsModel()
-        {
-            Email = u.Email,
-            UserId = u.UserId,
-            Permissions = u.UserRoles
-                .SelectMany(ur => ur.Role.RolePermissions)
-                .Select(rp => new PermissionModel()
-                {
-                    Name = rp.Permission.Name
-                })
-        });
-    })
-    .WithName("GetUsersWithPermissions")
-    .WithOpenApi();
 app.MapControllers();
 
 
