@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.Services;
 using ESOF.WebApp.WebAPI.Repositories;
@@ -32,6 +33,18 @@ builder.Services.AddScoped<IPositionRepository, PositionRepository>();
 builder.Services.AddScoped<PositionService>();
 builder.Services.AddScoped<TimesheetService>();
 builder.Services.AddScoped<ITimesheetRepository, TimesheetRepository>();
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<InvoiceService>();
+builder.Services.AddScoped<JobPositionService>();
+
+builder.Services.AddScoped<Common.Dtos.Invoice.InvoiceDTOConverter>();
+builder.Services.AddScoped<Common.Dtos.Position.PositionDTOConverter>();
+builder.Services.AddScoped<Common.Dtos.Timesheet.TimesheetDTOConverter>();
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
 
 var app = builder.Build();
 

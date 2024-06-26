@@ -7,14 +7,19 @@ public partial class ApplicationDbContext
 {
     private void BuildTimesheets(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Entities.Timesheet>()
-            .Property(t => t.TimesheetId)
-            .ValueGeneratedNever();
+        modelBuilder.Entity<Timesheet>()
+            .HasKey(t => t.TimesheetId);
 
-        modelBuilder.Entity<Entities.Timesheet>()
+        modelBuilder.Entity<Timesheet>()
             .HasOne(t => t.Position)
             .WithMany(p => p.Timesheets)
             .HasForeignKey(t => t.PositionId);
+
+        modelBuilder.Entity<Timesheet>()
+            .HasOne(t => t.Invoice)
+            .WithOne(i => i.Timesheet)
+            .HasForeignKey<Timesheet>(t => t.InvoiceId)
+            .IsRequired(false);  // Permitir valores nulos para InvoiceId
     }
     
 }

@@ -45,17 +45,13 @@ namespace ESOF.WebApp.Controllers
             // return CreatedAtAction(nameof(GetPositionById), new { id = createdPosition.PositionId }, createdPosition);
         }
 
-     /*   [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePosition(Guid id, Position position)
+       [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePosition(Guid id, PositionUpdateDTO dto)
         {
-          /*  if (id != position.PositionId)
-            {
-                return BadRequest();
-            }
-
-            var updatedPosition = await _positionService.UpdatePosition(position);
-            return Ok(updatedPosition); 
-        } */
+            
+            await _positionService.UpdatePosition(id, dto);
+            return Ok(); 
+        } 
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePosition(Guid id)

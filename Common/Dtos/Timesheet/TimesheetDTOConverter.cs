@@ -2,15 +2,16 @@
 
 public class TimesheetDTOConverter
 {
-    public ESOF.WebApp.DBLayer.Entities.Timesheet TimesheetCreateDtoToTimesheet(TimesheetCreateDTO dto, ESOF.WebApp.DBLayer.Entities.Position position)
+    public ESOF.WebApp.DBLayer.Entities.Timesheet TimesheetCreateDtoToTimesheet(TimesheetDTO dto, Guid positionId)
     {
         
         return new ESOF.WebApp.DBLayer.Entities.Timesheet()
         {
-            Position = position ,
+            PositionId = positionId,
             HoursWorked = dto.HoursWorked,
             TaskDescription = dto.TaskDescription,
-            Date = dto.Date
+            Date = dto.Date,
+            InvoiceId = dto.InvoiceId
         };
     }
 }

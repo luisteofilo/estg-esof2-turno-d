@@ -3,6 +3,7 @@ using System;
 using ESOF.WebApp.DBLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240626154422_AddInvoiceToDatabase")]
+    partial class AddInvoiceToDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,7 +185,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Invoice", b =>
                 {
                     b.Property<Guid>("InvoiceId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")
@@ -199,9 +201,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("InvoiceId");
-
-                    b.HasIndex("TimesheetId")
-                        .IsUnique();
 
                     b.ToTable("Invoices");
                 });
@@ -431,7 +430,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Timesheet", b =>
                 {
                     b.Property<Guid>("TimesheetId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")
@@ -440,7 +438,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Property<int>("HoursWorked")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("InvoiceId")
+                    b.Property<Guid>("InvoiceId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("PositionId")
@@ -540,17 +538,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Interviewer");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Invoice", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Timesheet", "Timesheet")
-                        .WithOne("Invoice")
-                        .HasForeignKey("ESOF.WebApp.DBLayer.Entities.Invoice", "TimesheetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Timesheet");
-                });
-
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Import", "Import")
@@ -647,6 +634,14 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Invoice", "Invoice")
+                        .WithOne("Timesheet")
+                        .HasForeignKey("ESOF.WebApp.DBLayer.Entities.Timesheet", "TimesheetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Invoice");
+
                     b.Navigation("Position");
                 });
 
@@ -682,6 +677,12 @@ namespace ESOF.WebApp.DBLayer.Migrations
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interviewer", b =>
                 {
                     b.Navigation("Interviews");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Invoice", b =>
+                {
+                    b.Navigation("Timesheet")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
@@ -722,11 +723,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("JobSkills");
 
                     b.Navigation("ProfileSkills");
-                });
-
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Timesheet", b =>
-                {
-                    b.Navigation("Invoice");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>

@@ -40,24 +40,19 @@ namespace ESOF.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateTimesheet(Guid positionId, [FromBody] TimesheetCreateDTO dto)
+        public async Task<ActionResult> CreateTimesheets(Guid positionId, [FromBody] TimesheetCreateDTO dto)
         {
-            await _timesheetService.CreateTimesheet(positionId, dto);
+            await _timesheetService.CreateTimesheets(positionId, dto);
             return Ok();
             // return CreatedAtAction(nameof(GetPositionById), new { id = createdPosition.PositionId }, createdPosition);
         }
 
-     /*   [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTimesheet(Guid id, Position position)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTimesheet(Guid id, TimesheetUpdateDTO dto)
         {
-          /*  if (id != position.PositionId)
-            {
-                return BadRequest();
-            }
-
-            var updatedPosition = await _positionService.UpdatePosition(position);
-            return Ok(updatedPosition); 
-        } */
+            await _timesheetService.UpdateTimesheet(id, dto);
+            return Ok(); 
+        } 
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTimesheet(Guid id)

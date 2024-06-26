@@ -65,6 +65,8 @@ public partial class ApplicationDbContext : DbContext
     // Position Features
     public DbSet<Entities.Position> Positions { get; set; }
     public DbSet<Timesheet> Timesheets { get; set; }
+    
+    public DbSet<Invoice> Invoices { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -99,6 +101,7 @@ public partial class ApplicationDbContext : DbContext
         // Position Features
         BuildPositions(modelBuilder);
         BuildTimesheets(modelBuilder);
+        BuildInvoices(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
     }

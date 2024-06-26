@@ -2,12 +2,12 @@
 
 public class PositionDTOConverter
 {
-    public ESOF.WebApp.DBLayer.Entities.Position PositionCreateDTOToPosition(PositionCreateDTO dto, ESOF.WebApp.DBLayer.Entities.Job job)
+    public ESOF.WebApp.DBLayer.Entities.Position PositionCreateDTOToPosition(PositionCreateDTO dto, Guid jobId)
     {
         
         return new ESOF.WebApp.DBLayer.Entities.Position
         {
-            Job = job ,
+            JobId = jobId, 
             EndDate = dto.EndDate, 
             StartDate = dto.StartDate, 
             BillingType = dto.BillingType,

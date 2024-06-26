@@ -26,7 +26,7 @@ namespace ESOF.WebApp.Services
         }
 
         // Create a new position falta timesheets
-        public async Task CreateTimesheet(Guid positionId, TimesheetCreateDTO dto)
+        public async Task CreateTimesheets(Guid positionId, TimesheetCreateDTO dto)
         {
             var position = await _positionRepository.GetPositionById(positionId);
             if (position == null)
@@ -34,8 +34,11 @@ namespace ESOF.WebApp.Services
                 throw new Exception("There is no position with this id.");
             }
 
-            var timesheet = _timesheetDtoConverter.TimesheetCreateDtoToTimesheet(dto, position);
-            await _timesheetRepository.CreateTimesheet(timesheet);
+            foreach (var timesheet in dto.TimesheetDtos)
+            {
+                var newTimesheet = _timesheetDtoConverter.TimesheetCreateDtoToTimesheet(timesheet, positionId);
+                await _timesheetRepository.CreateTimesheet(newTimesheet);
+            }
         }
 
         // Get all timesheet Dar um return de dto 
@@ -57,8 +60,17 @@ namespace ESOF.WebApp.Services
         }
 
         // Update a timesheet
-        public async Task UpdateTimesheet(Guid timesheetId,Timesheet timesheet)
+        public async Task UpdateTimesheet(Guid timesheetId,TimesheetUpdateDTO dto)
         {
+            var timesheet = await _timesheetRepository.GetTimesheetById(timesheetId);
+            if (timesheet == null)
+            {
+                throw new Exception("There is no timesheet with this Id.");
+            }
+
+            timesheet.Date = dto.Date;
+            timesheet.TaskDescription = dto.TaskDescription;
+            timesheet.HoursWorked = dto.HoursWorked;
             await _timesheetRepository.UpdateTimesheet(timesheet);
         }
 

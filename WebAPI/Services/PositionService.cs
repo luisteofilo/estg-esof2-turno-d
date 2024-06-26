@@ -33,7 +33,7 @@ namespace ESOF.WebApp.Services
                 throw new Exception("There is no job with this id.");
             }
 
-            var position = _positionDtoConverter.PositionCreateDTOToPosition(dto, job);
+            var position = _positionDtoConverter.PositionCreateDTOToPosition(dto, jobId);
             await _positionRepository.CreatePosition(position);
         }
 
@@ -56,8 +56,17 @@ namespace ESOF.WebApp.Services
         }
 
         // Update a position
-        public async Task UpdatePosition( Guid positionId,Position position)
+        public async Task UpdatePosition(Guid positionId, PositionUpdateDTO dto)
         {
+            var position = await _positionRepository.GetPositionById(positionId);
+            if (position == null)
+            {
+                throw new Exception("There is no position with this Id.");
+            }
+
+            position.StartDate = dto.StartDate;
+            position.EndDate = dto.EndDate;
+            position.BillingType = dto.BillingType;
             await _positionRepository.UpdatePosition(position);
         }
 

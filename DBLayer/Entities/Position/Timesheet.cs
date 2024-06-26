@@ -13,4 +13,8 @@ public class Timesheet
     public Guid PositionId { get; set; }
 
     public Position Position { get; set; }
+    
+    public Guid? InvoiceId { get; set; }
+
+    public Invoice Invoice { get; set; }
 }

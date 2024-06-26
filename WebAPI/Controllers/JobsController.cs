@@ -1,4 +1,5 @@
-﻿using ESOF.WebApp.DBLayer.Entities;
+﻿using Common.Dtos.Jobs;
+using ESOF.WebApp.DBLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESOF.WebApp.WebAPI.Controllers;
@@ -14,12 +15,26 @@ public class JobsController : ControllerBase
         _jobPositionService = jobPositionService;
     }
 
-    [HttpPost("{jobId}/convert")]
-    public async Task<IActionResult> ConvertJobToPosition(int jobId, [FromBody] ConvertJobToPositionRequest request)
+    // [HttpPost("{jobId}/convert")]
+    // public async Task<IActionResult> ConvertJobToPosition(int jobId, [FromBody] ConvertJobToPositionRequest request)
+    // {
+    //     try
+    //     {
+    //         var position = await _jobPositionService.ConvertJobToPosition(jobId, request.StartDate, request.EndDate, request.BillingType);
+    //         return Ok(position);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         return BadRequest(ex.Message);
+    //     }
+    // }
+    
+    [HttpPost("{jobId}/ConvertToPosition")]
+    public async Task<IActionResult> ConvertJobToPosition(Guid jobId, [FromBody] JobToPositionConvertDTO request)
     {
         try
         {
-            var position = await _jobPositionService.ConvertJobToPosition(jobId, request.StartDate, request.EndDate, request.BillingType);
+            var position = await _jobPositionService.ConvertJobToPosition(jobId, request);
             return Ok(position);
         }
         catch (Exception ex)
