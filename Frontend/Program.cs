@@ -15,7 +15,7 @@ builder.Services.AddScoped<ApiHelper>();
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
 
-builder.Services.AddScoped<ISearchService, SearchService>();
+
 
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IExternalJobService, ExternalJobService>();
