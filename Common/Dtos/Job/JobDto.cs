@@ -5,7 +5,7 @@ using Helpers.Job;
 
 namespace Common.Dtos.Job;
 
-public class JobDto : IEnumerable
+public class JobDto
 {
     public Guid JobId { get; set; }
     
@@ -26,9 +26,5 @@ public class JobDto : IEnumerable
     public String? Experience { get; set; }
     
     public String? Description { get; set; }
-
-    public IEnumerator GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+    
 }

@@ -17,6 +17,10 @@
       <Content Remove="Components\Pages\Job\**" />
       <Content Remove="Components\Pages\Interview\**" />
       <Content Remove="Components\Pages\Profile\**" />
+      <Content Remove="Components\Pages\Optimization-Request\EditJob.Razor" />
+      <Content Remove="Components\Pages\Optimization-Request\JobsDropdown.razor" />
+      <Content Remove="Components\Pages\Optimization-Request\EditJobComponent.razor" />
+      <Content Remove="Components\Pages\Optimization-Request\EditJobDropdownPage.razor" />
     </ItemGroup>
 
     <ItemGroup>

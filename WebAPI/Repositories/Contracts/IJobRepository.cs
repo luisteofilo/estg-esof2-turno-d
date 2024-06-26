@@ -7,5 +7,8 @@ public interface IJobRepository
     Task<Job> GetJobByIdAsync(Guid jobId);
     Task AddJobAsync(Job job);
     Task UpdateJobAsync(Job job);
+    
+    Task<IEnumerable<Client>> GetClients();
+
     Task DeleteJobAsync(Guid jobId);
 }

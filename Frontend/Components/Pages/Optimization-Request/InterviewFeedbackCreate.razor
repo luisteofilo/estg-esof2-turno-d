@@ -56,7 +56,7 @@
             <option value="">Select Job Position...</option>
             @foreach (var job in jobs)
             {
-                <option value="@job.JobId">@job.Position</option>
+                <option value="@job.JobId">@job.Description</option>
             }
         </select>
     </div>
@@ -87,6 +87,10 @@
 {
     <p class="text-danger">@submitError</p>
 }
+
+<p>
+    <a href="/edit-job2/@newFeedback.JobId" class="btn btn-secondary">Edit Job Details</a>
+</p>
 
 @code {
     private InterviewFeedbackDTO newFeedback = new InterviewFeedbackDTO();

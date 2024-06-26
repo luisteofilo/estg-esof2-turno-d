@@ -188,7 +188,10 @@ namespace ESOF.WebApp.WebAPI.Controllers
                     return NotFound(new { message = "Job not found." });
                 }
 
-                
+                // Log current values before update
+                Console.WriteLine($"Updating Job: {jobId} with new values.");
+                Console.WriteLine($"ClientId: {jobDto.ClientId}, EndDate: {jobDto.EndDate}, Position: {jobDto.Position}, Commitment: {jobDto.Commitment}, Remote: {jobDto.Remote}, Localization: {jobDto.Localization}, Education: {jobDto.Education}, Experience: {jobDto.Experience}, Description: {jobDto.Description}");
+
                 existingJob.ClientId = jobDto.ClientId;
                 existingJob.EndDate = jobDto.EndDate;
                 existingJob.Position = jobDto.Position;
@@ -208,6 +211,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating job: {ex.Message}");
             }
         }
+
 
         [HttpGet("jobs-from-feedback")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<JobDto>))]

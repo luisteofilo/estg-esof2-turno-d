@@ -42,6 +42,16 @@ public static class DtoConversion
             Description = job.Description
         };
     }
+    
+    
+    public static ClientDto ClientConvertToDto(this Client client)
+    {
+        return new ClientDto()
+        {
+            ClientId = client.ClientId,
+            Name = client.Name
+        };
+    }
 
     public static Job DtoConvertToJob(this JobDto jobDto)
     {

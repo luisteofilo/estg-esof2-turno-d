@@ -60,6 +60,23 @@ public class JobController(
         }
     }
     
+    
+     
+    [HttpPost("GetClients")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<ClientDto>))]
+    public async Task<IActionResult> GetClients()
+    {
+        try
+        {
+            var jobs = await _jobRepository.GetClients();
+            return Ok(jobs.Select(c => c.ClientConvertToDto()));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving jobs: {ex.Message}");
+        }
+    }
+    
     [HttpGet("{jobId:guid}")]
     [ProducesResponseType(200, Type = typeof(JobDto))]
     [ProducesResponseType(404)]

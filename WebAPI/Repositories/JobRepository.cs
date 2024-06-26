@@ -14,6 +14,12 @@ public class JobRepository : IJobRepository
     { 
         return await _dbContext.Jobs.ToListAsync();
     }
+    
+    
+    public async Task<IEnumerable<Client>> GetClients()
+    { 
+        return await _dbContext.Clients.ToListAsync();
+    }
 
     public async Task<Job> GetJobByIdAsync(Guid jobId)
     { 

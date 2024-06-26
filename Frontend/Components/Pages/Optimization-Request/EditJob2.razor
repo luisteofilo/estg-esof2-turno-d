@@ -1,0 +1,161 @@
+﻿@page "/edit-job2/{jobId:guid}"
+@using Common.Dtos.Job
+@rendermode InteractiveServer
+@using System.Text.Json
+@using System.Text
+@using global::Helpers.Job
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@attribute [StreamRendering]
+
+<PageTitle>Edit Job</PageTitle>
+
+<h3>Edit Job</h3>
+
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (job == null)
+{
+    <p>Job not found.</p>
+}
+else
+{
+    <form @onsubmit="HandleSubmit">
+        <div class="form-group">
+            <label for="Position">Position:</label>
+            <input id="Position" class="form-control" @bind="job.Position" />
+        </div>
+        <div class="form-group">
+            <label for="ClientId">Client ID:</label>
+            <input id="ClientId" class="form-control" @bind="job.ClientId" />
+        </div>
+        <div class="form-group">
+            <label for="EndDate">End Date:</label>
+            <input id="EndDate" type="date" class="form-control" @bind="job.EndDate" />
+        </div>
+        <div class="form-group">
+            <label for="Commitment">Commitment:</label>
+            <select id="Commitment" class="form-control" @bind="job.Commitment">
+                <option value="">Select Commitment...</option>
+                @foreach (var commitment in Enum.GetValues(typeof(CommitmentType)))
+                {
+                    <option value="@commitment">@commitment</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Remote">Remote:</label>
+            <select id="Remote" class="form-control" @bind="job.Remote">
+                <option value="">Select Remote Type...</option>
+                @foreach (var remote in Enum.GetValues(typeof(RemoteType)))
+                {
+                    <option value="@remote">@remote</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Localization">Localization:</label>
+            <input id="Localization" class="form-control" @bind="job.Localization" />
+        </div>
+        <div class="form-group">
+            <label for="Education">Education Level:</label>
+            <select id="Education" class="form-control" @bind="job.Education">
+                <option value="">Select Education Level...</option>
+                @foreach (var education in Enum.GetValues(typeof(EducationLevel)))
+                {
+                    <option value="@education">@education</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="Experience">Experience:</label>
+            <input id="Experience" class="form-control" @bind="job.Experience" />
+        </div>
+        <div class="form-group">
+            <label for="Description">Description:</label>
+            <textarea id="Description" class="form-control" @bind="job.Description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+}
+
+@if (isSubmitting)
+{
+    <p>Submitting...</p>
+}
+
+@if (submitError != null)
+{
+    <p class="text-danger">@submitError</p>
+}
+
+@code {
+    [Parameter]
+    public Guid JobId { get; set; }
+
+    private JobDto job = new JobDto();
+    private bool isLoading = true;
+    private bool isSubmitting = false;
+    private string? submitError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadJob();
+    }
+
+    private async Task LoadJob()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync($"http://localhost:5295/api/Job/{JobId}");
+            response.EnsureSuccessStatusCode();
+
+            job = await response.Content.ReadFromJsonAsync<JobDto>();
+        }
+        catch (Exception ex)
+        {
+            submitError = $"Error fetching job: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            isSubmitting = true;
+
+            var jsonPayload = JsonSerializer.Serialize(job);
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            var response = await HttpClient.PutAsync($"http://localhost:5295/api/InterviewFeedback/update-job/{job.JobId}", content);
+            response.EnsureSuccessStatusCode();
+
+            job = new JobDto();
+
+
+            if (response.IsSuccessStatusCode)
+            {
+                NavigationManager.NavigateTo("/create-interview-feedback");
+            }
+            else
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                submitError = $"Error submitting job: {response.StatusCode} - {responseContent}";
+            }
+        }
+        catch (Exception ex)
+        {
+            submitError = $"Error submitting job: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}
