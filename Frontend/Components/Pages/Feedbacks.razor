@@ -1,0 +1,93 @@
+﻿@page "/{InterviewId}/feedback"
+@rendermode InteractiveServer
+
+@using Common.Dtos.Feedback
+@using Frontend.Services
+@using Frontend.Services.Contracts
+@inject IFeedbackService FeedbackService
+
+<PageTitle>Feedback</PageTitle>
+
+<h3>Feedback</h3>
+
+@code {
+    [Parameter]
+    public string InterviewId { get; set; }
+    private Guid interviewGuid;
+
+    private FeedbackDto feedback;
+    private string newFeedbackText;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!Guid.TryParse(InterviewId, out interviewGuid))
+        {
+            // InterviewId não é um Guid válido
+            throw new ArgumentException("InterviewId não é um Guid válido.");
+        }
+
+        await LoadFeedback();
+    }
+
+    private async Task LoadFeedback()
+    {
+        try
+        {
+            feedback = await FeedbackService.GetFeedbackByInterviewIdAsync(interviewGuid);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar feedback: {ex.Message}");
+        }
+    }
+
+    private async Task SubmitFeedback()
+    {
+        if (string.IsNullOrWhiteSpace(newFeedbackText))
+        {
+            errorMessage = "Feedback cannot be empty.";
+            return;
+        }
+
+        var newFeedback = new FeedbackDto
+        {
+            InterviewId = interviewGuid,
+            Message = newFeedbackText
+        };
+
+        try
+        {
+            await FeedbackService.SubmitFeedbackAsync(newFeedback);
+            await LoadFeedback();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao enviar feedback: {ex.Message}");
+        }
+    }
+}
+
+@if (feedback != null)
+{
+    <div>
+        <h4>Existing Feedback</h4>
+        <p>@feedback.Message</p>
+    </div>
+}
+else
+{
+    <div>
+        <p>No feedback found for this interview.</p>
+    </div>
+}
+
+<div>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <p style="color: red;">@errorMessage</p>
+    }
+
+    <textarea @bind="newFeedbackText" placeholder="Enter your feedback here"></textarea>
+    <button @onclick="SubmitFeedback">Submit Feedback</button>
+</div>
