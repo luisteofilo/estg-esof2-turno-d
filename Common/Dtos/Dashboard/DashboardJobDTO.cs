@@ -1,6 +1,6 @@
 ﻿namespace Common.Dtos.Job;
 
-public class DashboardJobDTo
+public class DashboardJobDTO
 {
     public Guid JobId { get; set; }
     public Guid SkillId { get; set; }

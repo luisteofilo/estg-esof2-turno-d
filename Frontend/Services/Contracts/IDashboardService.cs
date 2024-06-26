@@ -5,9 +5,9 @@ using Common.Dtos.Profile;
 
 public interface IDashboardService
 {
-    Task<IEnumerable<ProfileSkillDto>> GetProfileSkills();
+    Task<IEnumerable<DashboardProfilesSkillDTO>> GetProfileSkills();
     
-    Task<IEnumerable<DashboardJobDTo>> GetJobSkills();
+    Task<IEnumerable<DashboardJobDTO>> GetJobSkills();
     
     Task<IEnumerable<ExperienceDto>> GetExperiences();
     

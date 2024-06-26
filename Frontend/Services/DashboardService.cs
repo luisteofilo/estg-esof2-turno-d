@@ -17,18 +17,18 @@ namespace Frontend.Services
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<ProfileSkillDto>> GetProfileSkills()
+        public async Task<IEnumerable<DashboardProfilesSkillDTO>> GetProfileSkills()
         {
             var response = await _httpClient.GetAsync("api/Dashboard/ProfileSkills");
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<IEnumerable<ProfileSkillDto>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<DashboardProfilesSkillDTO>>();
         }
 
-        public async Task<IEnumerable<DashboardJobDTo>> GetJobSkills()
+        public async Task<IEnumerable<DashboardJobDTO>> GetJobSkills()
         {
             var response = await _httpClient.GetAsync("api/Dashboard/JobSkills");
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<IEnumerable<DashboardJobDTo>>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<DashboardJobDTO>>();
         }
         
         public async Task<IEnumerable<ExperienceDto>> GetExperiences()
