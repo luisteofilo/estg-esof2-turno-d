@@ -54,6 +54,9 @@ builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 //Email Template
 builder.Services.AddScoped<EmailTemplateService>();
 
+// Faq Repository
+builder.Services.AddScoped<JobFAQRepository>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
