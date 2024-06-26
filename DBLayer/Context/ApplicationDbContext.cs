@@ -1,7 +1,9 @@
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.DBLayer.Entities.FAQ;
 using ESOF.WebApp.DBLayer.Entities.Interviews;
+
 using ESOF.WebApp.DBLayer.Entities.Emails;
+
 using ESOF.WebApp.DBLayer.Persistence;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -63,7 +65,9 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<EmailTemplate> EmailTemplates { get; set; }
     // Job Features
     public DbSet<Job> Jobs { get; set; }
-    public DbSet<Import> Imports { get; set; }
+
+    public DbSet<Import> Imports{ get; set; }
+
     public DbSet<JobSkill> JobSkills { get; set; }
     
     // FAQ Features
@@ -102,6 +106,7 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         BuildInterviews(modelBuilder);
         BuildInterviewer(modelBuilder);
         BuildCandidates(modelBuilder);
+
         
         // FAQ Features
         BuildFAQJobs(modelBuilder);

@@ -12,7 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
 using ESOF.WebApp.WebAPI.Services;
-
+using Hangfire;
+using Hangfire.PostgreSql;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,14 +22,15 @@ var dbContext = new ApplicationDbContext();
 var connectionString = dbContext.Database.GetDbConnection().ConnectionString;
 
 builder.Services.AddHangfire(config => config
-.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-.UseSimpleAssemblyNameTypeSerializer()
-.UseRecommendedSerializerSettings()
-.UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
 
 builder.Services.AddHangfireServer();
 
 // Add services to the container.
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
@@ -54,6 +56,10 @@ builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
 builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
+
+
+//Dashboard
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 //Email Template
 builder.Services.AddScoped<EmailTemplateService>();
