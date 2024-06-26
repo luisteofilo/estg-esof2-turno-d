@@ -8,63 +8,74 @@
 @inherits SearchBase
 
 <div class="search-container">
-    <form method="get" action="/search/results" class="search-form">
+    <form method="get" action="/search/people" class="search-form">
         <div class="input-row">
             <input type="text" @bind="searchText" placeholder="Search Text" name="searchText" class="search-input" required/>
+            @if (action == "people")
+            {
+                <input type="hidden" name="action" value="@action" />
+            }
+            
+            
             <button type="submit" class="submit-button">Ok</button>
         </div>
         @if (SearchService.searchPerformed)
         {
-        <div class="select-row">
-        <!--    <select name="skill" @bind="skill" class="custom-select">
-                <option value="">Skills</option>
-                @if (Skills != null && Skills.Any())
+            <button type="submit" name="action" value="people" class="btn-primary">
+                People
+            </button>
+            <button type="submit" name="action" value="jobs" class="btn-primary">
+                Jobs
+            </button>
+            <div class="select-row">
+                @if (action == "people")
                 {
-                @foreach (var skill in Skills)
-                {
-                <option value="@skill.Name">@skill.Name</option>
-                }
-                }
-            </select>-->
-              <!--  <select name="job" class="custom-select">
-                    <option value="">Jobs</option>
-                    @if (Jobs != null && Jobs.Any())
-                    {
-                    @foreach (var job in Jobs)
-                    {
-                    <option value="@job.Position">@job.Position</option>
-                    }
-                    }
-                </select>-->
-              <a href="search/people?searchText=@searchText" type="button" class="btn-primary">
-                  People
-              </a>
-              
-              <button type="button" class="btn-primary">
-                  Jobs
-              </button>
+                    <select name="skill" @bind="skill" class="custom-select">
+                        <option value="">Skills</option>
+                        @if (Skills != null && Skills.Any())
+                        {
+                            @foreach (var skill in Skills)
+                            {
+                                <option value="@skill.Name">@skill.Name</option>
+                            }
+                        }
+                    </select>
 
-        <!--      <select name="location" class="custom-select">
-                    <option value="">Location</option>
-                    @if (Locations != null && Locations.Any())
-                    {
-                    @foreach (var location in Locations)
-                    {
-                    <option value="@location">@location</option>
-                    }
-                    }
-                </select>-->
-        </div>
+                    <select name="location" class="custom-select">
+                        <option value="">Location</option>
+                        @if (Locations != null && Locations.Any())
+                        {
+                            @foreach (var location in Locations)
+                            {
+                                <option value="@location">@location</option>
+                            }
+                        }
+                    </select>
+                }
+            </div>
         }
     </form>
 </div>
 
-
 @code {
-    
-    [SupplyParameterFromQuery(Name= "searchText")]
+    [SupplyParameterFromQuery(Name = "searchText")]
     private string searchText { get; set; } = string.Empty;
+
+    [SupplyParameterFromQuery(Name = "action")]
+    private string action { get; set; } = string.Empty;
+
     private string skill { get; set; } = string.Empty;
 
-[Inject] public ISearchService SearchService { get; set; }
+    [Inject] public ISearchService SearchService { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        
+    }
+    
+    public async ValueTask DisposeAsync()
+    {
+        action = string.Empty;
+        await Task.CompletedTask;
+    }
 }
