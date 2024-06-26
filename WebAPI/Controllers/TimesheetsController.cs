@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common.Dtos.Position;
+using Common.Dtos.Timesheet;
 using ESOF.WebApp.DBLayer.Entities;
 using ESOF.WebApp.Services;
 using ESOF.WebApp.WebAPI.Repositories;
@@ -10,43 +11,44 @@ namespace ESOF.WebApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PositionsController : ControllerBase
+    public class TimesheetsController : ControllerBase
     {
-        private readonly PositionService _positionService;
+        private readonly TimesheetService _timesheetService;
 
-        public PositionsController(PositionService positionService)
+        public TimesheetsController(TimesheetService timesheetService)
         {
-            _positionService = positionService;
+            _timesheetService = timesheetService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Position>>> GetAllPositions()
+        public async Task<ActionResult<IEnumerable<Timesheet>>> GetAllTimesheets()
         {
-            var positions = await _positionService.GetAllPositions();
-            return Ok(positions);
+            var timesheets = await _timesheetService.GetAllTimesheets();
+            return Ok(timesheets);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Position>> GetPositionById(Guid id)
+        public async Task<ActionResult<Timesheet>> GetTimesheetById(Guid id)
         {
-            var position = await _positionService.GetPositionById(id);
-            if (position == null)
+            var timesheet = await _timesheetService.GetTimesheetById(id); 
+            
+            if (timesheet == null)
             {
                 return NotFound();
             }
-            return Ok(position);
+            return Ok(timesheet);
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreatePosition(Guid jobId, [FromBody] PositionCreateDTO dto)
+        public async Task<ActionResult> CreateTimesheet(Guid positionId, [FromBody] TimesheetCreateDTO dto)
         {
-            await _positionService.CreatePosition(jobId, dto);
+            await _timesheetService.CreateTimesheet(positionId, dto);
             return Ok();
             // return CreatedAtAction(nameof(GetPositionById), new { id = createdPosition.PositionId }, createdPosition);
         }
 
      /*   [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePosition(Guid id, Position position)
+        public async Task<IActionResult> UpdateTimesheet(Guid id, Position position)
         {
           /*  if (id != position.PositionId)
             {
@@ -58,9 +60,9 @@ namespace ESOF.WebApp.Controllers
         } */
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePosition(Guid id)
+        public async Task<IActionResult> DeleteTimesheet(Guid id)
         {
-            var result = await _positionService.DeletePosition(id);
+            var result = await _timesheetService.DeleteTimesheet(id);
             if (!result)
             {
                 return NotFound();

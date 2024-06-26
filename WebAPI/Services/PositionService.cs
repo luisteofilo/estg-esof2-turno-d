@@ -15,14 +15,16 @@ namespace ESOF.WebApp.Services
     {
         private readonly IPositionRepository _positionRepository;
         private readonly IJobRepository _jobRepository;
+        private readonly PositionDTOConverter _positionDtoConverter;
 
-        public PositionService(IPositionRepository positionRepository, IJobRepository jobRepository)
+        public PositionService(IPositionRepository positionRepository, IJobRepository jobRepository, PositionDTOConverter positionDtoConverter)
         {
             _positionRepository = positionRepository;
             _jobRepository = jobRepository;
+            _positionDtoConverter = positionDtoConverter;
         }
 
-        // Create a new position
+        // Create a new position falta timesheets
         public async Task CreatePosition(Guid jobId, PositionCreateDTO dto)
         {
             var job = await _jobRepository.GetJobByIdAsync(jobId);
@@ -30,11 +32,12 @@ namespace ESOF.WebApp.Services
             {
                 throw new Exception("There is no job with this id.");
             }
-            var position = 
-            await _positionRepository.CreatePosition(job, dto);
+
+            var position = _positionDtoConverter.PositionCreateDTOToPosition(dto, job);
+            await _positionRepository.CreatePosition(position);
         }
 
-        // Get all positions
+        // Get all positions Dar um return de dto 
         public async Task<IEnumerable<Position>> GetAllPositions()
         {
             return await _positionRepository.GetAllPositions();
@@ -53,7 +56,7 @@ namespace ESOF.WebApp.Services
         }
 
         // Update a position
-        public async Task UpdatePosition(Position position)
+        public async Task UpdatePosition( Guid positionId,Position position)
         {
             await _positionRepository.UpdatePosition(position);
         }
