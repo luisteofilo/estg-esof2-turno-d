@@ -49,7 +49,8 @@ builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 
-
+//Dashboard
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 var app = builder.Build();
 
