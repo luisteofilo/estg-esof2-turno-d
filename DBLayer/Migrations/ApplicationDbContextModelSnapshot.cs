@@ -21,68 +21,15 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-            
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Emails.EmailTemplate", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("integer");
-
-                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                b.Property<string>("Body")
-                    .IsRequired()
-                    .HasColumnType("text");
-
-                b.Property<string>("Subject")
-                    .IsRequired()
-                    .HasColumnType("text");
-
-                b.HasKey("Id");
-
-                b.ToTable("EmailTemplates");
-
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
-                {
-                    b.Property<Guid>("EducationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<string>("EndDate")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("SchoolName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("StartDate")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("EducationId");
-
-                    b.HasIndex("ProfileId");
-
-                    b.ToTable("Educations");
-                });
-            
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Emails.EmailTemplate", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Emails.EmailTemplate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-                    
+
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Body")
@@ -96,44 +43,97 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmailTemplates");
-                });
-            
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
-                
-                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
-                {
-                    b.Property<Guid>("ExperienceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
+                    {
+                        b.Property<Guid>("EducationId")
+                            .ValueGeneratedOnAdd()
+                            .HasColumnType("uuid")
+                            .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        b.Property<string>("EndDate")
+                            .IsRequired()
+                            .HasColumnType("text");
 
-                    b.Property<string>("Duration")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        b.Property<string>("Name")
+                            .IsRequired()
+                            .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        b.Property<Guid>("ProfileId")
+                            .HasColumnType("uuid");
 
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("uuid");
+                        b.Property<string>("SchoolName")
+                            .IsRequired()
+                            .HasColumnType("text");
 
-                    b.HasKey("ExperienceId");
+                        b.Property<string>("StartDate")
+                            .IsRequired()
+                            .HasColumnType("text");
 
-                    b.HasIndex("ProfileId");
+                        b.HasKey("EducationId");
 
-                    b.ToTable("Experiences");
+                        b.HasIndex("ProfileId");
+
+                        b.ToTable("Educations");
+                    });
+
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Emails.EmailTemplate", b =>
+                    {
+                        b.Property<int>("Id")
+                            .ValueGeneratedOnAdd()
+                            .HasColumnType("integer");
+
+                        NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                        b.Property<string>("Body")
+                            .IsRequired()
+                            .HasColumnType("text");
+
+                        b.Property<string>("Subject")
+                            .IsRequired()
+                            .HasColumnType("text");
+
+                        b.HasKey("Id");
+
+                        b.ToTable("EmailTemplates");
+                    });
+
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
+
+                        modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
+                        {
+                            b.Property<Guid>("ExperienceId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uuid")
+                                .HasDefaultValueSql("gen_random_uuid()");
+
+                            b.Property<string>("CompanyName")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b.Property<string>("Description")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b.Property<string>("Duration")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b.Property<Guid>("ProfileId")
+                                .HasColumnType("uuid");
+
+                            b.HasKey("ExperienceId");
+
+                            b.HasIndex("ProfileId");
+
+                            b.ToTable("Experiences");
+                        }));
+
                 }));
-                
-                });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
                 {
@@ -670,8 +670,8 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Skill", b => { b.Navigation("ProfileSkills"); });
 
                 modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b => { b.Navigation("UserRoles"); });
+            
 #pragma warning restore 612, 618
-            }));
         }
     }
 }
