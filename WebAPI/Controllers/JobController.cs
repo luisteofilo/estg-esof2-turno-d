@@ -83,10 +83,10 @@ public class JobController(
     }
     
     [HttpPost("CreateJobSkill")]
-    [ProducesResponseType(201, Type = typeof(JobSkillDto))] 
-    [ProducesResponseType(400)] 
-    public async Task<IActionResult> CreateJobSkill([FromBody] JobSkillDto jobSkillDto) 
-    { 
+    [ProducesResponseType(201, Type = typeof(JobSkillDto))]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> CreateJobSkill([FromBody] JobSkillDto jobSkillDto)
+    {
         try
         {
             if (jobSkillDto == null)
@@ -104,11 +104,10 @@ public class JobController(
 
             var createdJobSkillDto = jobSkill.JobSkillConvertToDto();
 
-            return CreatedAtAction(nameof(GetJobSkillsById), new { jobId = createdJobSkillDto.JobId }, createdJobSkillDto);
+            return CreatedAtAction(nameof(GetJobSkillsById), new { jobId = createdJobSkillDto.JobId, skillId = createdJobSkillDto.SkillId }, createdJobSkillDto);
         }
         catch (Exception ex)
         {
-            // Log the full exception including the inner exception
             Console.WriteLine($"Error creating jobSkill: {ex}");
             return StatusCode(StatusCodes.Status500InternalServerError, $"Error creating jobSkill: {ex.Message} {ex.InnerException?.Message}");
         }
