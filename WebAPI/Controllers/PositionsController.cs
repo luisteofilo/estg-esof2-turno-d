@@ -20,7 +20,8 @@ namespace ESOF.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PositionResponseDTO>>> GetAllPositions()
+        [ProducesResponseType(200, Type = typeof(IEnumerable<PositionResponseDTO>))]
+        public async Task<ActionResult> GetAllPositions()
         {
             var positions = await _positionService.GetAllPositions();
             return Ok(positions);

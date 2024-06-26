@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Frontend.Components;
 using Frontend.Helpers;
 using Frontend.Services;
@@ -10,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// builder.Services.AddControllers()
+//     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler 
+//         = ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(EnvFileHelper.GetString("API_URL")) });
 builder.Services.AddScoped<ApiHelper>();
 
@@ -21,6 +26,8 @@ builder.Services.AddScoped<IExternalJobService, ExternalJobService>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IInterviewerService, InterviewerService>();
 builder.Services.AddScoped<ICandidateService, CandidateService>();
+
+builder.Services.AddScoped<IPositionService, PositionService>();
 
 var app = builder.Build();
 
