@@ -28,6 +28,21 @@
       <Compile Remove="Migrations\20240625014726_job-creation-1.cs" />
       <Compile Remove="Migrations\20240625014726_job-creation-1.Designer.cs" />
       <Compile Remove="Migrations\20240625181846_mig.Designer.cs" />
+      <Compile Remove="Migrations\20240609154849_EmailTemplateSnapshot.cs" />
+      <Compile Remove="Migrations\20240609154849_EmailTemplateSnapshot.Designer.cs" />
+      <Compile Remove="Context\Tables\Emails\**" />
+      <Compile Remove="Migrations\20240621125851_CreateEmailTemplates.cs" />
+      <Compile Remove="Migrations\20240621125851_CreateEmailTemplates.Designer.cs" />
+      <Compile Remove="Migrations\20240621125945_CreateEmailTemplates.cs" />
+      <Compile Remove="Migrations\20240621125945_CreateEmailTemplates.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Context\Tables\Emails\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Context\Tables\Emails\**" />
     </ItemGroup>
 
 </Project>
