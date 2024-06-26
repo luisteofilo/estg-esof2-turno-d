@@ -1,0 +1,36 @@
+@using Common.Dtos.FAQ
+@using Frontend.Services.Contracts
+@inject IFAQService FaqService
+
+<div class="floating-faq-window">
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h5 class="card-title">FAQ Search</h5>
+            <input type="text" class="form-control" placeholder="Search FAQs" @bind-value="searchQuery" />
+            <button class="btn btn-primary mt-3" @onclick="SearchFAQs">Search</button>
+            <ul class="list-group mt-3">
+                @if (faqResults != null && faqResults.Any())
+                {
+                @foreach (var faq in faqResults)
+                {
+                <li class="list-group-item">@faq.QuestionText</li>
+                }
+                }
+                else
+                {
+                <li class="list-group-item">No results found.</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+private string searchQuery;
+private List<QuestionDto> faqResults = new List<QuestionDto>();
+
+private async Task SearchFAQs()
+{
+faqResults = (await FaqService.SearchQuestions(searchQuery)).ToList();
+}
+}

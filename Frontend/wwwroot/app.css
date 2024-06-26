@@ -49,3 +49,15 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.floating-window {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050; /* Above the default bootstrap modal */
+    width: 300px;
+}
+
+.floating-window .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

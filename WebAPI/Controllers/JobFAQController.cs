@@ -24,7 +24,15 @@ public class JobFAQController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok();
+        // Adicionar dados de teste
+        var faqJobs = new List<FaqJobs>
+        {
+            new FaqJobs { Id = 1, Name = "Job 1" },
+            new FaqJobs { Id = 2, Name = "Job 2" },
+            new FaqJobs { Id = 3, Name = "Job 3" }
+        };
+
+        return Ok(faqJobs);
     }
 
     [HttpGet("{jobId}/questions")]
@@ -97,6 +105,10 @@ public class JobFAQController : ControllerBase
         await _jobFaqRepository.AnswerQuestion(questionId, null, answerText);
         return Ok();
     }
+}
 
-
+public class FaqJobs
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
 }

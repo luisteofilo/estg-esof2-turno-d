@@ -1,14 +1,19 @@
-using System.Text.Json;
-using System.Text.Json.Nodes;
+using System.Net.Http.Json;
 using Common.Dtos.FAQ;
 using ESOF.WebApp.DBLayer.Entities.FAQ;
-using Frontend.Helpers;
 using Frontend.Services.Contracts;
 
 namespace Frontend.Services;
 
-public class FAQService(HttpClient _httpClient) : IFAQService
+public class FAQService : IFAQService
 {
+    private readonly HttpClient _httpClient;
+
+    public FAQService(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
     public async Task<IEnumerable<QuestionDto>> GetQuestions(string jobId)
     {
         var response = await _httpClient.GetAsync($"api/JobFAQ/{jobId}/questions");
@@ -18,7 +23,7 @@ public class FAQService(HttpClient _httpClient) : IFAQService
 
     public async Task<QuestionDto> GetQuestion(string questionId)
     {
-        var response  = await _httpClient.GetAsync($"api/JobFAQ/question/{questionId}");
+        var response = await _httpClient.GetAsync($"api/JobFAQ/question/{questionId}");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<QuestionDto>();
     }
@@ -28,23 +33,25 @@ public class FAQService(HttpClient _httpClient) : IFAQService
         var content = new QuestionDto
         {
             QuestionText = question,
-JobId = new Guid(jobId),
-Answers = new List<AnswerDto>()
+            JobId = new Guid(jobId),
+            Answers = new List<AnswerDto>()
         };
-        
-        var response = await _httpClient
-            .PostAsJsonAsync($"api/JobFAQ/{jobId}/questions", content);
+
+        var response = await _httpClient.PostAsJsonAsync($"api/JobFAQ/{jobId}/questions", content);
         response.EnsureSuccessStatusCode();
     }
 
-    public Task<Question> UpdateQuestion(Guid questionId, Question updatedQuestion)
+    public async Task<Question> UpdateQuestion(Guid questionId, Question updatedQuestion)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PutAsJsonAsync($"api/JobFAQ/questions/{questionId}", updatedQuestion);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<Question>();
     }
 
-    public Task DeleteQuestion(Guid questionId)
+    public async Task DeleteQuestion(Guid questionId)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.DeleteAsync($"api/JobFAQ/questions/{questionId}");
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task<IEnumerable<AnswerDto>> GetAnswersForQuestion(string jobId, string questionId)
@@ -56,22 +63,40 @@ Answers = new List<AnswerDto>()
 
     public async Task CreateAnswerForQuestion(string questionId, string answer)
     {
-        var response = await _httpClient.PostAsJsonAsync($"api/JobFAQ/questions/{questionId}/answers", answer);
+        var content = new AnswerDto
+        {
+            AnswerText = answer,
+            QuestionId = new Guid(questionId)
+        };
+
+        var response = await _httpClient.PostAsJsonAsync($"api/JobFAQ/questions/{questionId}/answers", content);
         response.EnsureSuccessStatusCode();
     }
 
-    public Task<Answer> UpdateAnswerForQuestion(Guid questionId, Guid answerId, Answer updatedAnswer)
+    public async Task<Answer> UpdateAnswerForQuestion(Guid questionId, Guid answerId, Answer updatedAnswer)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PutAsJsonAsync($"api/JobFAQ/questions/{questionId}/answers/{answerId}", updatedAnswer);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<Answer>();
     }
 
-    public Task DeleteAnswerForQuestion(Guid questionId, Guid answerId)
+    public async Task DeleteAnswerForQuestion(Guid questionId, Guid answerId)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.DeleteAsync($"api/JobFAQ/questions/{questionId}/answers/{answerId}");
+        response.EnsureSuccessStatusCode();
     }
 
-    public Task<IEnumerable<Question>> SearchQuestions(string query)
+    public async Task<IEnumerable<QuestionDto>> SearchQuestions(string query)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.GetAsync($"api/JobFAQ/questions/search?query={query}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<QuestionDto>>();
+    }
+
+    public async Task<IEnumerable<FaqJobs>> GetFaqJobsAsync()
+    {
+        var response = await _httpClient.GetAsync("api/JobFAQ");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<FaqJobs>>();
     }
 }

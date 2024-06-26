@@ -1,41 +1,68 @@
 @page "/faqs"
+@inject IFAQService FaqService
 @inject NavigationManager Navigation
 @using Frontend.Helpers
-@using Frontend.Components.Pages.FAQ.SearchWindow
+@using Frontend.Components.Pages.FAQ
+@using Frontend.Services.Contracts
 
 <PageTitle>Job FAQs</PageTitle>
 
 <h1>Job FAQs</h1>
 <hr/>
 
-<div class="list-group">
-    @if (_faqJobs != null && _faqJobs.Any())
+<button class="btn btn-primary" @onclick="ToggleFloatingWindow">
+    @(showFloatingWindow ? "Deactivate" : "Activate") Floating FAQ Window
+</button>
+
+<div class="list-group mt-3">
+    @if (_faqJobs.Any())
     {
-        foreach (var job in _faqJobs)
-        {
-            <a href="@($"/faq/{job.Id}")" class="list-group-item list-group-item-action">
-                @job.Name
-            </a>
-        }
+    foreach (var job in _faqJobs)
+    {
+    <a href="@($"/faqs/{job.Id}")" class="list-group-item list-group-item-action">
+        @job.Name
+    </a>
+    }
     }
     else
     {
-        <p>No FAQ topics available.</p>
+    <p>No FAQ topics available.</p>
     }
-    <SearchWindow />
-    
 </div>
 
+@if (showFloatingWindow)
+{
+<div class="floating-window">
+    <div class="card">
+        <div class="card-header">
+            <button class="btn btn-danger btn-sm float-end" @onclick="ToggleFloatingWindow">Close</button>
+            <h5>FAQ Search</h5>
+        </div>
+        <div class="card-body">
+            <SearchWindow />
+        </div>
+    </div>
+</div>
+}
+
 @code {
-    private List<FaqJobs>? _faqJobs;
+private List<Services.Contracts.FaqJobs> _faqJobs = new();
+private bool showFloatingWindow = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-    }
+protected override async Task OnInitializedAsync()
+{
+// Carrega os tópicos de FAQ do serviço
+_faqJobs = (await FaqService.GetFaqJobsAsync()).ToList();
+}
 
-    private class FaqJobs
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = default!;
-    }
+private void ToggleFloatingWindow()
+{
+showFloatingWindow = !showFloatingWindow;
+}
+
+private class FaqJobs
+{
+public int Id { get; set; }
+public string Name { get; set; } = default!;
+}
 }
