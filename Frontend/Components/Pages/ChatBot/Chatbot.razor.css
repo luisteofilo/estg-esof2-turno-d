@@ -27,7 +27,7 @@
 }
 
 .chatbot-chat {
-    width: 300px;
+    width: 400px;
     height: 80vh;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -123,14 +123,13 @@
 
 .message.person {
     background-color: #e0f7fa;
-    align-self: flex-start;
+    align-self: flex-end;
     border: 1px solid #00acc1;
     margin-left: 10px;
 }
 
 .message.ai {
-    background-color: #f1f1f1;
-    align-self: flex-end;
+    align-self: flex-start;
     border: 1px solid #d3d3d3;
     margin-right: 10px;
     text-align: right;

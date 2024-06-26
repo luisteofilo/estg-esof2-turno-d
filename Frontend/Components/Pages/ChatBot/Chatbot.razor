@@ -25,21 +25,65 @@
         }
     }
 
-    private async Task SendMessage()
-    {
-        if (!string.IsNullOrEmpty(_message))
-        {
-            var message = new MessageDto("person", _message);
-            _messages.Add(message);
-            _message = string.Empty;
-
-            var aiMessage = new MessageDto("ai", "Respondi!");
-            _messages.Add(aiMessage);
-            
-            await ScrollToBottom();
+    private async Task SendMessage() {
+        
+        if (string.IsNullOrEmpty(_message)) {
+            return;
         }
+        
+        var message = new MessageDto("person", _message);
+        _messages.Add(message);
+            
+        await ChooseHttpRequest(message);
+        
+        _message = string.Empty;
+        await ScrollToBottom();
+        
     }
 
+    private async Task ChooseHttpRequest(MessageDto message)
+    {
+        var command = message.message.Split(' ')[0].ToLower();
+
+        switch (command)
+        {
+            case "/jobs":
+                await HandleJobsCommand();
+                break;
+            case "/interview":
+                await HandleInterviewCommand();
+                break;
+            case "/help":
+                await HandleHelpCommand();
+                break;
+            default:
+                var aiMessage = new MessageDto("ai", "Comando não reconhecido. Use /help para ver a lista de comandos.", TIPO.ERRO);
+                _messages.Add(aiMessage);
+                break;
+        }
+
+        await ScrollToBottom();
+    }
+    
+    private async Task HandleJobsCommand()
+    {
+        // TODO: Implementar lógica para obter e enviar informações sobre vagas de emprego.
+        var aiMessage = new MessageDto("ai", "Aqui estão as vagas disponíveis: [Exemplo de vaga]", TIPO.SUCESSO);
+        _messages.Add(aiMessage);
+    }
+
+    private async Task HandleHelpCommand()
+    {
+        var aiMessage = new MessageDto("ai", "Comandos disponíveis:<br/>/Interview - Lista de interviews<br/>/jobs - Lista de vagas <br/>/help - Lista de comandos", TIPO.SUCESSO);
+        _messages.Add(aiMessage);
+    }
+
+    private async Task HandleInterviewCommand()
+    { 
+        var aiMessage = new MessageDto("ai", "Aqui estão as interviews disponíveis: [Exemplo de interview]", TIPO.SUCESSO);
+        _messages.Add(aiMessage);
+    }
+    
     private async Task ScrollToBottom()
     {
         await JS.InvokeVoidAsync("scrollToBottom", "chat-body");
@@ -58,8 +102,8 @@
                 <div class="message ai">Hi there! How can we help you today?</div>
                 @foreach (var msg in _messages)
                 {
-                    <div class="message @(msg.sender == "person" ? "person" : "ai")">
-                        <span>@msg.message</span>
+                    <div class="message @(msg.sender == "person" ? "person" : "ai") @(msg.sender != "person" ? (msg.type == TIPO.ERRO ? "bg-danger" : msg.type == TIPO.AVISO ? "bg-warning" : msg.type == TIPO.SUCESSO ? "bg-success" : "") : "")">
+                        <span>@((MarkupString)msg.message)</span>
                     </div>
                 }
             </div>
