@@ -12,7 +12,7 @@ namespace Frontend.Components.Pages.Interview
         [Inject] protected ICandidateService CandidateService { get; set; }
         [Inject] protected IInterviewerService InterviewerService { get; set; }
 
-        protected IEnumerable<InterviewDto> interviews;
+        private IEnumerable<InterviewDto> interviews;
         protected IEnumerable<InterviewDto> filteredInterviews;
         protected Dictionary<Guid, string> candidateNames = new Dictionary<Guid, string>();
         protected Dictionary<Guid, string> interviewerNames = new Dictionary<Guid, string>();
@@ -22,14 +22,14 @@ namespace Frontend.Components.Pages.Interview
         protected Dictionary<Guid, bool> lightOn = new Dictionary<Guid, bool>();
         private bool _shouldContinuePolling = true;
 
-        protected string searchText = string.Empty;
-        protected string selectedState = "All";
-        protected string selectedCandidate = string.Empty;
-        protected string selectedInterviewer = string.Empty;
-        protected DateTime? startDateStart = null;
-        protected DateTime? endDateStart = null;
-        protected DateTime? startDateEnd = null;
-        protected DateTime? endDateEnd = null;
+        private string searchText = string.Empty;
+        private string selectedState = "All";
+        private string selectedCandidate = string.Empty;
+        private string selectedInterviewer = string.Empty;
+        private DateTime? startDateStart = null;
+        private DateTime? endDateStart = null;
+        private DateTime? startDateEnd = null;
+        private DateTime? endDateEnd = null;
         protected string selectedLocation = string.Empty;
 
         protected override async Task OnInitializedAsync()

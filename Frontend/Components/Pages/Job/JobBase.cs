@@ -67,7 +67,7 @@ public class JobBase : ComponentBase
 
     protected void RemoveJob(Guid jobId)
     {
-        // Implement the removal of the job here
+        // Implement the job removal logic
     }
 
     protected void OnSearchPositionChanged(ChangeEventArgs e)
@@ -88,13 +88,12 @@ public class JobBase : ComponentBase
         FilterJobs();
     }
 
-    // Metodo para filtrar as ofertas de emprego
     protected void FilterJobs()
     {
         FilteredJobs = Jobs.Where(j =>
             (string.IsNullOrEmpty(searchPosition) || j.Position.Contains(searchPosition, StringComparison.OrdinalIgnoreCase)) &&
             (string.IsNullOrEmpty(searchLocalization) || j.Localization.Contains(searchLocalization, StringComparison.OrdinalIgnoreCase)) &&
-            (string.IsNullOrEmpty(searchCompany) || (j.Company != null && j.Company.Contains(searchCompany, StringComparison.OrdinalIgnoreCase)))
+            (string.IsNullOrEmpty(searchCompany) || j.Company != null && j.Company.Contains(searchCompany, StringComparison.OrdinalIgnoreCase))
         ).ToList();
     }
 }

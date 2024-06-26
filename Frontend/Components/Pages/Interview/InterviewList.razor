@@ -8,49 +8,51 @@
 
 <h3>Interview List</h3>
 
-<div class="row mb-3">
-    <div class="col" style="margin-top: 20px">
-        <label for="statusSelector">Select Interview Status:</label>
-        <select id="statusSelector" class="form-control" @onchange="OnStateChanged">
-            <option value="All">All</option>
-            <option value="Scheduled">Scheduled</option>
-            <option value="Missed">Missed</option>
-            <option value="On Going">On Going</option>
-            <option value="Completed">Completed</option>
-            <option value="Canceled">Canceled</option>
-        </select>
-    </div>
-    <div class="col" style="margin-top: 20px">
-        <label for="candidateSelector">Select Candidate:</label>
-        <select id="candidateSelector" class="form-control" @onchange="OnCandidateChanged">
-            <option value="">All</option>
-            @foreach (var candidate in candidateNames)
-            {
-                <option value="@candidate.Key">@candidate.Value</option>
-            }
-        </select>
-    </div>
-    <div class="col" style="margin-top: 20px">
-        <label for="interviewerSelector">Select Interviewer:</label>
-        <select id="interviewerSelector" class="form-control" @onchange="OnInterviewerChanged">
-            <option value="">All</option>
-            @foreach (var interviewer in interviewerNames)
-            {
-                <option value="@interviewer.Key">@interviewer.Value</option>
-            }
-        </select>
-    </div>
-    <div class="col" style="margin-top: 20px">
-        <label for="locationBox">Location:</label>
-        <input type="text" id="locationBox" class="form-control" @bind="selectedLocation" @oninput="OnLocationChanged" />
-    </div>
-    <div class="col" style="margin-top: 20px">
-        <label for="startDateStart">Start Date:</label>
-        <input type="date" id="startDateStart" class="form-control" @onchange="OnStartDateStartChanged" />
-    </div>
-    <div class="col" style="margin-top: 20px">  
-        <label for="endDateStart">End Date:</label>
-        <input type="date" id="endDateStart" class="form-control" @onchange="OnEndDateStartChanged" />
+<div class="filter-section mb-3 p-3 rounded shadow-sm">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="statusSelector" class="form-label">Status:</label>
+            <select id="statusSelector" class="form-control" @onchange="OnStateChanged">
+                <option value="All">All</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Missed">Missed</option>
+                <option value="On Going">On Going</option>
+                <option value="Completed">Completed</option>
+                <option value="Canceled">Canceled</option>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="candidateSelector" class="form-label">Candidate:</label>
+            <select id="candidateSelector" class="form-control" @onchange="OnCandidateChanged">
+                <option value="">All</option>
+                @foreach (var candidate in candidateNames)
+                {
+                    <option value="@candidate.Key">@candidate.Value</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="interviewerSelector" class="form-label">Interviewer:</label>
+            <select id="interviewerSelector" class="form-control" @onchange="OnInterviewerChanged">
+                <option value="">All</option>
+                @foreach (var interviewer in interviewerNames)
+                {
+                    <option value="@interviewer.Key">@interviewer.Value</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="locationBox" class="form-label">Location:</label>
+            <input type="text" id="locationBox" class="form-control" @bind="selectedLocation" @oninput="OnLocationChanged" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="startDateStart" class="form-label">Start Date:</label>
+            <input type="date" id="startDateStart" class="form-control" @onchange="OnStartDateStartChanged" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="endDateStart" class="form-label">End Date:</label>
+            <input type="date" id="endDateStart" class="form-control" @onchange="OnEndDateStartChanged" />
+        </div>
     </div>
 </div>
 
@@ -60,8 +62,8 @@
 }
 else
 {
-    <p>Current DateTime: @currentDateTime</p>
-    <table class="table">
+    <p><b>Current DateTime</b>: @currentDateTime</p>
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Candidate</th>
@@ -87,11 +89,11 @@ else
                     <td>
                         @if (interview.InterviewState == InterviewState.OnGoing && !presenceMarked[interview.InterviewId])
                         {
-                            <button @onclick="() => MarkPresence(interview.InterviewId)">Mark Presence</button>
+                            <button class="btn btn-sm btn-success" @onclick="() => MarkPresence(interview.InterviewId)">Mark Presence</button>
                         }
                         else if (interview.InterviewState == InterviewState.Scheduled)
                         {
-                            <button @onclick="() => CancelInterview(interview.InterviewId)">Cancel</button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => CancelInterview(interview.InterviewId)">Cancel</button>
                         }
                     </td>
                     <td>
