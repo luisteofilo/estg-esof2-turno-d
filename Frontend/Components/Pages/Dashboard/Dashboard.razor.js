@@ -1,12 +1,25 @@
 ﻿export class Dashboard {
     static initPieChart(selector, skillNames) {
         const skillCounts = skillNames.reduce((acc, skill) => {
-            acc[skill] = (acc[skill] || 0) + 1;
+            const skillLower = skill.toLowerCase(); 
+            acc[skillLower] = (acc[skillLower] || 0) + 1; 
             return acc;
         }, {});
 
-        const labels = Object.keys(skillCounts);
-        const counts = Object.values(skillCounts);
+        const sortedSkills = Object.entries(skillCounts)
+            .sort((a, b) => b[1] - a[1]);
+
+        const topSkills = sortedSkills.slice(0, 9);
+        const otherSkills = sortedSkills.slice(9);
+
+        const labels = topSkills.map(skill => skill[0]);
+        const counts = topSkills.map(skill => skill[1]);
+
+        if (otherSkills.length > 0) {
+            const otherCount = otherSkills.reduce((acc, skill) => acc + skill[1], 0);
+            labels.push('Other');
+            counts.push(otherCount);
+        }
 
         const target = document.querySelector(selector);
         let ctx = target.getContext('2d');
@@ -16,11 +29,19 @@
                 labels: labels,
                 datasets: [{
                     data: counts,
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40']
+                    backgroundColor: labels.map((_, index) => Dashboard.getColor(index))
                 }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                }
             }
         });
     }
+
 
     static initDoughnutChart(selector, experienceNames) {
         const experienceCounts = {};
