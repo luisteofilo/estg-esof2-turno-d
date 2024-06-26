@@ -15,4 +15,16 @@ public class PositionDTOConverter
                 
         };
     }
+    
+    public PositionResponseDTO PositionToPositionResponseDTO(ESOF.WebApp.DBLayer.Entities.Position position, ESOF.WebApp.DBLayer.Entities.Job? job)
+    {
+        
+        return new PositionResponseDTO
+        {
+            BillingType = position.BillingType,
+            EndDate = position.EndDate,
+            StartDate = position.StartDate,
+            JobDetails = job != null ? job.OtherDetails : position.Job.OtherDetails
+        };
+    }
 }

@@ -22,14 +22,14 @@ namespace ESOF.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Invoice>>> GetAllInvoices()
+        public async Task<ActionResult<IEnumerable<InvoiceResponseDTO>>> GetAllInvoices()
         {
             var invoices = await _invoiceService.GetAllInvoices();
             return Ok(invoices);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Invoice>> GetInvoiceById(Guid id)
+        public async Task<ActionResult<InvoiceResponseDTO>> GetInvoiceById(Guid id)
         {
             var invoice = await _invoiceService.GetInvoiceById(id);
             

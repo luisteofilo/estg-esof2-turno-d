@@ -20,14 +20,14 @@ namespace ESOF.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Position>>> GetAllPositions()
+        public async Task<ActionResult<IEnumerable<PositionResponseDTO>>> GetAllPositions()
         {
             var positions = await _positionService.GetAllPositions();
             return Ok(positions);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Position>> GetPositionById(Guid id)
+        public async Task<ActionResult<PositionResponseDTO>> GetPositionById(Guid id)
         {
             var position = await _positionService.GetPositionById(id);
             if (position == null)

@@ -21,14 +21,14 @@ namespace ESOF.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Timesheet>>> GetAllTimesheets()
+        public async Task<ActionResult<IEnumerable<TimesheetResponseDTO>>> GetAllTimesheets()
         {
             var timesheets = await _timesheetService.GetAllTimesheets();
             return Ok(timesheets);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Timesheet>> GetTimesheetById(Guid id)
+        public async Task<ActionResult<TimesheetResponseDTO>> GetTimesheetById(Guid id)
         {
             var timesheet = await _timesheetService.GetTimesheetById(id); 
             

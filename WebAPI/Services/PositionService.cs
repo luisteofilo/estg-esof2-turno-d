@@ -38,21 +38,33 @@ namespace ESOF.WebApp.Services
         }
 
         // Get all positions Dar um return de dto 
-        public async Task<IEnumerable<Position>> GetAllPositions()
+        public async Task<IEnumerable<PositionResponseDTO>> GetAllPositions()
         {
-            return await _positionRepository.GetAllPositions();
+            var result = new List<PositionResponseDTO>();
+            var positions = await _positionRepository.GetAllPositions();
+            foreach (var position in positions)
+            {
+                result.Add(_positionDtoConverter.PositionToPositionResponseDTO(position, null));
+            }
+
+            return result;
         }
 
         // Get a position by ID
-        public async Task<Position> GetPositionById(Guid id)
+        public async Task<PositionResponseDTO> GetPositionById(Guid id)
         {
             var position = await _positionRepository.GetPositionById(id);
             if (position == null)
             {
                 throw new Exception("There is no position with this Id.");
             }
+            var job = await _jobRepository.GetJobByIdAsync(position.JobId);
+            if (job == null)
+            {
+                throw new Exception("There is no job with this id.");
+            }
 
-            return position;
+            return _positionDtoConverter.PositionToPositionResponseDTO(position, job);
         }
 
         // Update a position

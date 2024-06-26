@@ -42,13 +42,20 @@ namespace ESOF.WebApp.Services
         }
 
         // Get all timesheet Dar um return de dto 
-        public async Task<IEnumerable<Timesheet>> GetAllTimesheets()
+        public async Task<IEnumerable<TimesheetResponseDTO>> GetAllTimesheets()
         {
-            return await _timesheetRepository.GetAllTimesheets();
+            var result = new List<TimesheetResponseDTO>();
+            var timesheets = await _timesheetRepository.GetAllTimesheets();
+            foreach (var timesheet in timesheets)
+            {
+                result.Add(_timesheetDtoConverter.TimesheetToTimesheetResponseDTO(timesheet));
+            }
+
+            return result;
         }
 
         // Get a timesheet by ID
-        public async Task<Timesheet> GetTimesheetById(Guid id)
+        public async Task<TimesheetResponseDTO> GetTimesheetById(Guid id)
         {
             var timesheet = await _timesheetRepository.GetTimesheetById(id);
             if (timesheet == null)
@@ -56,7 +63,7 @@ namespace ESOF.WebApp.Services
                 throw new Exception("There is no timesheet with this Id.");
             }
 
-            return timesheet;
+            return _timesheetDtoConverter.TimesheetToTimesheetResponseDTO(timesheet);
         }
 
         // Update a timesheet

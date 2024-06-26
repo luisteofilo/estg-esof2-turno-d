@@ -14,4 +14,15 @@ public class TimesheetDTOConverter
             InvoiceId = dto.InvoiceId
         };
     }
+    
+    public TimesheetResponseDTO TimesheetToTimesheetResponseDTO(ESOF.WebApp.DBLayer.Entities.Timesheet timesheet)
+    {
+        
+        return new TimesheetResponseDTO
+        {
+            HoursWorked = timesheet.HoursWorked,
+            TaskDescription = timesheet.TaskDescription,
+            Date = timesheet.Date
+        };
+    }
 }

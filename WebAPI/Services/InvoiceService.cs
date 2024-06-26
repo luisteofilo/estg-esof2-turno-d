@@ -41,12 +41,19 @@ namespace ESOF.WebApp.Services
         }
 
         
-        public async Task<IEnumerable<Invoice>> GetAllInvoices()
+        public async Task<IEnumerable<InvoiceResponseDTO>> GetAllInvoices()
         {
-            return await _invoiceRepository.GetAllInvoices();
+            var result = new List<InvoiceResponseDTO>();
+            var invoices = await _invoiceRepository.GetAllInvoices();
+            foreach (var invoice in invoices)
+            {
+                result.Add(_dtoConverter.InvoiceToInvoiceResponseDTO(invoice));
+            }
+
+            return result;
         }
 
-        public async Task<Invoice> GetInvoiceById(Guid id)
+        public async Task<InvoiceResponseDTO> GetInvoiceById(Guid id)
         {
             var invoice = await _invoiceRepository.GetInvoiceById(id);
             if (invoice == null)
@@ -54,7 +61,7 @@ namespace ESOF.WebApp.Services
                 throw new Exception("There is no invoice with this Id.");
             }
 
-            return invoice;
+            return _dtoConverter.InvoiceToInvoiceResponseDTO(invoice);
         }
 
         public async Task UpdateInvoice(Guid id, Guid timesheetId, InvoiceUpdateDTO dto)

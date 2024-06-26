@@ -12,4 +12,15 @@ public class InvoiceDTOConverter
             Payment = dto.Payment
         };
     }
+    
+    public InvoiceResponseDTO InvoiceToInvoiceResponseDTO(ESOF.WebApp.DBLayer.Entities.Invoice invoice)
+    {
+        
+        return new InvoiceResponseDTO
+        {
+            Payment = invoice.Payment,
+            Date = invoice.Date,
+            Description = invoice.Description
+        };
+    }
 }
