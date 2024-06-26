@@ -18,6 +18,7 @@
     private FeedbackDto feedback;
     private string newFeedbackText;
     private string errorMessage;
+    private bool feedbackExists;
 
     protected override async Task OnInitializedAsync()
     {
@@ -35,10 +36,16 @@
         try
         {
             feedback = await FeedbackService.GetFeedbackByInterviewIdAsync(interviewGuid);
+            feedbackExists = feedback != null;
+            Console.WriteLine($"Feedback Exists: {feedbackExists}");
+            if (feedback != null)
+            {
+                Console.WriteLine($"Feedback Message: {feedback.Message}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao carregar feedback: {ex.Message}");
+            Console.WriteLine($"Error loading feedback: {ex.Message}");
         }
     }
 
@@ -46,7 +53,7 @@
     {
         if (string.IsNullOrWhiteSpace(newFeedbackText))
         {
-            errorMessage = "Feedback cannot be empty.";
+            errorMessage = "Please enter your feedback.";
             return;
         }
 
@@ -59,16 +66,19 @@
         try
         {
             await FeedbackService.SubmitFeedbackAsync(newFeedback);
-            await LoadFeedback();
+            feedback = newFeedback; // Update feedback to reflect the newly submitted feedback
+            feedbackExists = true; // Set feedbackExists to true
+            newFeedbackText = string.Empty; // Clear the input field
+            StateHasChanged(); // Refresh the UI
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erro ao enviar feedback: {ex.Message}");
+            Console.WriteLine($"Error submitting feedback: {ex.Message}");
         }
     }
 }
 
-@if (feedback != null)
+@if (feedbackExists)
 {
     <div>
         <h4>Existing Feedback</h4>
@@ -82,12 +92,17 @@ else
     </div>
 }
 
-<div>
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <p style="color: red;">@errorMessage</p>
-    }
+@if (!feedbackExists)
+{
+    <div class="mt-4 feedback-form">
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <p style="color: red;">@errorMessage</p>
+        }
 
-    <textarea @bind="newFeedbackText" placeholder="Enter your feedback here"></textarea>
-    <button @onclick="SubmitFeedback">Submit Feedback</button>
-</div>
+        <div class="form-group">
+            <textarea class="form-control feedback-textarea" @bind="newFeedbackText" placeholder="Enter your feedback here"></textarea>
+        </div>
+        <button class="btn btn-primary feedback-button" @onclick="SubmitFeedback">Submit Feedback</button>
+    </div>
+}
