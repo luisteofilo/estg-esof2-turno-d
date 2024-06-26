@@ -14,6 +14,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(EnvFileH
 builder.Services.AddScoped<ApiHelper>();
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
+
+
+
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IExternalJobService, ExternalJobService>();
 
@@ -43,6 +46,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+app.UseRouting();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()

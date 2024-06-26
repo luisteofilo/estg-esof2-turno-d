@@ -12,7 +12,8 @@ namespace Frontend.Components.Pages.Interview
         [Inject] protected ICandidateService CandidateService { get; set; }
         [Inject] protected IInterviewerService InterviewerService { get; set; }
 
-        protected IEnumerable<InterviewDto> interviews;
+        private IEnumerable<InterviewDto> interviews;
+        protected IEnumerable<InterviewDto> filteredInterviews;
         protected Dictionary<Guid, string> candidateNames = new Dictionary<Guid, string>();
         protected Dictionary<Guid, string> interviewerNames = new Dictionary<Guid, string>();
 
@@ -21,18 +22,29 @@ namespace Frontend.Components.Pages.Interview
         protected Dictionary<Guid, bool> lightOn = new Dictionary<Guid, bool>();
         private bool _shouldContinuePolling = true;
 
+        private string searchText = string.Empty;
+        private string selectedState = "All";
+        private string selectedCandidate = string.Empty;
+        private string selectedInterviewer = string.Empty;
+        private DateTime? startDateStart = null;
+        private DateTime? endDateStart = null;
+        private DateTime? startDateEnd = null;
+        private DateTime? endDateEnd = null;
+        protected string selectedLocation = string.Empty;
+
         protected override async Task OnInitializedAsync()
         {
             await LoadDataAsync();
             _ = StartPollingAsync();
         }
 
-        //Aqui Carregamos os dados para atualizar a lista
+        // Aqui Carregamos os dados para atualizar a lista
         protected async Task LoadDataAsync()
         {
             try
             {
                 interviews = await InterviewService.GetInterviewsAsync();
+                filteredInterviews = interviews;
 
                 var candidates = await CandidateService.GetCandidatesAsync();
                 var interviewers = await InterviewerService.GetInterviewersAsync();
@@ -46,6 +58,8 @@ namespace Frontend.Components.Pages.Interview
                     presenceMarked[interview.InterviewId] = isPresenceMarked;
                     lightOn[interview.InterviewId] = isPresenceMarked;
                 }
+
+                FilterInterviews();
             }
             catch (HttpRequestException ex)
             {
@@ -54,7 +68,7 @@ namespace Frontend.Components.Pages.Interview
             }
         }
 
-        //Metodo para o botão Cancelar
+        // Metodo para o botão Cancelar
         protected async Task CancelInterview(Guid interviewId)
         {
             try
@@ -69,7 +83,7 @@ namespace Frontend.Components.Pages.Interview
             }
         }
 
-        //Metodo para passar os states para Strings
+        // Metodo para passar os states para Strings
         protected string GetInterviewState(InterviewState state)
         {
             return state switch
@@ -83,7 +97,7 @@ namespace Frontend.Components.Pages.Interview
             };
         }
 
-        //Metodo para atualizar a data e hora ao segundo
+        // Metodo para atualizar a data e hora ao segundo
         private async Task StartPollingAsync()
         {
             while (_shouldContinuePolling)
@@ -92,10 +106,9 @@ namespace Frontend.Components.Pages.Interview
                 StateHasChanged();
                 await Task.Delay(1000); // Aguarde 1 seg.
             }
-        }  
-        
-        
-        //Metodo para o botão de Refresh da DataHora de hoje
+        }
+
+        // Metodo para o botão de Refresh da DataHora de hoje
         protected async Task RefreshDate()
         {
             try
@@ -114,7 +127,7 @@ namespace Frontend.Components.Pages.Interview
             }
         }
 
-        //Metodo para atualizar o estado da entrevista consoante a data e Hora recebida do refreshDate
+        // Metodo para atualizar o estado da entrevista consoante a data e Hora recebida do refreshDate
         protected async Task UpdateInterviewsState()
         {
             foreach (var interview in interviews)
@@ -137,7 +150,7 @@ namespace Frontend.Components.Pages.Interview
             StateHasChanged();
         }
 
-        //O botão Marcar Presença
+        // O botão Marcar Presença
         protected async Task MarkPresence(Guid interviewId)
         {
             if (presenceMarked.ContainsKey(interviewId))
@@ -147,6 +160,104 @@ namespace Frontend.Components.Pages.Interview
                 await InterviewService.MarkPresenceAsync(interviewId);
             }
             StateHasChanged();
+        }
+
+        protected void OnSearchTextChanged(ChangeEventArgs e)
+        {
+            searchText = e.Value.ToString();
+            FilterInterviews();
+        }
+
+        protected void OnStateChanged(ChangeEventArgs e)
+        {
+            selectedState = e.Value.ToString();
+            FilterInterviews();
+        }
+
+        protected void OnCandidateChanged(ChangeEventArgs e)
+        {
+            selectedCandidate = e.Value.ToString();
+            FilterInterviews();
+        }
+
+        protected void OnInterviewerChanged(ChangeEventArgs e)
+        {
+            selectedInterviewer = e.Value.ToString();
+            FilterInterviews();
+        }
+
+        protected void OnLocationChanged(ChangeEventArgs e)
+        {
+            selectedLocation = e.Value.ToString();
+            FilterInterviews();
+        }
+
+        protected void OnStartDateStartChanged(ChangeEventArgs e)
+        {
+            if (DateTime.TryParse(e.Value.ToString(), out var date))
+            {
+                startDateStart = date;
+            }
+            else
+            {
+                startDateStart = null;
+            }
+            FilterInterviews();
+        }
+
+        protected void OnEndDateStartChanged(ChangeEventArgs e)
+        {
+            if (DateTime.TryParse(e.Value.ToString(), out var date))
+            {
+                endDateStart = date;
+            }
+            else
+            {
+                endDateStart = null;
+            }
+            FilterInterviews();
+        }
+
+        protected void OnStartDateEndChanged(ChangeEventArgs e)
+        {
+            if (DateTime.TryParse(e.Value.ToString(), out var date))
+            {
+                startDateEnd = date;
+            }
+            else
+            {
+                startDateEnd = null;
+            }
+            FilterInterviews();
+        }
+
+        protected void OnEndDateEndChanged(ChangeEventArgs e)
+        {
+            if (DateTime.TryParse(e.Value.ToString(), out var date))
+            {
+                endDateEnd = date;
+            }
+            else
+            {
+                endDateEnd = null;
+            }
+            FilterInterviews();
+        }
+
+        // Metodo para filtrar as entrevistas
+        protected void FilterInterviews()
+        {
+            filteredInterviews = interviews.Where(i =>
+                (string.IsNullOrEmpty(searchText) || candidateNames[i.CandidateId].Contains(searchText, StringComparison.OrdinalIgnoreCase)) &&
+                (selectedState == "All" || GetInterviewState(i.InterviewState) == selectedState) &&
+                (string.IsNullOrEmpty(selectedCandidate) || i.CandidateId.ToString() == selectedCandidate) &&
+                (string.IsNullOrEmpty(selectedInterviewer) || i.InterviewerId.ToString() == selectedInterviewer) &&
+                (!startDateStart.HasValue || i.DateHourStart >= startDateStart) &&
+                (!endDateStart.HasValue || i.DateHourStart <= endDateStart) &&
+                (!startDateEnd.HasValue || i.DateHourEnd >= startDateEnd) &&
+                (!endDateEnd.HasValue || i.DateHourEnd <= endDateEnd) &&
+                (string.IsNullOrEmpty(selectedLocation) || i.Location.Contains(selectedLocation, StringComparison.OrdinalIgnoreCase))
+            ).ToList();
         }
     }
 }
