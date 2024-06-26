@@ -8,7 +8,6 @@ public static class DtoConversion
     {
         return jobs.Select(job => job.JobConvertToDto()).ToList();
     }
-
     public static JobDto CopyJobDto(this Job job)
     {
         return new JobDto
@@ -57,7 +56,6 @@ public static class DtoConversion
             DateTime endDateWithKind = DateTime.SpecifyKind(jobDto.EndDate.Value, DateTimeKind.Utc);
             jobDto.EndDate = endDateWithKind;
         }
-
         return new Job
         {
             ClientId = jobDto.ClientId,
@@ -79,7 +77,6 @@ public static class DtoConversion
     {
         return skills.Select(skill => skill.SkillConvertToDto()).ToList();
     }
-
     public static SkillDto SkillConvertToDto(this Skill skill)
     {
         return new SkillDto
@@ -88,7 +85,6 @@ public static class DtoConversion
             Name = skill.Name
         };
     }
-
     public static Skill DtoConvertToSkill(this SkillDto skillDto)
     {
         return new Skill
@@ -97,12 +93,10 @@ public static class DtoConversion
             Name = skillDto.Name
         };
     }
-
     public static IEnumerable<JobSkillDto> JobSkillsConvertToDto(this IEnumerable<JobSkill> jobSkills)
     {
         return jobSkills.Select(jobSkill => jobSkill.JobSkillConvertToDto()).ToList();
     }
-
     public static JobSkillDto JobSkillConvertToDto(this JobSkill jobSkill)
     {
         return new JobSkillDto()
@@ -112,7 +106,6 @@ public static class DtoConversion
             IsRequired = jobSkill.IsRequired
         };
     }
-
     public static JobSkill DtoConvertTOJobSkill(this JobSkillDto jobSkillDto)
     {
         return new JobSkill
