@@ -19,5 +19,11 @@ namespace Frontend.Services
         {
             return await _httpClient.GetFromJsonAsync<List<VerticalDto>>("api/taxonomias");
         }
+
+        public async Task CreateVerticalAsync(VerticalDto newVertical)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/taxonomias", newVertical);
+            response.EnsureSuccessStatusCode();
+        }
     }
 }
