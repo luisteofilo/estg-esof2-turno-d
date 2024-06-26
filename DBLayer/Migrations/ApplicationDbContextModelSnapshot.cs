@@ -88,6 +88,46 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Experience");
                 });
 
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Feedback", b =>
+                {
+                    b.Property<Guid>("FeedbackId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("InterviewId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("FeedbackId");
+
+                    b.HasIndex("Date");
+
+                    b.HasIndex("InterviewId")
+                        .IsUnique();
+
+                    b.HasIndex("Message");
+
+                    b.ToTable("Feedbacks");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interview", b =>
+                {
+                    b.Property<Guid>("InterviewId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.HasKey("InterviewId");
+
+                    b.ToTable("Interviews");
+                });
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
                 {
                     b.Property<Guid>("PermissionId")
@@ -269,6 +309,15 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Profile");
                 });
 
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Feedback", b =>
+                {
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Interview", "Interview")
+                        .WithOne("Feedback")
+                        .HasForeignKey("ESOF.WebApp.DBLayer.Entities.Feedback", "InterviewId");
+
+                    b.Navigation("Interview");
+                });
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
@@ -335,6 +384,11 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interview", b =>
+                {
+                    b.Navigation("Feedback");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>

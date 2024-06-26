@@ -3,7 +3,6 @@ using Frontend.Helpers;
 using Frontend.Services;
 using Frontend.Services.Contracts;
 using Helpers;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,7 +13,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(EnvFileH
 builder.Services.AddScoped<ApiHelper>();
 
 builder.Services.AddScoped<IProfileService, ProfileService>();
-
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

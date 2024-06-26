@@ -10,6 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+
 
 var app = builder.Build();
 
@@ -49,7 +51,6 @@ app.MapGet("/users/emails", () =>
     })
     .WithName("GetUsersNames")
     .WithOpenApi();
-
 
 app.MapControllers();
 
