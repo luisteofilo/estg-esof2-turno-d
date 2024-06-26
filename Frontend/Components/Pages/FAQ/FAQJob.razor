@@ -1,0 +1,90 @@
+@page "/faqs/{jobId?}"
+@using Frontend.Helpers
+@using Frontend.Services
+@using Common.Dtos.FAQ
+@using Frontend.Services.Contracts
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@inject IFAQService FaqService
+
+<PageTitle>@_jobName FAQ</PageTitle>
+
+<div class="d-flex justify-content-between">
+    <h1>@_jobName FAQ</h1>
+    
+</div>
+<hr/>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/faqs">FAQs</a></li>
+      @if (!string.IsNullOrWhiteSpace(JobId))
+      {
+          <li class="breadcrumb-item"><a href="/faqs/@JobId">Job</a></li>
+      }
+  </ol>
+</nav>
+
+<div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h3 class="mt-2">New Question</h3>
+            <textarea
+                @bind="_questionInput" 
+class="form-control mb-3" placeholder="Your Question"></textarea>
+            <button class="btn btn-primary" @onclick="SubmitQuestion">Submit</button>
+        </div>
+    </div>
+    
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h3>Previously Asked Questions (@_questionCount)</h3>
+        </div>
+        <div class="card-body">
+            <div>
+            @if (_questions != null && _questions.Any())
+            {
+                foreach (var question in _questions)
+                {
+                    <QuestionPreview Question="@question" />
+                }
+            }
+            else
+            {
+                <p>No questions have been asked yet.</p>
+            }
+        </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string JobId { get; set; }
+
+    private List<QuestionDto> _questions = new List<QuestionDto>();
+    private int _questionCount => _questions?.Count() ?? 0;
+    private string _jobName = string.Empty;
+    
+    private string _questionInput { get; set; } = string.Empty;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _questions = (await FaqService.GetQuestions(JobId)).ToList();
+        _jobName = (await FaqService.GetJobTitle(JobId));
+    }
+
+    private async Task SubmitQuestion()
+    {
+        if (string.IsNullOrWhiteSpace(_questionInput))
+        {
+            return;
+        }
+
+        await FaqService.CreateQuestion(JobId, _questionInput);
+        _questionInput = string.Empty;
+        _questions = (await FaqService.GetQuestions(JobId)).ToList();
+        StateHasChanged();
+    }
+
+}

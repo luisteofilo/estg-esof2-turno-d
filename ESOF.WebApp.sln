@@ -1,5 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+#
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{73450161-2C8B-4725-9CCF-4B963016E838}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5ECAD01E-E96E-49F5-9641-A3329A87F0D0}"
@@ -18,6 +19,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{B87DF5B0-8517-414E-B3A2-3799E668D423}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{6467C0E9-02B2-4632-89A4-1465A8020751}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scraper", "Scraper\Scraper.csproj", "{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,7 +48,9 @@ Global
 		{6467C0E9-02B2-4632-89A4-1465A8020751}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6467C0E9-02B2-4632-89A4-1465A8020751}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6467C0E9-02B2-4632-89A4-1465A8020751}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
+		{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C9E67A6-E4EA-42F7-858D-B5C335CCA5AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
