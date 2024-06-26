@@ -6,14 +6,19 @@
 
 <div class="my-2 card p-4" @onclick="NavigateToQuestionPage">
         <h4>@question.QuestionText</h4>
-        @if (_answers.Any())
+        @if (question.Answers.Any())
         {
-            <ul class="list-group p-2">
-                @foreach (var answer in _answers)
+            <ul class="list-group p-2 gap-1">
+                @foreach (var answer in question.Answers)
                 {
-                    <li class="list-group-item p-2">
+                    <li class="list-group-item p-2 mb-1">
                         <p>@answer.AnswerText</p>
-                        <small class="text-muted">- @answer.AuthorEmail</small>
+                            <small>
+                        <div class="d-flex justify-content-between">
+                            <p class="text-muted">Answered by: @answer.AuthorEmail</p>
+                            <p class="text-muted">@answer.CreatedAt</p>
+                        </div>
+                            </small>
                     </li>
                 }
             </ul>
@@ -34,12 +39,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _answers = (await FaqService.GetAnswersForQuestion(jobId, question.QuestionId.ToString())).ToList();
+        // TODO: fix this _answers = (await FaqService.GetAnswersForQuestion(jobId, question.QuestionId.ToString())).ToList();
     }
 
     void NavigateToQuestionPage()
     {
         Console.Out.WriteLine("Navigating to question page");
-        Navigation.NavigateTo($"{Navigation.Uri}/question/{question.QuestionId}");
+        Navigation.NavigateTo($"{Navigation.Uri}/{question.QuestionId}");
     }
 }

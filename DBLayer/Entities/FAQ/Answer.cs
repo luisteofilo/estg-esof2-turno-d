@@ -15,4 +15,8 @@ public class Answer
     
     [Required]
     public Question Question { get; set; }
+    
+    public DateTime CreatedAt { get; set; }
+    
+    public String AuthorEmail { get; set; }
 }

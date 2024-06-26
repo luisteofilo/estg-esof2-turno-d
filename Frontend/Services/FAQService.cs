@@ -16,22 +16,25 @@ public class FAQService(HttpClient _httpClient) : IFAQService
         return await response.Content.ReadFromJsonAsync<IEnumerable<QuestionDto>>();
     }
 
-    public Task<Question> GetQuestion(Guid questionId)
+    public async Task<QuestionDto> GetQuestion(string questionId)
     {
-        throw new NotImplementedException();
+        var response  = await _httpClient.GetAsync($"api/JobFAQ/question/{questionId}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<QuestionDto>();
     }
 
     public async Task CreateQuestion(string jobId, string question)
     {
         var content = new QuestionDto
         {
-            QuestionText = question
+            QuestionText = question,
+JobId = new Guid(jobId),
+Answers = new List<AnswerDto>()
         };
         
         var response = await _httpClient
             .PostAsJsonAsync($"api/JobFAQ/{jobId}/questions", content);
         response.EnsureSuccessStatusCode();
-        
     }
 
     public Task<Question> UpdateQuestion(Guid questionId, Question updatedQuestion)
@@ -51,9 +54,10 @@ public class FAQService(HttpClient _httpClient) : IFAQService
         return await response.Content.ReadFromJsonAsync<IEnumerable<AnswerDto>>();
     }
 
-    public Task<Answer> CreateAnswerForQuestion(Guid questionId, Answer answer)
+    public async Task CreateAnswerForQuestion(string questionId, string answer)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PostAsJsonAsync($"api/JobFAQ/questions/{questionId}/answers", answer);
+        response.EnsureSuccessStatusCode();
     }
 
     public Task<Answer> UpdateAnswerForQuestion(Guid questionId, Guid answerId, Answer updatedAnswer)

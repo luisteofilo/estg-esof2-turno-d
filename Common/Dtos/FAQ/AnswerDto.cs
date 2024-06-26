@@ -6,5 +6,6 @@ public class AnswerDto
     public string AnswerText { get; set; }
     public string AuthorEmail { get; set; }
     
-    public Guid QuestionId { get; set; }
+    public Guid? QuestionId { get; set; }
+    public string CreatedAt { get; set; }
 }

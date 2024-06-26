@@ -17,5 +17,9 @@ public partial class ApplicationDbContext
         modelBuilder.Entity<Answer>()
             .Property(a => a.AnswerId)
             .HasDefaultValueSql("gen_random_uuid()");
+        
+        modelBuilder.Entity<Answer>()
+            .Property(a => a.CreatedAt)
+            .HasDefaultValueSql("now()");
     }
 }

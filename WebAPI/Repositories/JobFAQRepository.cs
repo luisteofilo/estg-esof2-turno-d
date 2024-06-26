@@ -16,7 +16,13 @@ public class JobFAQRepository
             .Where(q => q.Job.JobId == jobId)
             .Include(q => q.Answers)
             .ToListAsync();
-        
+    }
+    
+    public async Task<Question> GetQuestion(Guid questionId)
+    {
+        return await _db.FAQQuestions
+            .Include(q => q.Answers)
+            .FirstOrDefaultAsync(q => q.QuestionId == questionId);
     }
     
     public async Task<IEnumerable<Answer>> GetAnswersForQuestion(Guid questionId)
