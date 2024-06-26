@@ -7,10 +7,10 @@
 @rendermode InteractiveServer
 @inject IFAQService FaqService
 
-<PageTitle>Jobs FAQ</PageTitle>
+<PageTitle>@_jobName FAQ</PageTitle>
 
 <div class="d-flex justify-content-between">
-    <h1>Job Name FAQ</h1>
+    <h1>@_jobName FAQ</h1>
     
 </div>
 <hr/>
@@ -64,12 +64,14 @@ class="form-control mb-3" placeholder="Your Question"></textarea>
 
     private List<QuestionDto> _questions = new List<QuestionDto>();
     private int _questionCount => _questions?.Count() ?? 0;
+    private string _jobName = string.Empty;
     
     private string QuestionInput { get; set; } = string.Empty;
     
     protected override async Task OnInitializedAsync()
     {
         _questions = (await FaqService.GetQuestions(JobId)).ToList();
+        _jobName = (await FaqService.GetJobTitle(JobId));
     }
 
     private async void fetchQuestions()
@@ -88,6 +90,7 @@ class="form-control mb-3" placeholder="Your Question"></textarea>
         Console.WriteLine("Question submitted");
         QuestionInput = string.Empty;
         fetchQuestions();
+        StateHasChanged();
     }
 
 }

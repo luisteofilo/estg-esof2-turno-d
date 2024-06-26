@@ -14,5 +14,7 @@ public interface IFAQService
     Task CreateAnswerForQuestion(string questionId, string answer);
     Task<Answer> UpdateAnswerForQuestion(Guid questionId, Guid answerId, Answer updatedAnswer);
     Task DeleteAnswerForQuestion(Guid questionId, Guid answerId);
-    Task<IEnumerable<Question>> SearchQuestions(string query);
+    Task<IEnumerable<QuestionDto>> SearchQuestions(string jobId, string query);
+    Task<IEnumerable<JobDto>> GetFaqJobsAsync();
+    Task<string> GetJobTitle(string jobId);
 }

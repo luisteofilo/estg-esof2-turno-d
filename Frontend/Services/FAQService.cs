@@ -70,8 +70,25 @@ Answers = new List<AnswerDto>()
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Question>> SearchQuestions(string query)
+    public async Task<IEnumerable<QuestionDto>> SearchQuestions(string jobId, string query)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.GetAsync($"api/JobFAQ/{jobId}/questions/search/{query}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<QuestionDto>>();
+    }
+    
+    public async Task<IEnumerable<JobDto>> GetFaqJobsAsync()
+    {
+        var response = await _httpClient.GetAsync("api/JobFAQ");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<JobDto>>();
+    }
+    
+    public async Task<string> GetJobTitle(string jobId)
+    {
+        var response = await _httpClient.GetAsync($"api/JobFAQ/{jobId}");
+        response.EnsureSuccessStatusCode();
+        var title = await response.Content.ReadAsStringAsync();
+        return title;
     }
 }

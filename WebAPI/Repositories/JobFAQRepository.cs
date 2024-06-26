@@ -55,7 +55,8 @@ public class JobFAQRepository
         {
             AnswerText = answerText,
             Author = _author,
-            Question = question
+            Question = question,
+            AuthorEmail = _author.Email
         };
         
         _db.FAQAnswers.Add(answer);
@@ -81,12 +82,28 @@ public class JobFAQRepository
         }
     }
     
-    public async Task<List<Question>> SearchQuestions(string query)
+    public async Task<IEnumerable<Question>> SearchQuestions(string jobId, string query)
     {
-        var questions = _db.FAQQuestions.Where(q => 
-            q.QuestionText.Contains(query, StringComparison.CurrentCultureIgnoreCase) ||
-            q.Answers.Any(a => a.AnswerText.Contains(query, StringComparison.CurrentCultureIgnoreCase)));
-        return await questions.ToListAsync();
+        var questions = await _db.FAQQuestions
+            .Where(q => q.Job.JobId == new Guid(jobId))
+            .ToListAsync();
+
+        var filteredQuestions = questions
+            .Where(q => q.QuestionText.IndexOf(query, StringComparison.CurrentCultureIgnoreCase) >= 0)
+            .ToList();
+        
+        return filteredQuestions;
+    }
+    
+    public async Task<IEnumerable<Job>> GetFaqJobsAsync()
+    {
+        return await _db.Jobs.ToListAsync();
+    }
+    
+    public async Task<string> GetJobTitle(string jobId)
+    {
+        var job = await _db.Jobs.FindAsync(new Guid(jobId));
+        return job.JobTitle;
     }
     
 }

@@ -1,20 +1,30 @@
 @page "/faqs"
+@inject IFAQService FaqService
 @inject NavigationManager Navigation
 @using Frontend.Helpers
 @using Frontend.Components.Pages.FAQ.SearchWindow
+@using Frontend.Services.Contracts
+@using Common.Dtos.FAQ
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
 
 <PageTitle>Job FAQs</PageTitle>
 
 <h1>Job FAQs</h1>
 <hr/>
 
-<div class="list-group">
-    @if (_faqJobs != null && _faqJobs.Any())
+<button class="btn btn-primary" @onclick="ToggleFloatingWindow">
+    @(showFloatingWindow ? "Deactivate" : "Activate") Floating FAQ Window
+</button>
+
+<div class="list-group mt-3">
+    @if (_faqJobs.Any())
     {
         foreach (var job in _faqJobs)
         {
-            <a href="@($"/faq/{job.Id}")" class="list-group-item list-group-item-action">
-                @job.Name
+            <a href="@($"/faqs/{job.JobId}")" class="list-group-item list-group-item-action">
+                @job.JobTitle
             </a>
         }
     }
@@ -22,20 +32,26 @@
     {
         <p>No FAQ topics available.</p>
     }
-    <SearchWindow />
-    
 </div>
 
+@if (showFloatingWindow)
+{
+    <SearchWindow />
+}
+
 @code {
-    private List<FaqJobs>? _faqJobs;
+    
+private List<JobDto> _faqJobs = new();
+private bool showFloatingWindow = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-    }
+protected override async Task OnInitializedAsync()
+{
+    _faqJobs = (await FaqService.GetFaqJobsAsync()).ToList();
+}
 
-    private class FaqJobs
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = default!;
-    }
+private void ToggleFloatingWindow()
+{
+    showFloatingWindow = !showFloatingWindow;
+}
+    
 }

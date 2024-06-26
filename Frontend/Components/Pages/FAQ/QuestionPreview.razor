@@ -4,7 +4,16 @@
 @inject NavigationManager Navigation
 @inject IFAQService FaqService
 
-<div class="my-2 card p-4" @onclick="NavigateToQuestionPage">
+@if (small)
+{
+    <div class="my-2 card p-2" @onclick="NavigateToQuestionPage">
+        <h5>@question.QuestionText</h5>
+    </div>
+}
+else
+{
+
+    <div class="my-2 card p-4" @onclick="NavigateToQuestionPage">
         <h4>@question.QuestionText</h4>
         @if (question.Answers.Any())
         {
@@ -13,12 +22,12 @@
                 {
                     <li class="list-group-item p-2 mb-1">
                         <p>@answer.AnswerText</p>
-                            <small>
-                        <div class="d-flex justify-content-between">
-                            <p class="text-muted">Answered by: @answer.AuthorEmail</p>
-                            <p class="text-muted">@answer.CreatedAt</p>
-                        </div>
-                            </small>
+                        <small>
+                            <div class="d-flex justify-content-between">
+                                <p class="text-muted">Answered by: @answer.AuthorEmail</p>
+                                <p class="text-muted">@answer.CreatedAt</p>
+                            </div>
+                        </small>
                     </li>
                 }
             </ul>
@@ -27,12 +36,16 @@
         {
             <p class="text-muted">No answers yet.</p>
         }
+
     </div>
+}
 @code {
     [Parameter]
     public QuestionDto question { get; set; }
     [Parameter]
     public String jobId { get; set; }
+    [Parameter]
+    public bool small { get; set; } = false;
     
     
     private List<AnswerDto> _answers = new List<AnswerDto>();
@@ -45,6 +58,13 @@
     void NavigateToQuestionPage()
     {
         Console.Out.WriteLine("Navigating to question page");
+        if (small)
+        {
+            Navigation.NavigateTo($"{Navigation.Uri}/{jobId}/{question.QuestionId}");
+        }
+        else
+        {
         Navigation.NavigateTo($"{Navigation.Uri}/{question.QuestionId}");
+        }
     }
 }

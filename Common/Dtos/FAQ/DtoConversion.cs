@@ -34,7 +34,20 @@ public static class DtoConversion
 
         return a;
     }
+
+    public static JobDto JobConvertToDto(Job job)
+    {
+        JobDto j = new JobDto();
+        j.JobId = job.JobId;
+        j.JobTitle = job.JobTitle;
+        return j;
+    }
     
+    public static IEnumerable<JobDto> JobConvertToDto(IEnumerable<Job> jobs)
+    {
+        return jobs.Select(JobConvertToDto);
+    }
+
     public static IEnumerable<QuestionDto> QuestionConvertToDto(IEnumerable<Question> questions)
     {
         return questions.Select(QuestionConvertToDto);
