@@ -132,8 +132,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.ToTable("Experiences");
                 }));
-                
-                });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
                 {
