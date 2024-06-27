@@ -53,7 +53,7 @@
         switch (command)
         {
             case "/jobs":
-                //TODO: await HandleJobsCommand(message);
+                await ParseJobsMessage(message);
                 break;
 
             case "/interviews":
@@ -89,10 +89,21 @@
 
         return parameters;
     }
-    
+
+    private async Task ParseJobsMessage(MessageDto message)
+    {
+        var parameters = ParseParameters(message.message);
+
+        //Obter parametros inseridos na mensagem
+        parameters.TryGetValue("company", out string? company);
+        parameters.TryGetValue("location", out string? location);
+        parameters.TryGetValue("experience", out string? experience);
+        
+        await HandleJobsCommand(company, location, experience);
+    }
     private async Task HandleJobsCommand(string company = null, string location = null, string experience = null)
     {
-        var url = "api/Jobs/GetJobs";
+        var url = "api/Job";
         var queryParams = new List<string>();
 
         if (!string.IsNullOrEmpty(company))
@@ -114,9 +125,9 @@
         {
             url += "?" + string.Join("&", queryParams);
         }
-
-        //var response = await Http.GetFromJsonAsync<IEnumerable<JobDto>>(url);
-        //return response ?? new List<JobDto>();
+        Console.WriteLine(url);
+        var response = await ApiHelper.GetFromApiAsync<string[]>(url);
+        //Console.WriteLine(response);
         var aiMessage = new MessageDto("ai", "Aqui estão as vagas disponíveis: [Exemplo de vaga]", TIPO.SUCESSO);
         _messages.Add(aiMessage);
     }
