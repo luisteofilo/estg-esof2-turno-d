@@ -126,13 +126,13 @@
     align-self: flex-end;
     border: 1px solid #00acc1;
     margin-left: 10px;
+    text-align: right;
 }
 
 .message.ai {
     align-self: flex-start;
-    border: 1px solid #d3d3d3;
-    margin-right: 10px;
-    text-align: right;
+    text-align: start;
+    border: 1px solid #d3d3d3;    
 }
 
 .suggestions {

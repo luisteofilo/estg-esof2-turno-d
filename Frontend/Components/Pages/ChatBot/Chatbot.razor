@@ -1,4 +1,6 @@
 ﻿@using Common.Dtos.Message
+@using Frontend.Helpers
+@inject ApiHelper ApiHelper
 @inject IJSRuntime JS
 @namespace ChatBot
 @rendermode InteractiveServer
@@ -6,12 +8,11 @@
 @code {
     private bool _isChatOpen = false;
     private string _message = string.Empty;
-    private List<MessageDto> _messages = new List<MessageDto>();
+    private List<MessageDto> _messages = [];
     
-    private List<string> commands = new List<string> { "/jobs", "/interviews", "/help" };
-    private List<string> jobParams = new List<string> { "company", "location", "title" };
-    private List<string> interviewParams = new List<string> { "candidate", "date", "position" };
-
+    private List<string> _commands = ["/jobs", "/interviews", "/help"];
+    private List<string> _jobParams = ["company", "location", "experience"];
+    private List<string> _interviewParams = ["candidate", "date", "position"];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -43,7 +44,6 @@
         
         _message = string.Empty;
         await ScrollToBottom();
-        
     }
 
     private async Task ChooseHttpRequest(MessageDto message)
@@ -53,7 +53,7 @@
         switch (command)
         {
             case "/jobs":
-                await HandleJobsCommand(message);
+                //TODO: await HandleJobsCommand(message);
                 break;
 
             case "/interviews":
@@ -61,11 +61,11 @@
                 break;
 
             case "/help":
-                await HandleHelpCommand();
+                HandleHelpCommand();
                 break;
 
             default:
-                var aiMessage = new MessageDto("ai", "Comando não reconhecido. Use /help para ver a lista de comandos.", TIPO.ERRO);
+                var aiMessage = new MessageDto("ai", "Comando não reconhecido.<br/> Use <b>/help</b> para ver a lista de comandos.", TIPO.ERRO);
                 _messages.Add(aiMessage);
                 break;
         }
@@ -90,10 +90,33 @@
         return parameters;
     }
     
-    private async Task HandleJobsCommand(MessageDto message)
+    private async Task HandleJobsCommand(string company = null, string location = null, string experience = null)
     {
-        var parameters = ParseParameters(message.message);
-        // TODO: Implementar lógica para obter e enviar informações sobre vagas de emprego com base nos parâmetros.
+        var url = "api/Jobs/GetJobs";
+        var queryParams = new List<string>();
+
+        if (!string.IsNullOrEmpty(company))
+        {
+            queryParams.Add($"company={company}");
+        }
+
+        if (!string.IsNullOrEmpty(location))
+        {
+            queryParams.Add($"location={location}");
+        }
+
+        if (!string.IsNullOrEmpty(experience))
+        {
+            queryParams.Add($"experience={experience}");
+        }
+
+        if (queryParams.Count > 0)
+        {
+            url += "?" + string.Join("&", queryParams);
+        }
+
+        //var response = await Http.GetFromJsonAsync<IEnumerable<JobDto>>(url);
+        //return response ?? new List<JobDto>();
         var aiMessage = new MessageDto("ai", "Aqui estão as vagas disponíveis: [Exemplo de vaga]", TIPO.SUCESSO);
         _messages.Add(aiMessage);
     }
@@ -106,9 +129,9 @@
         _messages.Add(aiMessage);
     }
 
-    private async Task HandleHelpCommand()
+    private void HandleHelpCommand()
     {
-        var aiMessage = new MessageDto("ai", "Comandos disponíveis:<br/>/Interview - Lista de interviews<br/>/jobs - Lista de vagas <br/>/help - Lista de comandos", TIPO.AVISO);
+        var aiMessage = new MessageDto("ai", "Comandos disponíveis:<br/>/Interview - Lista de entrevistas<br/>/jobs - Lista de empregos <br/>/help - Lista de comandos", TIPO.AVISO);
         _messages.Add(aiMessage);
     }
     
@@ -117,11 +140,12 @@
         await JS.InvokeVoidAsync("scrollToBottom", "chat-body");
     }
     
-    private List<string> _suggestions = new List<string>();
+    private List<string> _suggestions = [];
+    private string[] _companySugestions = [];
 
     private void ShowSuggestions(ChangeEventArgs e)
     {
-        var input = e.Value.ToString();
+        var input = e.Value?.ToString();
         _suggestions.Clear();
 
         var parts = input.Split(' ');
@@ -143,11 +167,11 @@
     {
         if (input.StartsWith('/'))
         {
-            _suggestions.AddRange(commands.Where(c => c.StartsWith(input, StringComparison.OrdinalIgnoreCase)));
+            _suggestions.AddRange(_commands.Where(c => c.StartsWith(input, StringComparison.OrdinalIgnoreCase)));
         }
     }
 
-    private void HandleSuggestionSecondPart(string command, string lastPart)
+    private async void HandleSuggestionSecondPart(string command, string lastPart)
     {
         var paramInput = lastPart.Contains(":") ? lastPart.Split(':')[0] : lastPart;
         if (!lastPart.Contains(":"))
@@ -163,31 +187,59 @@
 
     private void SuggestParameter(string command, string paramInput)
     {
-        if (command == "/jobs")
+        if (command.Trim() == "/jobs")
         {
-            _suggestions.AddRange(jobParams.Where(p => p.StartsWith(paramInput, StringComparison.OrdinalIgnoreCase)));
+            _suggestions.AddRange(_jobParams.Where(p => p.StartsWith(paramInput, StringComparison.OrdinalIgnoreCase)));
         }
-        else if (command == "/interviews")
+        else if (command.Trim() == "/interviews")
         {
-            _suggestions.AddRange(interviewParams.Where(p => p.StartsWith(paramInput, StringComparison.OrdinalIgnoreCase)));
+            _suggestions.AddRange(_interviewParams.Where(p => p.StartsWith(paramInput, StringComparison.OrdinalIgnoreCase)));
         }
     }
 
-    private void SuggestParameterValue(string command, string paramName, string paramValue)
+    private async void SuggestParameterValue(string command, string paramName, string paramValue)
     {
         if (command == "/jobs" && paramName == "company")
         {
-            // Exemplo de chamada fictícia para obter valores da base de dados
-            var companies = GetCompaniesFromDatabase();
-            _suggestions.AddRange(companies.Where(c => c.Contains(paramValue, StringComparison.OrdinalIgnoreCase)));
+            var companies = await GetJobCompaniesFromDatabase();
+            if (companies != null)
+            {
+                _suggestions.AddRange(companies.Where(c => c.Contains(paramValue, StringComparison.OrdinalIgnoreCase)));
+            }
+            StateHasChanged(); 
         }
-        // Adicione outras condições conforme necessário
+        if (command == "/jobs" && paramName == "experience")
+        {
+            var companies = await GetJobExperiencesFromDatabase();
+            if (companies != null)
+            {
+                _suggestions.AddRange(companies.Where(c => c.Contains(paramValue, StringComparison.OrdinalIgnoreCase)));
+            }
+            StateHasChanged(); 
+        }
+        if (command == "/jobs" && paramName == "location")
+        {
+            var locations = await GetJobLocationsAFromDatabase();
+            if (locations != null)
+            {
+                _suggestions.AddRange(locations.Where(c => c.Contains(paramValue, StringComparison.OrdinalIgnoreCase)));
+            }
+            StateHasChanged(); 
+        }
+        
     }
 
-    private List<string> GetCompaniesFromDatabase()
+    private async Task<string[]?> GetJobCompaniesFromDatabase()
     {
-        // Simulação de obtenção de dados da base de dados
-        return new List<string> { "CompanyA", "CompanyB", "CompanyC" };
+        return await ApiHelper.GetFromApiAsync<string[]>("api/Job/company");
+    }
+    private async Task<string[]?> GetJobLocationsAFromDatabase()
+    {
+        return await ApiHelper.GetFromApiAsync<string[]>("api/Job/location");
+    }
+    private async Task<string[]?> GetJobExperiencesFromDatabase()
+    {
+        return await ApiHelper.GetFromApiAsync<string[]>("api/Job/experience");
     }
 
 
@@ -211,7 +263,8 @@
         }
         else
         {
-            _message = suggestion;
+            _message = suggestion + " ";
+            SuggestParameter(_message, "");
         }
 
         _suggestions.Clear();
@@ -229,8 +282,8 @@
                 <button class="close-button" @onclick="ToggleChat">X</button>
             </div>
             <div id="chat-body" class="chat-body">
-                <div class="message ai">Hi there! How can we help you today?</div>
-                <div class="message ai">If this is your first time I recomend to write <b> '/help'</b></div>
+                <div class="message ai"><span>Hi there! How can we help you today?</span></div>
+                <div class="message ai"><span>If this is your first time I recommend you to use the command <b> '/help'</b></span></div>
                 @foreach (var msg in _messages)
                 {
                     <div class="message @(msg.sender == "person" ? "person" : "ai") @(msg.sender != "person" ? (msg.type == TIPO.ERRO ? "bg-danger" : msg.type == TIPO.AVISO ? "bg-warning" : "") : "")">
