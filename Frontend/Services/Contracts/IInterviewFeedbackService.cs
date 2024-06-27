@@ -13,10 +13,6 @@ namespace Frontend.Services.Contracts
         Task<InterviewFeedbackDTO> UpdateInterviewFeedbackAsync(InterviewFeedbackDTO interviewFeedbackDTO, Guid InterviewFeedbackId);
         Task DeleteInterviewFeedbackAsync(Guid InterviewFeedbackId);
         Task<InterviewFeedbackDTO> AddInterviewFeedbackAsync(InterviewFeedbackDTO interviewFeedbackDTO);
-        Task<InterviewFeedbackDTO> GetInterviewFeedbackByJob(Guid JobId);
-        Task<InterviewFeedbackDTO> GetInterviewFeedbackByCandidate(Guid candidate);
-        Task<InterviewFeedbackDTO> GetInterviewFeedbackByInterview(Guid interview);
-        Task<InterviewFeedbackDTO> GetInterviewFeedbackByInterviewer(Guid interview);
         Task<IEnumerable<CandidateDto>> GetCandidates();
         Task<IEnumerable<InterviewDto>> GetInterviews();
         Task<IEnumerable<InterviewerDto>> GetInterviewers();

@@ -1,0 +1,79 @@
+﻿@page "/create-email-template"
+@using Frontend.Services
+@using ESOF.WebApp.DBLayer.Entities.Emails
+@inject HttpClient HttpClient
+@inject EmailService EmailService
+
+<PageTitle>Create Email Template</PageTitle>
+
+<h3>Create Email Template</h3>
+
+<div>
+    <label for="templateId">Template ID:</label>
+    <input id="templateId" @bind="emailTemplate.Id" />
+</div>
+
+<div>
+    <label for="subject">Subject:</label>
+    <input id="subject" @bind="emailTemplate.Subject" />
+</div>
+
+<div>
+    <label for="body">Body:</label>
+    <textarea id="body" @bind="emailTemplate.Body"></textarea>
+</div>
+
+<button @onclick="CreateEmailTemplate">Create Email Template</button>
+
+@if (isSubmitting)
+{
+    <p>Submitting...</p>
+}
+
+@if (!string.IsNullOrEmpty(resultMessage))
+{
+    <p>@resultMessage</p>
+}
+
+@code {
+    private EmailTemplate emailTemplate = new EmailTemplate();
+    private bool isSubmitting;
+    private string resultMessage;
+
+    private async Task CreateEmailTemplate()
+    {
+        isSubmitting = true;
+        resultMessage = string.Empty;
+
+        try
+        {
+            // Validate input (optional)
+            if (string.IsNullOrEmpty(emailTemplate.Subject) || string.IsNullOrEmpty(emailTemplate.Body))
+            {
+                resultMessage = "Subject and Body are required.";
+                return;
+            }
+
+            // Add email template
+            var addedTemplate = await EmailService.AddTemplate(emailTemplate);
+
+            if (addedTemplate != null)
+            {
+                resultMessage = "Email template created successfully with ID: " + addedTemplate.Id;
+            }
+            else
+            {
+                resultMessage = "Failed to create email template";
+            }
+        }
+        catch (Exception ex)
+        {
+            resultMessage = $"Error: {ex.Message}";
+            Console.WriteLine($"Error creating email template: {ex}");
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

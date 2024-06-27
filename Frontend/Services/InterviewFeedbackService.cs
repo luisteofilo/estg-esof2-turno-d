@@ -56,27 +56,7 @@ namespace Frontend.Services
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<InterviewFeedbackDTO>();
         }
-
-        public async Task<InterviewFeedbackDTO?> GetInterviewFeedbackByJob(Guid JobId)
-        {
-            var response = await _httpClient.GetAsync($"api/InterviewFeedback/job/{JobId}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<InterviewFeedbackDTO>();
-        }
-
-        public async Task<InterviewFeedbackDTO?> GetInterviewFeedbackByCandidate(Guid candidate)
-        {
-            var response = await _httpClient.GetAsync($"api/InterviewFeedback/candidate/{candidate}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<InterviewFeedbackDTO>();
-        }
-
-        public async Task<InterviewFeedbackDTO?> GetInterviewFeedbackByInterview(Guid interview)
-        {
-            var response = await _httpClient.GetAsync($"api/InterviewFeedback/interview/{interview}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<InterviewFeedbackDTO>();
-        }
+        
         public async Task<IEnumerable<CandidateDto>> GetCandidates()
         {
             var response = await _httpClient.GetAsync("api/InterviewFeedback/Candidates-from-feedback");
@@ -99,13 +79,7 @@ namespace Frontend.Services
         }
 
 
-        public async Task<InterviewFeedbackDTO?> GetInterviewFeedbackByInterviewer(Guid interviewer)
-        {
-            var response = await _httpClient.GetAsync($"api/InterviewFeedback/interviewer/{interviewer}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<InterviewFeedbackDTO>();
-        }
-     
+   
 
         public async Task<JobDto?> UpdateJob(Guid JobId, JobDto jobDto)
         {

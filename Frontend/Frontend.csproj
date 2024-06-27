@@ -21,6 +21,7 @@
       <Content Remove="Components\Pages\Optimization-Request\JobsDropdown.razor" />
       <Content Remove="Components\Pages\Optimization-Request\EditJobComponent.razor" />
       <Content Remove="Components\Pages\Optimization-Request\EditJobDropdownPage.razor" />
+      <Content Remove="Components\Pages\Send-feedback-email.razor" />
     </ItemGroup>
 
     <ItemGroup>
@@ -48,6 +49,7 @@
       <Compile Remove="Components\Pages\Interview\**" />
       <Compile Remove="Components\Pages\Profile\**" />
       <Compile Remove="Components\Pages\Optimization-Request\InterviewFeesbackCreate.cs" />
+      <Compile Remove="Services\Contracts\IEmailService.cs" />
     </ItemGroup>
 
     <ItemGroup>

@@ -21,7 +21,7 @@
         <input id="InterviewFeedbackId" class="form-control" @bind="@newFeedback.InterviewFeedbackId" />
     </div>
     <div class="form-group">
-        <label for="candidate">Candidate Name:</label>
+        <label for="candidate">Candidate :</label>
         <select id="candidate" class="form-control" @bind="@newFeedback.Candidate">
             <option value="">Select Candidate...</option>
             @foreach (var candidate in candidates)
@@ -31,7 +31,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="interviewer">Interviewer Name:</label>
+        <label for="interviewer">Interviewer :</label>
         <select id="interviewer" class="form-control" @bind="@newFeedback.Interviewer">
             <option value="">Select Interviewer...</option>
             @foreach (var interviewer in interviewers)
@@ -41,7 +41,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="interview">Interview Name:</label>
+        <label for="interview">Interview :</label>
         <select id="interview" class="form-control" @bind="@newFeedback.Interview">
             <option value="">Select Interview...</option>
             @foreach (var interview in interviews)
@@ -51,7 +51,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="Job">Job Position:</label>
+        <label for="Job">Job:</label>
         <select id="Job" class="form-control" @bind="@newFeedback.JobId">
             <option value="">Select Job Position...</option>
             @foreach (var job in jobs)
