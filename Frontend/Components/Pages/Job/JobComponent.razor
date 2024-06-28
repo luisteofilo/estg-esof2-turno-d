@@ -38,8 +38,7 @@
             </div>
             <div class="modal-body d-flex justify-content-center align-items-center m-1">
                 <div class="row w-100">
-                    <div
-                        class="col-5 p-0 d-flex flex-column align-items-center justify-content-around text-center modal-section">
+                    <div class="col-5 p-0 d-flex flex-column align-items-center justify-content-around text-center modal-section">
                         <div class="mb-4">
                             <h2>Create a Job Offer Manually</h2>
                         </div>
@@ -48,14 +47,12 @@
                     <div class="col-2 d-flex justify-content-center align-items-center">
                         <div class="vertical-line"></div>
                     </div>
-                    <div
-                        class="col-5 p-0 d-flex flex-column align-items-center justify-content-around text-center modal-section">
+                    <div class="col-5 p-0 d-flex flex-column align-items-center justify-content-around text-center modal-section">
                         <div class="mb-4">
                             <h2>Create through external sources</h2>
                             <h5>(LinkedIn or Wellfound)</h5>
                         </div>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#urlModal">Register</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#urlModal">Register</button>
                     </div>
                 </div>
             </div>
@@ -72,10 +69,8 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="urlInput" class="form-label m-2">Insert the URL of a job offer detail from LinkedIn or
-                        Wellfound.</label>
-                    <input type="url" class="form-control" id="urlInput" @bind="UrlInput"
-                        placeholder="Your Job Offer Detail Link!">
+                    <label for="urlInput" class="form-label m-2">Insert the URL of a job offer detail from LinkedIn or Wellfound.</label>
+                    <input type="url" class="form-control" id="urlInput" @bind="UrlInput" placeholder="Your Job Offer Detail Link!">
                 </div>
                 <div class="col-12 d-flex justify-content-center align-items-center">
                     <button class="btn btn-primary" data-bs-dismiss="modal" @onclick="SubmitURL">Submit</button>
@@ -86,7 +81,22 @@
 </div>
 
 <div class="m-3">
-    @if (Jobs == null)
+    <div class="filter-section row mb-3">
+        <div class="col" style="margin-top: 20px">
+            <label for="positionBox" class="form-label">Position:</label>
+            <input type="text" id="positionBox" class="form-control" @bind="searchPosition" @oninput="OnSearchPositionChanged" />
+        </div>
+        <div class="col" style="margin-top: 20px">
+            <label for="localizationBox" class="form-label">Localization:</label>
+            <input type="text" id="localizationBox" class="form-control" @bind="searchLocalization" @oninput="OnSearchLocalizationChanged" />
+        </div>
+        <div class="col" style="margin-top: 20px">
+            <label for="companyBox" class="form-label">Company:</label>
+            <input type="text" id="companyBox" class="form-control" @bind="searchCompany" @oninput="OnSearchCompanyChanged" />
+        </div>
+    </div>
+
+    @if (FilteredJobs == null)
     {
         <p>
             <em>There are no job offers!</em>
@@ -94,7 +104,7 @@
     }
     else
     {
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Position</th>
@@ -106,7 +116,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var job in Jobs)
+                @foreach (var job in FilteredJobs)
                 {
                     <tr>
                         <td>@job.Positions</td>
@@ -114,8 +124,7 @@
                         <td>@job.Company</td>
                         <td>
                             <div class="col-12 d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-primary d-flex justify-content-center align-items-center"
-                                    data-bs-toggle="modal" data-bs-target="#detailModal">
+                                <button type="button" class="btn btn-primary d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#detailModal">
                                     <i class="bi bi-info-circle"></i>
                                 </button>
                             </div>
@@ -123,16 +132,14 @@
                         @* TODO: Only appears if Admin *@
                         <td>
                             <div class="col-12 d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-primary d-flex justify-content-center align-items-center"
-                                    data-bs-toggle="modal" data-bs-target="#editModal">
+                                <button type="button" class="btn btn-primary d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#editModal">
                                     <i class="bi bi-pencil-fill"></i>
                                 </button>
                             </div>
                         </td>
                         <td>
                             <div class="col-12 d-flex justify-content-center align-items-center">
-                                <button type="button" class="btn btn-danger d-flex justify-content-center align-items-center"
-                                    @onclick="() => RemoveJob(job.JobId)">
+                                <button type="button" class="btn btn-danger d-flex justify-content-center align-items-center" @onclick="() => RemoveJob(job.JobId)">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>

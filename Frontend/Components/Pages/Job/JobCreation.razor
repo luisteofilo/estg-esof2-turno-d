@@ -60,7 +60,10 @@ else
                 <option value="@RemoteType.Office">Office</option>
             </InputSelect>
         </div>
-
+        <div>
+            <label for="company">Company:</label>
+            <input type="text" id="company" @bind="JobNew.Company" />
+        </div>
         <div>
             <label for="education">Education:</label>
             <InputSelect id="education" @bind-Value="JobNew.Education">
@@ -75,7 +78,7 @@ else
 
         <!-- Required Skills -->
         <div class="skills-label">
-            <label for="skills">Required Skills:</label>
+            <label for="skills">Required Skills (Optional):</label>
         </div>
         <div class="skills-input">
             <div class="checkbox-container">
@@ -91,7 +94,7 @@ else
 
         <!-- Nice to Have Skills -->
         <div class="nice-to-have-skills-label">
-            <label for="niceToHaveSkills">Nice to Have Skills:</label>
+            <label for="niceToHaveSkills">Nice to Have Skills (Optional):</label>
         </div>
         <div class="nice-to-have-skills-input">
             <div class="checkbox-container">
@@ -106,7 +109,7 @@ else
         </div>
 
         <div class="description-label">
-            <label for="description">Description:</label>
+            <label for="description">Description (Optional):</label>
         </div>
         <div class="description-input">
             <input type="text" Area id="description" @bind="JobNew.Description" />
@@ -127,3 +130,13 @@ else
     </div>
 }
 
+@if (showWarningModal)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <span class="close" @onclick="CloseWarningModal">&times;</span>
+            <p>@WarningMessage</p>
+            <button @onclick="CloseWarningModal">Ok</button>
+        </div>
+    </div>
+}
