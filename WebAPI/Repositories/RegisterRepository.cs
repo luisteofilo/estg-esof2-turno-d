@@ -126,7 +126,6 @@ namespace ESOF.WebApp.WebAPI.Repositories
         Bio = "placeholder",
         Avatar = "placeholder",
         Location = $"{talent.Address}, {talent.PostalCode}, {talent.City}, {talent.Country}",
-        UrlBackground = "placeholder",
         UrlProfile = "placeholder",
         ProfileSkills = new List<ProfileSkill>(),
         Educations = new List<Education>(),
