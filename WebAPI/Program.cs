@@ -6,11 +6,15 @@ using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using ESOF.WebApp.DBLayer.Persistence;
 using ESOF.WebApp.DBLayer.Persistence.Interfaces;
 using ESOF.WebApp.DBLayer.Persistence.Repositories;
+using ESOF.WebApp.Scraper;
+using ESOF.WebApp.WebAPI.Repositories;
+using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using ESOF.WebApp.WebAPI.Services;
 using ESOF.WebApp.Scraper;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
 using ESOF.WebApp.WebAPI.Services;
@@ -37,10 +41,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+//Profile features
+builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetService<ApplicationDbContext>()!);
+builder.Services.AddScoped<IImportRepository, ImportRepository>();
+builder.Services.AddScoped<ExternalJobService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+
 builder.Services.AddScraperDependencyInjection();
 
 
@@ -102,6 +113,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+//Profile features (Store Profile Avatar)
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
+    RequestPath = new PathString("/Resources")
+});
 
 app.UseExceptionHandler("/error");
 
