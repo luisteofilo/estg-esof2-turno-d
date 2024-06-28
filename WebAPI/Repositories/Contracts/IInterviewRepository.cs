@@ -2,7 +2,7 @@
 namespace WebAPI.Repositories.Contracts;
 public interface IInterviewRepository
 {
-    Task<IEnumerable<Interview>> GetAllAsync();
+    Task<IEnumerable<Interview>> GetAllAsync(string candidate = null, string location = null);
     Task<Interview> GetByIdAsync(Guid interviewid);
     Task<bool> InterviewExistsAsync(Guid interviewid);
     Task AddAsync(Interview interview);
@@ -19,4 +19,6 @@ public interface IInterviewRepository
     Task MarkPresenceAsync(Guid interviewId);
     Task UpdateInterviewStateAsync(Guid interviewId, InterviewState state);
     Task<bool> GetPresenceStateAsync(Guid interviewId);
+    Task<List<Candidate>> GetAllInterviewCandidates();
+    Task<List<string>> GetAllInterviewLocation();
 }

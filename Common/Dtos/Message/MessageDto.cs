@@ -27,5 +27,6 @@ public enum TIPO
 {
     SUCESSO,
     AVISO,
-    ERRO
+    ERRO,
+    DISPLAY
 }
