@@ -73,21 +73,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetClients")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDto>))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetClients()
-        {
-            try
-            {
-                var clients = await _jobRepository.GetClients();
-                return Ok(clients.Select(c => c.ClientConvertToDto()));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving clients: {ex.Message}");
-            }
-        }
+
 
         [HttpGet("{jobId:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(JobDto))]

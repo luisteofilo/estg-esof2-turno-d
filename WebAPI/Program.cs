@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
 using ESOF.WebApp.DBLayer.Context;
 using ESOF.WebApp.DBLayer.Persistence;
 using ESOF.WebApp.DBLayer.Persistence.Interfaces;
@@ -9,38 +5,38 @@ using ESOF.WebApp.DBLayer.Persistence.Repositories;
 using ESOF.WebApp.Scraper;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+using ESOF.WebApp.WebAPI.Services; // Add this namespace for EmailTemplateService
+using Microsoft.EntityFrameworkCore;
+using WebAPI.Repositories; // Adjust namespaces accordingly
+using WebAPI.Repositories.Contracts; // Adjust namespaces accordingly
 using ESOF.WebApp.WebAPI.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register DbContext and Hangfire
 var dbContext = new ApplicationDbContext();
+
 var connectionString = dbContext.Database.GetDbConnection().ConnectionString;
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
-
 builder.Services.AddHangfire(config => config
-    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
-    .UsePostgreSqlStorage(connectionString));
+    .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
 
 builder.Services.AddHangfireServer();
 
-// Add Swagger/OpenAPI
+// Add services to the container.
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
 
-// Register repositories
+// Register repositories with their respective interfaces
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
@@ -48,27 +44,63 @@ builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
-builder.Services.AddScoped<IInterviewFeedback, InterviewFeedbackRepository>();
+builder.Services.AddScoped<IInterviewFeedback, InterviewFeedbackRepository>(); // Assuming this is correct
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+
+//Profile features
+builder.Services.AddDbContext<ApplicationDbContext>();
+builder.Services.AddScoped<IUnitOfWork>(provider => provider.GetService<ApplicationDbContext>()!);
 builder.Services.AddScoped<IImportRepository, ImportRepository>();
+builder.Services.AddScoped<ExternalJobService>();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<ISkillRepository, SkillRepository>();
+builder.Services.AddScoped<IEducationRepository, EducationRepository>();
+builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+
+builder.Services.AddScraperDependencyInjection();
+
+
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
 builder.Services.AddScoped<IExternalJobRepository, ExternalJobRepository>();
+
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
+
+
+//Interview Repository
+builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
+builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
+builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
+
+
+//Dashboard
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
-builder.Services.AddScoped<JobFAQRepository>();
+
+//Email Template
 builder.Services.AddScoped<EmailTemplateService>();
 
-// Add HttpClient service for making HTTP requests
-builder.Services.AddHttpClient();
+// Faq Repository
+builder.Services.AddScoped<JobFAQRepository>();
 
-// Add Scraper service
-builder.Services.AddScraperDependencyInjection();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+
+// Register services
+builder.Services.AddScoped<EmailTemplateService>(); // Assuming EmailTemplateService is correctly implemented and registered here
 
 var app = builder.Build();
 
-// Configure Hangfire dashboard
 app.UseHangfireDashboard("/hangfire");
 
-// Configure Swagger/OpenAPI
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -77,7 +109,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Serve static files (e.g., profile avatars)
+// Define endpoints
+//Profile features (Store Profile Avatar)
 app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions()
 {
@@ -85,11 +118,8 @@ app.UseStaticFiles(new StaticFileOptions()
     RequestPath = new PathString("/Resources")
 });
 
-// Configure exception handling
 app.UseExceptionHandler("/error");
 
-// Define weather forecast endpoint
-var random = new Random();
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -97,37 +127,37 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index => new WeatherForecast(
-        DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-        random.Next(-20, 55),
-        summaries[random.Next(summaries.Length)]
-    )).ToArray();
+    
+        var summaries = new[]
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
 
-    return Results.Ok(forecast);
-})
-.WithName("GetWeatherForecast")
-.WithMetadata(new
-{
-    Summary = "Get weather forecast for the next 5 days",
-    Tags = new[] { "weather", "forecast" }
-});
+        var forecast = Enumerable.Range(1, 5).Select(index =>
+                new WeatherForecast
+                (
+                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                    Random.Shared.Next(-20, 55),
+                    summaries[Random.Shared.Next(summaries.Length)]
+                ))
+            .ToArray();
+        return forecast;
+    })
+    .WithName("GetWeatherForecast")
+    .WithOpenApi();
 
-// Uncomment if needed: Example of retrieving user emails from the database
+   
+// Assuming this endpoint was intended, uncomment if needed
 /*
 app.MapGet("/users/emails", () =>
-{
-    var db = new ApplicationDbContext();
-    return db.Users.Select(u => u.Email).ToList();
-})
-.WithName("GetUsersEmails")
-.WithMetadata(new
-{
-    Summary = "Get emails of all users",
-    Tags = new[] { "users", "emails" }
-});
+    {
+        var db = new ApplicationDbContext();
+        return db.Users.Select(u => u.Email);
+    })
+    .WithName("GetUsersNames")
+    .WithOpenApi();
 */
 
-// Map controllers
 app.MapControllers();
 
 app.Run();
