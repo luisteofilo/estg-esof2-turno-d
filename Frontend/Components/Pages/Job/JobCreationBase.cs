@@ -114,9 +114,11 @@ public class JobCreationBase : ComponentBase
     private bool IsFormValid()
     {
         var missingFields = new List<string>();
-
-        if (string.IsNullOrWhiteSpace(JobNew.Position))
+    
+        if (JobNew.Positions == null || !JobNew.Positions.Any())
+        {
             missingFields.Add("Position");
+        }
         if (string.IsNullOrWhiteSpace(JobNew.EndDate.ToString()) || JobNew.EndDate < DateTime.Today)
             missingFields.Add("End Date (must be today or later)");
         if (string.IsNullOrWhiteSpace(JobNew.Experience))
