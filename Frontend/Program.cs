@@ -1,3 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+using Common.Dtos.Profile;
+using Common.Dtos.Profile.Validators;
+using FluentValidation;
+using Common.Dtos.Profile;
+using Common.Dtos.Profile.Validators;
+using FluentValidation;
 using Frontend.Components;
 using Frontend.Helpers;
 using Frontend.Services;
@@ -13,7 +20,13 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(EnvFileHelper.GetString("API_URL")) });
 builder.Services.AddScoped<ApiHelper>();
 
+// Profile features
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddTransient<IValidator<ProfileDto>, ProfileDtoValidator>();
+builder.Services.AddTransient<IValidator<ExperienceDto>, ExperienceDtoValidator>();
+builder.Services.AddTransient<IValidator<EducationDto>, EducationDtoValidator>();
+builder.Services.AddTransient<IValidator<SkillDto>, SkillDtoValidator>();
+
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IExternalJobService, ExternalJobService>();
 
@@ -21,6 +34,14 @@ builder.Services.AddScoped<IExternalJobService, ExternalJobService>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IInterviewerService, InterviewerService>();
 builder.Services.AddScoped<ICandidateService, CandidateService>();
+
+
+//Dashboard
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+//FAQ Services
+builder.Services.AddScoped<IFAQService, FAQService>();
+
 
 var app = builder.Build();
 
@@ -35,6 +56,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+app.UseRouting();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
