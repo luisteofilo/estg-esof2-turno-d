@@ -6,6 +6,7 @@ namespace Frontend.Services.Contracts;
 public interface IProfileService
 {
     // Profile
+    Task<IEnumerable<ProfileDto>> GetProfiles();
     Task<ProfileDto> GetProfile(Guid profileId);
     Task<ProfileDto> UpdateProfile(Guid profileId, ProfileDto updatedProfileDto);
     // Skill 

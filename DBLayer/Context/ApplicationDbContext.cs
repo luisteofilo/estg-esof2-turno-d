@@ -1,8 +1,13 @@
 using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Entities.FAQ;
 using ESOF.WebApp.DBLayer.Entities.Interviews;
+
+using ESOF.WebApp.DBLayer.Entities.Emails;
+
 using ESOF.WebApp.DBLayer.Persistence;
 using Helpers;
 using Microsoft.EntityFrameworkCore;
+using Job = ESOF.WebApp.DBLayer.Entities.Job;
 
 namespace ESOF.WebApp.DBLayer.Context;
 
@@ -55,11 +60,21 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<Interview> Interviews { get; set; }
     public DbSet<Interviewer> Interviewers { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
-
+    // Email Template
+    public DbSet<EmailTemplate> EmailTemplates { get; set; }
     // Job Features
     public DbSet<Job> Jobs { get; set; }
-    public DbSet<Import> Imports { get; set; }
+
+    public DbSet<Import> Imports{ get; set; }
+
     public DbSet<JobSkill> JobSkills { get; set; }
+    
+    // FAQ Features
+    public DbSet<Question> FAQQuestions { get; set; }
+    public DbSet<Answer> FAQAnswers { get; set; }
+    
+    public DbSet<Entities.FAQ.Job> FAQJobs { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -90,6 +105,12 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         BuildInterviews(modelBuilder);
         BuildInterviewer(modelBuilder);
         BuildCandidates(modelBuilder);
+
+        
+        // FAQ Features
+        BuildFAQJobs(modelBuilder);
+        BuildFAQQuestions(modelBuilder);
+        BuildFAQAnswers(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
     }
