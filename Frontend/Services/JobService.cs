@@ -26,7 +26,7 @@ namespace Frontend.Services
             return await response.Content.ReadFromJsonAsync<JobDto>();
         }
 
-        public async Task<ICollection<JobDto>> GetJobs()
+        public async Task<IEnumerable<JobDto>> GetJobs()
         {
             var response = await _httpClient.GetAsync("api/Job"); // Adjust endpoint if necessary
             response.EnsureSuccessStatusCode();
