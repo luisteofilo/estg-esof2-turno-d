@@ -149,12 +149,12 @@
 
     private void HandleJobAnswer(List<JobDto> jobs)
     {
-        var aiMessage = new MessageDto("ai", "Aqui estão as vagas disponíveis:", TIPO.SUCESSO);
+        var aiMessage = new MessageDto("ai", "Vagas disponíveis:", TIPO.SUCESSO);
         _messages.Add(aiMessage);
         
         foreach (var job in jobs)
         {
-            var jobDetails = $"{job.Position} at {job.Company}, {job.Localization}, {job.Experience}";
+            var jobDetails = $"<b>Posição:</b> {job.Position}<br><b>Empresa:</b> {job.Company};<br><b>Local:</b> {job.Localization}<br><b>Experiência:</b> {job.Experience}";
             var jobsAiMessage = new MessageDto("ai", jobDetails, TIPO.DISPLAY);
             _messages.Add(jobsAiMessage);
         }
@@ -167,7 +167,7 @@
         
         foreach (var interview in interviews)
         {
-            var jobDetails = $"Starts at: {interview.DateHourStart} until {interview.DateHourEnd}, {interview.Location}, {interview.Location}";
+            var jobDetails = $"<b>Início:</b> {interview.DateHourStart}<br><b>Término:</b> {interview.DateHourEnd}<br><b>Local:</b> {interview.Location}";;
             var jobsAiMessage = new MessageDto("ai", jobDetails, TIPO.DISPLAY);
             _messages.Add(jobsAiMessage);
         }
@@ -212,6 +212,7 @@
     
     private List<string> _suggestions = [];
     private string[] _companySugestions = [];
+    private bool _chatbotVisible = true;
 
     private void ShowSuggestions(ChangeEventArgs e)
     {
@@ -369,52 +370,63 @@
         await Task.Delay(100);
         _isInputFocused = false;
     }
-}
 
-<div class="chat-container">
-    @if (_isChatOpen)
+    private void CloseChatBot()
     {
-        <div class="chatbot-chat">
-            <div class="chat-header">
-                <span>Chatbot 🤖</span>
-                <button class="close-button" @onclick="ToggleChat">X</button>
-            </div>
-            <div id="chat-body" class="chat-body">
-                <div class="message ai"><span>Hi there! How can we help you today?</span></div>
-                <div class="message ai"><span>If this is your first time I recommend you to use the command <b> '/help'</b></span></div>
-                @foreach (var msg in _messages)
-                {
-                    <div class="message @(msg.sender == "person" ? "person" : "ai") @(msg.sender != "person" ? (msg.type == TIPO.ERRO ? "bg-danger" : msg.type == TIPO.AVISO ? "bg-warning" : "") : "")">
-                        <span>@((MarkupString)msg.message)</span>
-                    </div>
-                }
-            </div>
-            <div class="chat-footer w-100">
-                <div class="dropup w-100">
-                    <input type="text" class="form-control" @bind="_message" @oninput="ShowSuggestions" @onfocus="OnFocus" @onblur="OnBlur" placeholder="Type your message..." aria-haspopup="true" aria-expanded="@_isInputFocused.ToString()" />
-                    @if (_isInputFocused && _suggestions?.Any() == true)
+        _chatbotVisible = false;
+    }
+
+}
+@if (_chatbotVisible)
+{
+    <div class="chat-container">
+        @if (_isChatOpen)
+        {
+            <div class="chatbot-chat">
+                <div class="chat-header">
+                    <span>Chatbot 🤖</span>
+                    <button class="close-button" @onclick="ToggleChat">&times;</button>
+                </div>
+                <div id="chat-body" class="chat-body">
+                    <div class="message ai"><span>Olá! 👋 Como posso ajudá-lo hoje?</span></div>
+                    <div class="message ai"><span>Se esta é a sua primeira vez, recomendo que use o comando <b> '/help'</b></span></div>
+                    @foreach (var msg in _messages)
                     {
-                        <div class="dropdown-menu show w-100">
-                            @foreach (var suggestion in _suggestions)
-                            {
-                                <a class="dropdown-item" href="#" @onclick="async () => await SelectSuggestion(suggestion)">@suggestion</a>
-                            }
+                        <div class="message @(msg.sender == "person" ? "person" : "ai") @(msg.sender != "person" ? (msg.type == TIPO.ERRO ? "bg-danger" : msg.type == TIPO.AVISO ? "bg-warning" : "") : "")">
+                            <span>@((MarkupString)msg.message)</span>
                         </div>
                     }
                 </div>
-                <button class="chatbot-button ml-2" @onclick="SendMessage">
-                    📨
+                <div class="chat-footer w-100">
+                    <div class="dropup w-100">
+                        <input type="text" class="form-control" @bind="_message" @oninput="ShowSuggestions" @onfocus="OnFocus" @onblur="OnBlur" placeholder="Type your message..." aria-haspopup="true" aria-expanded="@_isInputFocused.ToString()"/>
+                        @if (_isInputFocused && _suggestions?.Any() == true)
+                        {
+                            <div class="dropdown-menu show w-100">
+                                @foreach (var suggestion in _suggestions)
+                                {
+                                    <a class="dropdown-item" href="#" @onclick="async () => await SelectSuggestion(suggestion)">@suggestion</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <button class="chatbot-button ml-2" @onclick="SendMessage">
+                        📨
+                    </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="open-chat-container">
+                <button class="chatbot-button" @onclick="ToggleChat">
+                    🤖
+                    <span class="close-icon" @onclick="CloseChatBot">&times;</span>
                 </button>
             </div>
-        </div>
-    }
-    else
-    {
-        <button class="chatbot-button" @onclick="ToggleChat">
-            🤖
-        </button>
-    }
-</div>
+        }
+    </div>
+}
 
 <script>
         function scrollToBottom(elementId) {
