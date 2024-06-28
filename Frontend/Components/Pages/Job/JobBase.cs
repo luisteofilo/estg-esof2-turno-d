@@ -11,16 +11,22 @@ public class JobBase : ComponentBase
     [Inject] protected NavigationManager Navigation { get; set; }
 
     protected IEnumerable<JobDto> Jobs { get; set; }
+    protected IEnumerable<JobDto> FilteredJobs { get; set; }
 
     protected string UrlInput { get; set; } = string.Empty;
     protected string SuccessMessage { get; set; }
     protected string ErrorMessage { get; set; }
+
+    protected string searchPosition = string.Empty;
+    protected string searchLocalization = string.Empty;
+    protected string searchCompany = string.Empty;
 
     private Timer? _timer;
 
     protected override async Task OnInitializedAsync()
     {
         Jobs = await JobService.GetJobs();
+        FilteredJobs = Jobs;
     }
 
     protected void ManualRegister()
@@ -61,7 +67,33 @@ public class JobBase : ComponentBase
 
     protected void RemoveJob(Guid jobId)
     {
-
+        // Implement the job removal logic
     }
 
+    protected void OnSearchPositionChanged(ChangeEventArgs e)
+    {
+        searchPosition = e.Value.ToString();
+        FilterJobs();
+    }
+
+    protected void OnSearchLocalizationChanged(ChangeEventArgs e)
+    {
+        searchLocalization = e.Value.ToString();
+        FilterJobs();
+    }
+
+    protected void OnSearchCompanyChanged(ChangeEventArgs e)
+    {
+        searchCompany = e.Value.ToString();
+        FilterJobs();
+    }
+
+    protected void FilterJobs()
+    {
+        FilteredJobs = Jobs.Where(j =>
+            (string.IsNullOrEmpty(searchPosition) || j.Position.Contains(searchPosition, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(searchLocalization) || j.Localization.Contains(searchLocalization, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(searchCompany) || j.Company != null && j.Company.Contains(searchCompany, StringComparison.OrdinalIgnoreCase))
+        ).ToList();
+    }
 }

@@ -10,11 +10,11 @@ public class DashboardRepository : IDashboardRepository
 {
     private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
 
-    public async Task<IEnumerable<ProfileSkillDto>> GetProfileSkillsAsync()
+    public async Task<IEnumerable<DashboardProfilesSkillDTO>> GetProfileSkillsAsync()
     {
         var profileSkills = await _dbContext.ProfileSkills
             .Include(ps => ps.Skill)
-            .Select(ps => new ProfileSkillDto
+            .Select(ps => new DashboardProfilesSkillDTO
             {
                 ProfileId = ps.ProfileId,
                 SkillId = ps.SkillId,
@@ -26,11 +26,11 @@ public class DashboardRepository : IDashboardRepository
         return profileSkills;
     }
         
-    public async Task<IEnumerable<JobSkillDto>> GetJobSkillsAsync()
+    public async Task<IEnumerable<DashboardJobDTO>> GetJobSkillsAsync()
     {
         var jobSkills = await _dbContext.JobSkills
             .Include(js => js.Skill)
-            .Select(js => new JobSkillDto()
+            .Select(js => new DashboardJobDTO()
             {
                 JobId = js.JobId,
                 SkillId = js.SkillId,

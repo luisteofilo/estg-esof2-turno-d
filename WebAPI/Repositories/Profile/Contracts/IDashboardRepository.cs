@@ -5,9 +5,9 @@ using Common.Dtos.Job;
 using Common.Dtos.Profile;
 public interface IDashboardRepository
 {
-    Task<IEnumerable<ProfileSkillDto>> GetProfileSkillsAsync();
+    Task<IEnumerable<DashboardProfilesSkillDTO>> GetProfileSkillsAsync();
     
-    Task<IEnumerable<JobSkillDto>> GetJobSkillsAsync();
+    Task<IEnumerable<DashboardJobDTO>> GetJobSkillsAsync();
     
     Task<IEnumerable<ExperienceDto>> GetExperiencesAsync();
 }
