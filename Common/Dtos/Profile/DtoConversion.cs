@@ -1,5 +1,4 @@
-﻿
-namespace Common.Dtos.Profile;
+﻿namespace Common.Dtos.Profile;
 using ESOF.WebApp.DBLayer.Entities;
 
 public static class DtoConversion
@@ -8,22 +7,6 @@ public static class DtoConversion
     public static IEnumerable<ProfileDto> ProfilesConvertToDto(this IEnumerable<Profile> profiles)
     {
         return profiles.Select(profile => profile.ProfileConvertToDto()).ToList();
-    }
-
-    public static ProfileDto CopyProfileDto(this ProfileDto profileDto)
-    {
-        return new ProfileDto
-        {
-            ProfileId = profileDto.ProfileId,
-            FirstName = profileDto.FirstName,
-            LastName = profileDto.LastName,
-            Bio = profileDto.Bio,
-            Avatar = profileDto.Avatar,
-            Location = profileDto.Location,
-            UrlBackground = profileDto.UrlBackground,
-            UrlProfile = profileDto.UrlProfile,
-            UserId = profileDto.UserId
-        };
     }
 
     public static ProfileDto ProfileConvertToDto(this Profile profile)
@@ -36,7 +19,6 @@ public static class DtoConversion
             Bio = profile.Bio,
             Avatar = profile.Avatar,
             Location = profile.Location,
-            UrlBackground = profile.UrlBackground,
             UrlProfile = profile.UrlProfile,
             UserId = profile.UserId
         };
@@ -52,7 +34,6 @@ public static class DtoConversion
             Bio = profileDto.Bio,
             Avatar = profileDto.Avatar,
             Location = profileDto.Location,
-            UrlBackground = profileDto.UrlBackground,
             UrlProfile = profileDto.UrlProfile,
             UserId = profileDto.UserId,
         };
@@ -109,8 +90,8 @@ public static class DtoConversion
             ProfileId = educationDto.ProfileId,
             Name = educationDto.Name,
             SchoolName = educationDto.SchoolName,
-            StartDate = educationDto.StartDate,
-            EndDate = educationDto.EndDate
+            StartDate = DateTime.SpecifyKind(educationDto.StartDate, DateTimeKind.Utc),
+            EndDate = DateTime.SpecifyKind(educationDto.EndDate, DateTimeKind.Utc)
         };
     }
 
@@ -128,7 +109,8 @@ public static class DtoConversion
             ProfileId = experience.ProfileId,
             Name = experience.Name,
             CompanyName = experience.CompanyName,
-            Duration = experience.Duration,
+            StartDate = experience.StartDate,
+            EndDate = experience.EndDate,
             Description = experience.Description
         };
     }
@@ -141,7 +123,8 @@ public static class DtoConversion
             ProfileId = experienceDto.ProfileId,
             Name = experienceDto.Name,
             CompanyName = experienceDto.CompanyName,
-            Duration = experienceDto.Duration,
+            StartDate = DateTime.SpecifyKind(experienceDto.StartDate, DateTimeKind.Utc),
+            EndDate = DateTime.SpecifyKind(experienceDto.EndDate, DateTimeKind.Utc),
             Description = experienceDto.Description
         };
     }
