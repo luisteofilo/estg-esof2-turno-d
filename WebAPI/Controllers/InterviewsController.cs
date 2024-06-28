@@ -11,11 +11,11 @@ public class InterviewsController(IInterviewRepository _interviewRepository) : C
 {
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewDto>))]
-    public async Task<IActionResult> GetInterviews()
+    public async Task<IActionResult> GetInterviews([FromQuery] string candidate = null, [FromQuery] string location = null)
     {
         try
         {
-            var interviews = await _interviewRepository.GetAllAsync();
+            var interviews = await _interviewRepository.GetAllAsync(candidate, location);
             var interviewsDto = interviews.InterviewsConvertToDto();
             return Ok(interviewsDto);
         }
@@ -307,5 +307,34 @@ public class InterviewsController(IInterviewRepository _interviewRepository) : C
         }
     }
 
+    [HttpGet("candidate")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewDto>))]
+    public async Task<IActionResult> GetInterviewCandidates()
+    {
+        try
+        {
+            var interviewCandidate = await _interviewRepository.GetAllInterviewCandidates();
+            return Ok(interviewCandidate);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving jobSkills: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("location")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<InterviewDto>))]
+    public async Task<IActionResult> GetInterviewLocation()
+    {
+        try
+        {
+            var interviewCandidate = await _interviewRepository.GetAllInterviewLocation();
+            return Ok(interviewCandidate);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving jobSkills: {ex.Message}");
+        }
+    }
 }
 

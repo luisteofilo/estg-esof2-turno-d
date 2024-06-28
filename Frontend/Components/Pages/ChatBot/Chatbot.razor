@@ -1,0 +1,438 @@
+﻿@using Common.Dtos.Interview
+@using Common.Dtos.Job
+@using Common.Dtos.Message
+@using ESOF.WebApp.DBLayer.Entities.Interviews
+@using Frontend.Helpers
+@inject ApiHelper ApiHelper
+@inject IJSRuntime JS
+@namespace ChatBot
+@rendermode InteractiveServer
+
+@code {
+    private bool _isChatOpen = false;
+    private string _message = string.Empty;
+    private List<MessageDto> _messages = [];
+    private bool _isInputFocused = false;
+    
+    private List<string> _commands = ["/jobs", "/interviews", "/help"];
+    private List<string> _jobParams = ["company", "location", "experience"];
+    private List<string> _interviewParams = ["candidate", "location"];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_isChatOpen)
+        {
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task ToggleChat()
+    {
+        _isChatOpen = !_isChatOpen;
+        if (_isChatOpen)
+        {
+            await ScrollToBottom();
+        }
+    }
+
+    private async Task SendMessage() {
+        _suggestions.Clear();
+        if (string.IsNullOrEmpty(_message)) {
+            return;
+        }
+        
+        var message = new MessageDto("person", _message);
+        _messages.Add(message);
+            
+        await ChooseHttpRequest(message);
+        
+        _message = string.Empty;
+        await ScrollToBottom();
+    }
+
+    private async Task ChooseHttpRequest(MessageDto message)
+    {
+        var command = message.message.Split(' ')[0].ToLower();
+
+        switch (command)
+        {
+            case "/jobs":
+                await ParseJobsMessage(message);
+                break;
+
+            case "/interviews":
+                await ParseInterviewMessage(message);
+                break;
+
+            case "/help":
+                HandleHelpCommand();
+                break;
+
+            default:
+                var aiMessage = new MessageDto("ai", "Comando não reconhecido.<br/> Use <b>/help</b> para ver a lista de comandos.", TIPO.ERRO);
+                _messages.Add(aiMessage);
+                break;
+        }
+
+        await ScrollToBottom();
+    }
+    
+    private Dictionary<string, string> ParseParameters(string message)
+    {
+        var parts = message.Split(' ');
+        var parameters = new Dictionary<string, string>();
+
+        for (int i = 1; i < parts.Length; i++)
+        {
+            var param = parts[i].Split(':');
+            if (param.Length == 2)
+            {
+                parameters[param[0].ToLower()] = param[1];
+            }
+        }
+
+        return parameters;
+    }
+
+    private async Task ParseJobsMessage(MessageDto message)
+    {
+        var parameters = ParseParameters(message.message);
+
+        //Obter parametros inseridos na mensagem
+        parameters.TryGetValue("company", out string? company);
+        parameters.TryGetValue("location", out string? location);
+        parameters.TryGetValue("experience", out string? experience);
+        
+        await HandleJobsCommand(company, location, experience);
+    }
+    
+    private async Task ParseInterviewMessage(MessageDto message)
+    {
+        var parameters = ParseParameters(message.message);
+
+        //Obter parametros inseridos na mensagem
+        parameters.TryGetValue("candidate", out string? candidate);
+        parameters.TryGetValue("location", out string? location);
+
+        await HandleInterviewsCommand(candidate, location);
+    }
+    
+    private async Task HandleJobsCommand(string company, string location, string experience)
+    {
+        var url = "api/Job";
+        var queryParams = new List<string>();
+
+        if (!string.IsNullOrEmpty(company))
+        {
+            queryParams.Add($"company={company}");
+        }
+
+        if (!string.IsNullOrEmpty(location))
+        {
+            queryParams.Add($"location={location}");
+        }
+
+        if (!string.IsNullOrEmpty(experience))
+        {
+            queryParams.Add($"experience={experience}");
+        }
+
+        if (queryParams.Count > 0)
+        {
+            url += "?" + string.Join("&", queryParams);
+        }
+        
+        var response = await ApiHelper.GetFromApiAsync<List<JobDto>>(url);
+
+        if (response != null) HandleJobAnswer(response);
+    }
+
+    private void HandleJobAnswer(List<JobDto> jobs)
+    {
+        var aiMessage = new MessageDto("ai", "Vagas disponíveis:", TIPO.SUCESSO);
+        _messages.Add(aiMessage);
+        
+        foreach (var job in jobs)
+        {
+            var jobDetails = $"<b>Posição:</b> {job.Position}<br><b>Empresa:</b> {job.Company};<br><b>Local:</b> {job.Localization}<br><b>Experiência:</b> {job.Experience}";
+            var jobsAiMessage = new MessageDto("ai", jobDetails, TIPO.DISPLAY);
+            _messages.Add(jobsAiMessage);
+        }
+    }
+    
+    private void HandleInterviewAnswer(List<InterviewDto> interviews)
+    {
+        var aiMessage = new MessageDto("ai", "Aqui estão as entrevistas agendadas:", TIPO.SUCESSO);
+        _messages.Add(aiMessage);
+        
+        foreach (var interview in interviews)
+        {
+            var jobDetails = $"<b>Início:</b> {interview.DateHourStart}<br><b>Término:</b> {interview.DateHourEnd}<br><b>Local:</b> {interview.Location}";;
+            var jobsAiMessage = new MessageDto("ai", jobDetails, TIPO.DISPLAY);
+            _messages.Add(jobsAiMessage);
+        }
+    }
+
+    private async Task HandleInterviewsCommand(string? candidate, string? location)
+    {
+        var url = "api/Interviews";
+        var queryParams = new List<string>();
+
+        if (!string.IsNullOrEmpty(candidate))
+        {
+            queryParams.Add($"candidate={candidate}");
+        }
+
+        if (!string.IsNullOrEmpty(location))
+        {
+            queryParams.Add($"location={location}");
+        }
+
+        if (queryParams.Count > 0)
+        {
+            url += "?" + string.Join("&", queryParams);
+        }
+    
+        var response = await ApiHelper.GetFromApiAsync<List<InterviewDto>>(url);
+
+        if (response != null) HandleInterviewAnswer(response);
+        
+    }
+
+    private void HandleHelpCommand()
+    {
+        var aiMessage = new MessageDto("ai", "Comandos disponíveis:<br/>/Interview - Lista de entrevistas<br/>/jobs - Lista de empregos <br/>/help - Lista de comandos", TIPO.AVISO);
+        _messages.Add(aiMessage);
+    }
+    
+    private async Task ScrollToBottom()
+    {
+        await JS.InvokeVoidAsync("scrollToBottom", "chat-body");
+    }
+    
+    private List<string> _suggestions = [];
+    private string[] _companySugestions = [];
+    private bool _chatbotVisible = true;
+
+    private void ShowSuggestions(ChangeEventArgs e)
+    {
+        var input = e.Value?.ToString();
+        _suggestions.Clear();
+
+        var parts = input.Split(' ');
+        switch (parts.Length)
+        {
+            case 1:
+                HandleSuggestionFirstPart(input);
+                break;
+            case > 1:
+            {
+                var command = parts[0].ToLower();
+                var lastPart = parts[parts.Length - 1].ToLower();
+                HandleSuggestionSecondPart(command, lastPart);
+                break;
+            }
+        }
+
+        StateHasChanged();
+    }
+    
+    private void HandleSuggestionFirstPart(string input)
+    {
+        if (input.StartsWith('/'))
+        {
+            _suggestions.AddRange(_commands.Where(c => c.StartsWith(input, StringComparison.OrdinalIgnoreCase)));
+        }
+    }
+
+    private async void HandleSuggestionSecondPart(string command, string lastPart)
+    {
+        var paramInput = lastPart.Contains(":") ? lastPart.Split(':')[0] : lastPart;
+        if (!lastPart.Contains(":"))
+        {
+            SuggestParameter(command, paramInput);
+        }
+        else
+        {
+            var paramValue = lastPart.Split(':')[1];
+            SuggestParameterValue(command, paramInput, paramValue);
+        }
+    }
+
+    private void SuggestParameter(string command, string paramInput)
+    {
+        switch (command.Trim())
+        {
+            case "/jobs":
+                _suggestions.AddRange(_jobParams.Where(p => p.StartsWith(paramInput, StringComparison.OrdinalIgnoreCase)).ToList());
+                break;
+            case "/interviews":
+                _suggestions.AddRange(_interviewParams.Where(p => p.StartsWith(paramInput, StringComparison.OrdinalIgnoreCase)));
+                break;
+        }
+    }
+
+    private async void SuggestParameterValue(string command, string paramName, string paramValue)
+    {
+        var commandParamMap = new Dictionary<(string command, string paramName), Func<string, Task<IEnumerable<string>>>>
+        {
+            { ("/jobs", "company"), async (_) => {
+                var companies = await GetJobCompaniesFromDatabase();
+                return companies.Where(c => c.Contains(paramValue, StringComparison.OrdinalIgnoreCase));
+            }},
+            { ("/jobs", "experience"), async (_) => {
+                var experiences = await GetJobExperiencesFromDatabase();
+                return experiences.Where(c => c.Contains(paramValue, StringComparison.OrdinalIgnoreCase));
+            }},
+            { ("/jobs", "location"), async (_) =>
+            {
+                var locations = await GetJobLocationsFromDatabase();
+                return locations.Where(c => c.Contains(paramValue, StringComparison.OrdinalIgnoreCase));
+            }},
+            { ("/interviews", "location"), async (_) => {
+                var locations = await GetInterviewLocationFromDatabase();
+                return locations.Where(c => c.Contains(paramValue, StringComparison.OrdinalIgnoreCase));
+            }},
+            { ("/interviews", "candidate"), async (_) => {
+                var candidates = await GetInterviewCandidateFromDatabase();
+                return candidates.Where(c => c.Name.Contains(paramValue, StringComparison.OrdinalIgnoreCase)).Select(c => c.Name);
+            }}
+        };
+
+        if (commandParamMap.TryGetValue((command, paramName), out var getValuesFunc))
+        {
+            var values = await getValuesFunc(paramValue);
+            if (values != null)
+            {
+                _suggestions.AddRange(values);
+            }
+            StateHasChanged();
+        }
+    }
+    
+    private async Task<string[]?> GetJobCompaniesFromDatabase()
+    {
+        return await ApiHelper.GetFromApiAsync<string[]>("api/Job/company");
+    }
+    private async Task<string[]?> GetJobLocationsFromDatabase()
+    {
+        return await ApiHelper.GetFromApiAsync<string[]>("api/Job/location");
+    }
+    private async Task<string[]?> GetJobExperiencesFromDatabase()
+    {
+        return await ApiHelper.GetFromApiAsync<string[]>("api/Job/experience");
+    }
+    private async Task<string[]?> GetInterviewLocationFromDatabase()
+    {
+        return await ApiHelper.GetFromApiAsync<string[]>("api/Interviews/location");
+    }
+    private async Task<Candidate[]?> GetInterviewCandidateFromDatabase()
+    {
+        return await ApiHelper.GetFromApiAsync<Candidate[]>("api/Interviews/candidate");
+    }
+
+    private async Task SelectSuggestion(string suggestion)
+    {
+        _suggestions.Clear();
+        var parts = _message.Split(' ');
+        if (parts.Length > 1)
+        {
+            var lastPart = parts[parts.Length - 1];
+            if (lastPart.Contains(":"))
+            {
+                var paramName = lastPart.Split(':')[0];
+                parts[parts.Length - 1] = $"{paramName}:{suggestion} ";
+                SuggestParameter(parts[0], "");
+            }
+            else
+            {
+                parts[parts.Length - 1] = suggestion + ':';
+                OnFocus();
+                SuggestParameterValue(parts[0], suggestion, "");
+            }
+            _message = string.Join(" ", parts);
+        }
+        else
+        {
+            _message = suggestion + " ";
+            SuggestParameter(_message, "");
+        }
+        StateHasChanged();
+    }
+    
+    private void OnFocus()
+    {
+        _isInputFocused = true;
+    }
+
+    private async void OnBlur()
+    {
+        await Task.Delay(100);
+        _isInputFocused = false;
+    }
+
+    private void CloseChatBot()
+    {
+        _chatbotVisible = false;
+    }
+
+}
+@if (_chatbotVisible)
+{
+    <div class="chat-container">
+        @if (_isChatOpen)
+        {
+            <div class="chatbot-chat">
+                <div class="chat-header">
+                    <span>Chatbot 🤖</span>
+                    <button class="close-button" @onclick="ToggleChat">&times;</button>
+                </div>
+                <div id="chat-body" class="chat-body">
+                    <div class="message ai"><span>Olá! 👋 Como posso ajudá-lo hoje?</span></div>
+                    <div class="message ai"><span>Se esta é a sua primeira vez, recomendo que use o comando <b> '/help'</b></span></div>
+                    @foreach (var msg in _messages)
+                    {
+                        <div class="message @(msg.sender == "person" ? "person" : "ai") @(msg.sender != "person" ? (msg.type == TIPO.ERRO ? "bg-danger" : msg.type == TIPO.AVISO ? "bg-warning" : "") : "")">
+                            <span>@((MarkupString)msg.message)</span>
+                        </div>
+                    }
+                </div>
+                <div class="chat-footer w-100">
+                    <div class="dropup w-100">
+                        <input type="text" class="form-control" @bind="_message" @oninput="ShowSuggestions" @onfocus="OnFocus" @onblur="OnBlur" placeholder="Type your message..." aria-haspopup="true" aria-expanded="@_isInputFocused.ToString()"/>
+                        @if (_isInputFocused && _suggestions?.Any() == true)
+                        {
+                            <div class="dropdown-menu show w-100">
+                                @foreach (var suggestion in _suggestions)
+                                {
+                                    <a class="dropdown-item" href="#" @onclick="async () => await SelectSuggestion(suggestion)">@suggestion</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <button class="chatbot-button ml-2" @onclick="SendMessage">
+                        📨
+                    </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="open-chat-container">
+                <button class="chatbot-button" @onclick="ToggleChat">
+                    🤖
+                    <span class="close-icon" @onclick="CloseChatBot">&times;</span>
+                </button>
+            </div>
+        }
+    </div>
+}
+
+<script>
+        function scrollToBottom(elementId) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                element.scrollTop = element.scrollHeight;
+            }
+        }
+</script>
