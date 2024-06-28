@@ -13,6 +13,28 @@ public class JobRepository : IJobRepository
     { 
         return await _dbContext.Jobs.ToListAsync();
     }
+    
+    public async Task<IEnumerable<Job>> GetJobsAsync(string company = null, string location = null, string experience = null)
+    {
+        var query = _dbContext.Jobs.AsQueryable();
+
+        if (!string.IsNullOrEmpty(company))
+        {
+            query = query.Where(j => j.Company.ToLower() == company.ToLower());
+        }
+
+        if (!string.IsNullOrEmpty(location))
+        {
+            query = query.Where(j => j.Localization.ToLower() == location.ToLower());
+        }
+
+        if (!string.IsNullOrEmpty(experience))
+        {
+            query = query.Where(j => j.Experience.ToLower() == experience.ToLower());
+        }
+
+        return await query.ToListAsync();
+    }
 
     public async Task<Job> GetJobByIdAsync(Guid jobId)
     { 
@@ -41,5 +63,32 @@ public class JobRepository : IJobRepository
             _dbContext.Jobs.Update(job);
             await _dbContext.SaveChangesAsync();
         }
+    }
+    
+    public async Task<IEnumerable<string>> GetAllJobsCompaniesAsync()
+    {
+        return await _dbContext.Jobs
+                               .Where(j => j.Company != null)
+                               .Select(j => j.Company)
+                               .Distinct()
+                               .ToListAsync();
+    }
+    
+    public async Task<IEnumerable<string>> GetAllJobsLocationsAsync()
+    {
+        return await _dbContext.Jobs
+            .Where(j => j.Localization != null)
+            .Select(j => j.Localization)
+            .Distinct()
+            .ToListAsync();
+    }
+    
+    public async Task<IEnumerable<string>> GetAllJobsExperienceAsync()
+    {
+        return await _dbContext.Jobs
+            .Where(j => j.Experience!= null)
+            .Select(j => j.Experience)
+            .Distinct()
+            .ToListAsync();
     }
 }

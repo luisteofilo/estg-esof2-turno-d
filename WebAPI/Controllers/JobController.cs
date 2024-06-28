@@ -46,12 +46,20 @@ public class JobController(
     
     [HttpGet]
     [ProducesResponseType(200, Type = typeof(IEnumerable<JobDto>))]
-    public async Task<IActionResult> GetJobs()
+    public async Task<IActionResult> GetJobs([FromQuery] string company = null, [FromQuery] string location = null, [FromQuery] string experience = null)
     {
         try
         {
-            var jobs = await _jobRepository.GetJobsAsync();
-            var jobsDto = jobs.JobsConvertToDto();
+            var jobs = await _jobRepository.GetJobsAsync(company, location, experience);
+            var jobsDto = jobs.Select(job => new JobDto
+            {
+                JobId = job.JobId,
+                Position = job.Position,
+                Company = job.Company,
+                Localization = job.Localization,
+                Experience = job.Experience,
+            }).ToList();
+
             return Ok(jobsDto);
         }
         catch (Exception ex)
@@ -122,6 +130,51 @@ public class JobController(
             var jobSkills = await _jobSkillRepository.GetJobSkillsAsync();
             var jobSkillsDto = jobSkills.JobSkillsConvertToDto();
             return Ok(jobSkillsDto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving jobSkills: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("company")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<JobSkillDto>))]
+    public async Task<IActionResult> GetJobsCompanys()
+    {
+        try
+        {
+            var jobCompanies = await _jobRepository.GetAllJobsCompaniesAsync();
+            return Ok(jobCompanies);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving jobSkills: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("location")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<JobSkillDto>))]
+    public async Task<IActionResult> GetJobsLocations()
+    {
+        try
+        {
+            var jobLocations = await _jobRepository.GetAllJobsLocationsAsync();
+            return Ok(jobLocations);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving jobSkills: {ex.Message}");
+        }
+    }
+    
+    [HttpGet("experience")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<JobSkillDto>))]
+    public async Task<IActionResult> GetJobsExperiences()
+    {
+        try
+        {
+            var jobExperiences = await _jobRepository.GetAllJobsExperienceAsync();
+            return Ok(jobExperiences);
         }
         catch (Exception ex)
         {
