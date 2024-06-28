@@ -9,6 +9,5 @@ public interface IJobRepository
     Task UpdateJobAsync(Job job);
     
     Task<IEnumerable<Client>> GetClients();
-
     Task DeleteJobAsync(Guid jobId);
 }

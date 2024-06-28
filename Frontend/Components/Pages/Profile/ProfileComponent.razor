@@ -1,67 +1,93 @@
-﻿@page "/profile"
+﻿@page "/profile/{ProfileId}"
+@page "/profile/url/{ProfileUrl}"
+@page "/profile"
 @inherits ProfileBase
 @rendermode InteractiveServer
 
-@if (Profile == null)
-{
-    <h2>Loading...</h2>
-}
-else
-{
-    <div class="container mt-4">
-        <!-- Profile Section -->
+<PageTitle>Profile</PageTitle>
+
+<div class="container mt-4">
+    @if (ErrorMessage != null)
+    {
+        <DisplayError ErrorMessage="@ErrorMessage"/>
+    } 
+    else if(Profile == null || Skills == null || Experiences == null || Educations == null)
+    {
+        <LoadingSpinner/>
+    }
+    else
+    {
         @if (IsEditingProfile)
         {
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <img src="..." alt="Profile Image" class="img-fluid rounded-circle">
-                </div>
-                <div class="col-md-9">
-                    <div class="mb-3">
-                        <input type="text" @bind="EditableProfile.FirstName" class="form-control" placeholder="First Name" />
+            <EditForm Model="@EditableProfile" OnValidSubmit="SaveProfile">
+                <FluentValidationValidator/>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <img src="@($"{ApiUrl}{EditableProfile.Avatar}")" alt="Profile Image" class="img-fluid rounded">
+                        <InputFile OnChange="AvatarSelected" accept="image/*" class="form-control mt-3 text-sm"/>
                     </div>
-                    <div class="mb-3">
-                        <input type="text" @bind="EditableProfile.LastName" class="form-control" placeholder="Last Name" />
-                    </div>
-                    <div class="mb-3">
-                        <input type="text" @bind="EditableProfile.Location" class="form-control" placeholder="Location" />
-                    </div>
-                    <div class="mb-3">
-                        <textarea @bind="EditableProfile.Bio" class="form-control" placeholder="Bio" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        @foreach (var skill in EditableSkills)
-                        {
-                            <span class="badge bg-secondary me-1">
-                                @skill.Name
-                                <span class="ms-1" @onclick="() => RemoveSkill(skill)">X</span>
-                            </span>
-                        }
-                    </div>
-                    <div class="mb-3 d-flex">
-                        <select class="form-select me-2">
-                            <option value="">Select a skill</option>
-                            @foreach (var skill in AllSkills)
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">First Name</label>
+                            <InputText @bind-Value="@EditableProfile.FirstName" class="form-control" placeholder="First Name"/>
+                            <ValidationMessage For="@(() => EditableProfile.FirstName)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Last Name</label>
+                            <InputText @bind-Value="@EditableProfile.LastName" class="form-control" placeholder="Last Name"/>
+                            <ValidationMessage For="@(() => EditableProfile.LastName)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Location</label>
+                            <InputText @bind-Value="@EditableProfile.Location" class="form-control" placeholder="Location"/>
+                            <ValidationMessage For="@(() => EditableProfile.Location)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Bio</label>
+                            <InputTextArea @bind-Value="@EditableProfile.Bio" class="form-control" placeholder="Biography" rows="3"/>
+                            <ValidationMessage For="@(() => EditableProfile.Bio)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Profile URL</label>
+                            <InputText @bind-Value="@EditableProfile.UrlProfile" class="form-control" placeholder="Profile Url"/>
+                            <ValidationMessage For="@(() => EditableProfile.UrlProfile)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            @foreach (var skill in EditableSkills)
                             {
-                                <option value="@skill.SkillId" @onclick="() => AddSkill(skill)">@skill.Name</option>
+                                <span class="badge bg-secondary me-1">
+                                    @skill.Name
+                                    <span class="ms-1 cursor-pointer" @onclick="() => RemoveSkill(skill)">X</span>
+                                </span>
                             }
-                        </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="skills" class="form-label fw-bold">Skills</label>
+                            <select id="skills" class="form-select me-2">
+                                <option value="">Select a skill</option>
+                                @foreach (var skill in AllSkills)
+                                {
+                                    <option value="@skill.SkillId" @onclick="() => AddSkill(skill)">@skill.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success me-2">Save</button>
+                        <button type="button" class="btn btn-secondary" @onclick="() => EditProfile(false)">Cancel</button>
                     </div>
-                    <button class="btn btn-success me-2" @onclick="SaveProfile">Save</button>
-                    <button class="btn btn-secondary" @onclick="() => EditProfile(false)">Cancel</button>
                 </div>
-            </div>
+            </EditForm>
         }
         else
         {
             <div class="row mb-4">
                 <div class="col-md-3">
-                    <img src="..." alt="Profile Image" class="img-fluid rounded-circle">
+                    <img src="@($"{ApiUrl}{Profile.Avatar}")" alt="Profile Image" class="img-fluid rounded form-control">
                 </div>
                 <div class="col-md-9">
                     <h2>@Profile.FirstName @Profile.LastName</h2>
                     <p>@Profile.Location</p>
-                    <p>@Profile.Bio</p>  
+                    <p class="col-md-9 mb-4">@Profile.Bio</p>
                     <div class="mb-3">
                         @foreach (var skill in Skills)
                         {
@@ -79,20 +105,83 @@ else
         @if (IsEditingExperiences)
         {
             <div class="mb-4">
-                <h2>Experience</h2>
-                @foreach (var exp in EditableExperiences)
+                @if (NewExperience == null)
                 {
-                    <div class="mb-3">
-                        <input type="text" @bind="exp.Name" class="form-control mb-2" placeholder="Experience Title" />
-                        <input type="text" @bind="exp.CompanyName" class="form-control mb-2" placeholder="Company Name" />
-                        <input type="text" @bind="exp.Duration" class="form-control mb-2" placeholder="Duration" />
-                        <textarea @bind="exp.Description" class="form-control mb-2" placeholder="Description" rows="3"></textarea>
-                        <button @onclick="() => RemoveExperience(exp)" class="btn btn-danger">Remove</button>
-                    </div>
+                    <h2>Experience</h2>
+                    <EditForm Model="@EditableExperiences" OnValidSubmit="SaveExperiences">
+                        <FluentValidationValidator/>
+                        @foreach (var exp in EditableExperiences)
+                        {
+                            <div class="mb-3 border rounded p-3">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Experience Name</label>
+                                    <InputText @bind-Value="@exp.Name" class="form-control" placeholder="Experience Name"/>
+                                    <ValidationMessage For="@(() => exp.Name)" class="text-danger"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Company Name</label>
+                                    <InputText @bind-Value="@exp.CompanyName" class="form-control" placeholder="Company Name"/>
+                                    <ValidationMessage For="@(() => exp.CompanyName)" class="text-danger"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Start Date</label>
+                                    <InputDate @bind-Value="@exp.StartDate" class="form-control" placeholder="Start Date"/>
+                                    <ValidationMessage For="@(() => exp.StartDate)" class="text-danger"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">End Date</label>
+                                    <InputDate @bind-Value="@exp.EndDate" class="form-control" placeholder="End Date"/>
+                                    <ValidationMessage For="@(() => exp.EndDate)" class="text-danger"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Description</label>
+                                    <InputTextArea @bind-Value="@exp.Description" class="form-control" placeholder="Description"/>
+                                    <ValidationMessage For="@(() => exp.Description)" class="text-danger"/>
+                                </div>
+                                <button type="button" @onclick="() => RemoveExperience(exp)" class="btn btn-danger">Remove</button>
+                            </div>
+                        }
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-success me-2">Save</button>
+                            <button type="button" class="btn btn-secondary" @onclick="() => EditExperiences(false)">Cancel</button>
+                            <button type="button" class="btn btn-primary" @onclick="() => AddExperience(true)">Add Experience</button>
+                        </div>
+                    </EditForm>
                 }
-                <button class="btn btn-success me-2" @onclick="SaveExperiences">Save</button>
-                <button class="btn btn-secondary me-2" @onclick="() => EditExperiences(false)">Cancel</button>
-                <button class="btn btn-primary" @onclick="AddExperience">Add Experience</button>
+                else
+                {
+                    <h4>Add new Experience</h4>
+                    <EditForm Model="@NewExperience" OnValidSubmit="SaveNewExperience">
+                        <FluentValidationValidator/>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Experience Name</label>
+                            <InputText @bind-Value="@NewExperience.Name" class="form-control" placeholder="Experience Name"/>
+                            <ValidationMessage For="@(() => NewExperience.Name)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Company Name</label>
+                            <InputText @bind-Value="@NewExperience.CompanyName" class="form-control" placeholder="Company Name"/>
+                            <ValidationMessage For="@(() => NewExperience.CompanyName)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Start Date</label>
+                            <InputDate @bind-Value="@NewExperience.StartDate" class="form-control" placeholder="Start Date"/>
+                            <ValidationMessage For="@(() => NewExperience.StartDate)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">End Date</label>
+                            <InputDate @bind-Value="@NewExperience.EndDate" class="form-control" placeholder="End Date"/>
+                            <ValidationMessage For="@(() => NewExperience.EndDate)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description</label>
+                            <InputTextArea @bind-Value="@NewExperience.Description" class="form-control" placeholder="Description"/>
+                            <ValidationMessage For="@(() => NewExperience.Description)" class="text-danger"/>
+                        </div>
+                        <button type="submit" class="btn btn-success me-2">Add New Experience</button>
+                        <button type="button" @onclick="() => AddExperience(false)" class="btn btn-danger">Cancel</button>
+                    </EditForm>
+                }
             </div>
         }
         else
@@ -101,10 +190,10 @@ else
                 <h2>Experience</h2>
                 @foreach (var exp in Experiences)
                 {
-                    <div class="mb-3">
-                        <h3>@exp.Name</h3>
+                    <div class="mb-3 border rounded p-3">
+                        <h4>@exp.Name</h4>
                         <p>@exp.CompanyName</p>
-                        <p>@exp.Duration</p>
+                        <p>@exp.StartDate.ToShortDateString() - @exp.EndDate.ToShortDateString()</p>
                         <p>@exp.Description</p>
                     </div>
                 }
@@ -114,24 +203,77 @@ else
 
         <hr>
 
-        <!-- Education Section -->
+        <!-- Educations Section -->
         @if (IsEditingEducations)
         {
             <div class="mb-4">
-                <h2>Education</h2>
-                @foreach (var edu in EditableEducations)
+                @if (NewEducation == null)
                 {
-                    <div class="mb-3">
-                        <input type="text" @bind="edu.Name" class="form-control mb-2" placeholder="Education Title" />
-                        <input type="text" @bind="edu.SchoolName" class="form-control mb-2" placeholder="Institution Name" />
-                        <input type="text" @bind="edu.StartDate" class="form-control mb-2" placeholder="Start Date" />
-                        <input type="text" @bind="edu.EndDate" class="form-control mb-2" placeholder="End Date" />
-                        <button @onclick="() => RemoveEducation(edu)" class="btn btn-danger">Remove</button>
-                    </div>
+                    <h2>Education</h2>
+                    <EditForm Model="@EditableEducations" OnValidSubmit="SaveEducations">
+                        <FluentValidationValidator/>
+                        @foreach (var edu in EditableEducations)
+                        {
+                            <div class="mb-3 border rounded p-3">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Education Name</label>
+                                    <InputText @bind-Value="@edu.Name" class="form-control" placeholder="Education Name"/>
+                                    <ValidationMessage For="@(() => edu.Name)" class="text-danger"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">School Name</label>
+                                    <InputText @bind-Value="@edu.SchoolName" class="form-control" placeholder="School Name"/>
+                                    <ValidationMessage For="@(() => edu.SchoolName)" class="text-danger"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Start Date</label>
+                                    <InputDate @bind-Value="@edu.StartDate" class="form-control" placeholder="Start Date"/>
+                                    <ValidationMessage For="@(() => edu.StartDate)" class="text-danger"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">End Date</label>
+                                    <InputDate @bind-Value="@edu.EndDate" class="form-control" placeholder="End Date"/>
+                                    <ValidationMessage For="@(() => edu.EndDate)" class="text-danger"/>
+                                </div>
+                                <button type="button" @onclick="() => RemoveEducation(edu)" class="btn btn-danger">Remove</button>
+                            </div>
+                        }
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-success me-2">Save</button>
+                            <button type="button" class="btn btn-secondary" @onclick="() => EditEducations(false)">Cancel</button>
+                            <button type="button" class="btn btn-primary" @onclick="() => AddEducation(true)">Add Education</button>
+                        </div>
+                    </EditForm>
                 }
-                <button class="btn btn-success me-2" @onclick="SaveEducations">Save</button>
-                <button class="btn btn-secondary me-2" @onclick="() => EditEducations(false)">Cancel</button>
-                <button class="btn btn-primary" @onclick="AddEducation">Add Education</button>
+                else
+                {
+                    <h4>Add new Education</h4>
+                    <EditForm Model="@NewEducation" OnValidSubmit="SaveNewEducation">
+                        <FluentValidationValidator/>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Education Name</label>
+                            <InputText @bind-Value="@NewEducation.Name" class="form-control" placeholder="Education Name"/>
+                            <ValidationMessage For="@(() => NewEducation.Name)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">School Name</label>
+                            <InputText @bind-Value="@NewEducation.SchoolName" class="form-control" placeholder="School Name"/>
+                            <ValidationMessage For="@(() => NewEducation.SchoolName)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Start Date</label>
+                            <InputDate @bind-Value="@NewEducation.StartDate" class="form-control" placeholder="Start Date"/>
+                            <ValidationMessage For="@(() => NewEducation.StartDate)" class="text-danger"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">End Date</label>
+                            <InputDate @bind-Value="@NewEducation.EndDate" class="form-control" placeholder="End Date"/>
+                            <ValidationMessage For="@(() => NewEducation.EndDate)" class="text-danger"/>
+                        </div>
+                        <button type="submit" class="btn btn-success me-2">Add New Education</button>
+                        <button type="button" @onclick="() => AddEducation(false)" class="btn btn-danger">Cancel</button>
+                    </EditForm>
+                }
             </div>
         }
         else
@@ -140,14 +282,14 @@ else
                 <h2>Education</h2>
                 @foreach (var edu in Educations)
                 {
-                    <div class="mb-3">
-                        <h3>@edu.Name</h3>
+                    <div class="mb-3 border rounded p-3">
+                        <h4>@edu.Name</h4>
                         <p>@edu.SchoolName</p>
-                        <p>@edu.StartDate - @edu.EndDate</p>
+                        <p>@edu.StartDate.ToShortDateString() - @edu.EndDate.ToShortDateString()</p>
                     </div>
                 }
                 <button class="btn btn-primary" @onclick="() => EditEducations(true)">Edit Education</button>
             </div>
         }
-    </div>
-}
+    }
+</div>

@@ -1,6 +1,7 @@
 ﻿using Common.Dtos.Job;
 using Common.Dtos.Profile;
 
+
 namespace Frontend.Services.Contracts;
 
 public interface IJobService
@@ -9,6 +10,7 @@ public interface IJobService
 
     Task<JobSkillDto> CreateJobSkill(Guid JobId, Guid SkillId, bool isRequired, JobSkillDto jobSkillDto);
     
-    Task<ICollection<JobDto>> GetJobs();
 
+
+    Task<IEnumerable<JobDto>> GetJobs();
 }

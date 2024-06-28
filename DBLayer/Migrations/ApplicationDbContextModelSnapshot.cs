@@ -23,111 +23,113 @@ namespace ESOF.WebApp.DBLayer.Migrations
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Client", b =>
-                {
-                    b.Property<Guid>("ClientId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
+            {
+                b.Property<Guid>("ClientId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid")
+                    .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.HasKey("ClientId");
+                b.HasKey("ClientId");
 
-                    b.ToTable("Clients");
-                });
+                b.ToTable("Clients");
+            });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
-                {
-                    b.Property<Guid>("EducationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
+            {
+                b.Property<Guid>("EducationId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid")
+                    .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<string>("EndDate")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<DateTime>("EndDate")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("uuid");
+                b.Property<Guid>("ProfileId")
+                    .HasColumnType("uuid");
 
-                    b.Property<string>("SchoolName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("SchoolName")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("StartDate")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<DateTime>("StartDate")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("EducationId");
+                b.HasKey("EducationId");
 
-                    b.HasIndex("ProfileId");
+                b.HasIndex("ProfileId");
 
-                    b.ToTable("Educations");
-                });
+                b.ToTable("Educations");
+            });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Emails.EmailTemplate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Body")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Subject")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("EmailTemplates");
-                });
+                b.ToTable("EmailTemplates");
+            });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
-                {
-                    b.Property<Guid>("ExperienceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
+            {
+                b.Property<Guid>("ExperienceId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid")
+                    .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("CompanyName")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Description")
+                    .HasColumnType("text");
 
-                    b.Property<string>("Duration")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<DateTime>("EndDate")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("text");
 
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("uuid");
+                b.Property<Guid>("ProfileId")
+                    .HasColumnType("uuid");
 
-                    b.HasKey("ExperienceId");
+                b.Property<DateTime>("StartDate")
+                    .HasColumnType("timestamp with time zone");
 
-                    b.HasIndex("ProfileId");
+                b.HasKey("ExperienceId");
 
-                    b.ToTable("Experiences");
-                });
+                b.HasIndex("ProfileId");
+
+                b.ToTable("Experiences");
+            });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.InterviewFeedback", b =>
+            {
+                b.Property<Guid>("InterviewFeedbackId");
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Answer", b =>
                 {
-                    b.Property<Guid>("InterviewFeedbackId")
+                    b.Property<Guid>("AnswerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
@@ -161,9 +163,100 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasIndex("JobId");
 
                     b.ToTable("InterviewFeedbacks");
+                    b.Property<string>("AnswerText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("AuthorEmail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("AuthorUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("AnswerId");
+
+                    b.HasIndex("AuthorUserId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("FAQAnswers");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Job", b =>
+                {
+                    b.Property<Guid>("JobId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("JobTitle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("JobId");
+
+                    b.ToTable("FAQJobs");
+                });
+
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Question", b =>
+                {
+                    b.Property<Guid>("QuestionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<Guid>("JobId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("VerifierUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("QuestionId");
+
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("VerifierUserId");
+
+                    b.ToTable("FAQQuestions");
+                });
+
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b =>
+                {
+                    b.Property<Guid>("ImportId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ImportId");
+
+                    b.ToTable("Imports", (string)null);
+                });
+
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate", b =>
                 {
                     b.Property<Guid>("CandidateId")
                         .ValueGeneratedOnAdd()
@@ -179,7 +272,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Candidates");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interview", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interview", b =>
                 {
                     b.Property<Guid>("InterviewId")
                         .HasColumnType("uuid");
@@ -215,7 +308,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Interviews");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interviewer", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interviewer", b =>
                 {
                     b.Property<Guid>("InterviewerId")
                         .ValueGeneratedOnAdd()
@@ -231,7 +324,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Interviewers");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
                 {
                     b.Property<Guid>("JobId")
                         .HasColumnType("uuid");
@@ -241,6 +334,9 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
                     b.Property<int?>("Commitment")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Company")
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -260,8 +356,15 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Property<string>("Experience")
                         .HasColumnType("text");
 
+
+                    b.Property<Guid?>("ImportId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Localization")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OtherDetails")
                         .HasColumnType("text");
 
                     b.Property<string>("Position")
@@ -277,11 +380,12 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasKey("JobId");
 
                     b.HasIndex("ClientId");
+                    b.HasIndex("ImportId");
 
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.JobSkill", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.JobSkill", b =>
                 {
                     b.Property<Guid>("JobId")
                         .HasColumnType("uuid");
@@ -299,7 +403,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("JobSkills");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
                 {
                     b.Property<Guid>("PermissionId")
                         .ValueGeneratedOnAdd()
@@ -315,7 +419,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Permissions");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
                 {
                     b.Property<Guid>("ProfileId")
                         .ValueGeneratedOnAdd()
@@ -323,31 +427,21 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Bio")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UrlBackground")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("UrlProfile")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
@@ -361,7 +455,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.ProfileSkill", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.ProfileSkill", b =>
                 {
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uuid");
@@ -376,7 +470,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("ProfileSkills");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Role", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Role", b =>
                 {
                     b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
@@ -392,7 +486,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.RolePermission", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.RolePermission", b =>
                 {
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
@@ -407,7 +501,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("RolePermissions");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Skill", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Skill", b =>
                 {
                     b.Property<Guid>("SkillId")
                         .ValueGeneratedOnAdd()
@@ -423,7 +517,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Skills");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -450,7 +544,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserRole", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserRole", b =>
                 {
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
@@ -465,7 +559,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Education", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Profile", "Profile")
                         .WithMany("Educations")
@@ -476,7 +570,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Experience", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Profile", "Profile")
                         .WithMany("Experiences")
@@ -487,189 +581,219 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.InterviewFeedback", b =>
+                modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.InterviewFeedback", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Job", "Job")
-                        .WithMany("InterviewFeedbacks")
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("InterviewFeedbacks");
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Answer", b =>
+                    {
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "Author")
+                            .WithMany()
+                            .HasForeignKey("AuthorUserId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Navigation("Job");
-                });
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.FAQ.Question", "Question")
+                            .WithMany("Answers")
+                            .HasForeignKey("QuestionId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interview", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate", "Candidate")
-                        .WithMany("Interviews")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        b.Navigation("Author");
 
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Interviews.Interviewer", "Interviewer")
-                        .WithMany("Interviews")
-                        .HasForeignKey("InterviewerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        b.Navigation("Question");
+                    });
 
-                    b.Navigation("Candidate");
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Question", b =>
+                    {
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.FAQ.Job", "Job")
+                            .WithMany()
+                            .HasForeignKey("JobId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Navigation("Interviewer");
-                });
+                        b.Navigation("Job");
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "Verifier")
+                            .WithMany()
+                            .HasForeignKey("VerifierUserId");
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Client", "Client")
-                        .WithMany("Jobs")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        b.Navigation("Job");
 
-                    b.Navigation("Client");
-                });
+                        b.Navigation("Verifier");
+                    });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.JobSkill", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Job", "Job")
-                        .WithMany("JobSkills")
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interview", b =>
+                    {
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate", "Candidate")
+                            .WithMany("Interviews")
+                            .HasForeignKey("CandidateId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Skill", "Skill")
-                        .WithMany("JobSkills")
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Interviews.Interviewer", "Interviewer")
+                            .WithMany("Interviews")
+                            .HasForeignKey("InterviewerId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Navigation("Job");
+                        b.Navigation("Candidate");
 
-                    b.Navigation("Skill");
-                });
+                        b.Navigation("Interviewer");
+                    });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
-                        .WithOne()
-                        .HasForeignKey("ESOF.WebApp.DBLayer.Entities.Profile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
+                    {
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Client", "Client")
+                            .WithMany("Jobs")
+                            .HasForeignKey("ClientId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Navigation("User");
-                });
+                        b.Navigation("Client");
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Import", "Import")
+                            .WithMany("Jobs")
+                            .HasForeignKey("ImportId");
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.ProfileSkill", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Profile", "Profile")
-                        .WithMany("ProfileSkills")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        b.Navigation("Import");
+                    });
 
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Skill", "Skill")
-                        .WithMany("ProfileSkills")
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.JobSkill", b =>
+                    {
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Job", "Job")
+                            .WithMany("JobSkills")
+                            .HasForeignKey("JobId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Navigation("Profile");
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Skill", "Skill")
+                            .WithMany("JobSkills")
+                            .HasForeignKey("SkillId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Navigation("Skill");
-                });
+                        b.Navigation("Job");
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.RolePermission", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        b.Navigation("Skill");
+                    });
 
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Role", "Role")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
+                    {
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
+                            .WithOne()
+                            .HasForeignKey("ESOF.WebApp.DBLayer.Entities.Profile", "UserId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Navigation("Permission");
+                        b.Navigation("User");
+                    });
 
-                    b.Navigation("Role");
-                });
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.ProfileSkill", b =>
+                    {
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Profile", "Profile")
+                            .WithMany("ProfileSkills")
+                            .HasForeignKey("ProfileId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserRole", b =>
-                {
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Skill", "Skill")
+                            .WithMany("ProfileSkills")
+                            .HasForeignKey("SkillId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        b.Navigation("Profile");
 
-                    b.Navigation("Role");
+                        b.Navigation("Skill");
+                    });
 
-                    b.Navigation("User");
-                });
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.RolePermission", b =>
+                    {
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Permission", "Permission")
+                            .WithMany("RolePermissions")
+                            .HasForeignKey("PermissionId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Client", b =>
-                {
-                    b.Navigation("Jobs");
-                });
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Role", "Role")
+                            .WithMany("RolePermissions")
+                            .HasForeignKey("RoleId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate", b =>
-                {
-                    b.Navigation("Interviews");
-                });
+                        b.Navigation("Permission");
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interviewer", b =>
-                {
-                    b.Navigation("Interviews");
-                });
+                        b.Navigation("Role");
+                    });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
-                {
-                    b.Navigation("InterviewFeedbacks");
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.UserRole", b =>
+                    {
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.Role", "Role")
+                            .WithMany("UserRoles")
+                            .HasForeignKey("RoleId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-                    b.Navigation("JobSkills");
-                });
+                        b.HasOne("ESOF.WebApp.DBLayer.Entities.User", "User")
+                            .WithMany("UserRoles")
+                            .HasForeignKey("UserId")
+                            .OnDelete(DeleteBehavior.Cascade)
+                            .IsRequired();
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
-                {
-                    b.Navigation("RolePermissions");
-                });
+                        b.Navigation("Role");
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
-                {
-                    b.Navigation("Educations");
+                        b.Navigation("User");
+                    });
 
-                    b.Navigation("Experiences");
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Client", b =>
+                        modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.FAQ.Question",
+                            b => { b.Navigation("Answers"); }));
 
-                    b.Navigation("ProfileSkills");
-                });
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Import", b => { b.Navigation("Jobs"); });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Role", b =>
-                {
-                    b.Navigation("RolePermissions");
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Candidate",
+                        b => { b.Navigation("Interviews"); });
 
-                    b.Navigation("UserRoles");
-                });
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Interviews.Interviewer",
+                        b => { b.Navigation("Interviews"); });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Skill", b =>
-                {
-                    b.Navigation("JobSkills");
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
+                    {
+                        b.Navigation("InterviewFeedbacks");
 
-                    b.Navigation("ProfileSkills");
-                });
 
-            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>
-                {
-                    b.Navigation("UserRoles");
-                });
+                        b.Navigation("JobSkills");
+                    });
+
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission",
+                        b => { b.Navigation("RolePermissions"); });
+
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
+                    {
+                        b.Navigation("Educations");
+
+                        b.Navigation("Experiences");
+
+                        b.Navigation("ProfileSkills");
+                    });
+
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Role", b =>
+                    {
+                        b.Navigation("RolePermissions");
+
+                        b.Navigation("UserRoles");
+                    });
+
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Skill", b =>
+                    {
+                        b.Navigation("JobSkills");
+
+                        b.Navigation("ProfileSkills");
+                    });
+
+                    modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b => { b.Navigation("UserRoles"); });
 #pragma warning restore 612, 618
+                });
+            });
         }
     }
 }

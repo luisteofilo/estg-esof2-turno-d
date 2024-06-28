@@ -8,14 +8,71 @@
 
 <h3>Interview List</h3>
 
+<<<<<<< HEAD
 @if (interviews == null)
+=======
+<div class="filter-section mb-3 p-3 rounded shadow-sm">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label for="statusSelector" class="form-label">Status:</label>
+            <select id="statusSelector" class="form-control" @onchange="OnStateChanged">
+                <option value="All">All</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="Missed">Missed</option>
+                <option value="On Going">On Going</option>
+                <option value="Completed">Completed</option>
+                <option value="Canceled">Canceled</option>
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="candidateSelector" class="form-label">Candidate:</label>
+            <select id="candidateSelector" class="form-control" @onchange="OnCandidateChanged">
+                <option value="">All</option>
+                @foreach (var candidate in candidateNames)
+                {
+                    <option value="@candidate.Key">@candidate.Value</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="interviewerSelector" class="form-label">Interviewer:</label>
+            <select id="interviewerSelector" class="form-control" @onchange="OnInterviewerChanged">
+                <option value="">All</option>
+                @foreach (var interviewer in interviewerNames)
+                {
+                    <option value="@interviewer.Key">@interviewer.Value</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="locationBox" class="form-label">Location:</label>
+            <input type="text" id="locationBox" class="form-control" @bind="selectedLocation" @oninput="OnLocationChanged" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="startDateStart" class="form-label">Start Date:</label>
+            <input type="date" id="startDateStart" class="form-control" @onchange="OnStartDateStartChanged" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label for="endDateStart" class="form-label">End Date:</label>
+            <input type="date" id="endDateStart" class="form-control" @onchange="OnEndDateStartChanged" />
+        </div>
+    </div>
+</div>
+
+@if (filteredInterviews == null)
+>>>>>>> origin/master
 {
     <p><em>Loading...</em></p>
 }
 else
 {
+<<<<<<< HEAD
     <p>Current DateTime: @currentDateTime</p>
     <table class="table">
+=======
+    <p><b>Current DateTime</b>: @currentDateTime</p>
+    <table class="table table-striped">
+>>>>>>> origin/master
         <thead>
             <tr>
                 <th>Candidate</th>
@@ -29,7 +86,11 @@ else
             </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
             @foreach (var interview in interviews)
+=======
+            @foreach (var interview in filteredInterviews)
+>>>>>>> origin/master
             {
                 <tr>
                     <td>@candidateNames[interview.CandidateId]</td>
@@ -41,11 +102,19 @@ else
                     <td>
                         @if (interview.InterviewState == InterviewState.OnGoing && !presenceMarked[interview.InterviewId])
                         {
+<<<<<<< HEAD
                             <button @onclick="() => MarkPresence(interview.InterviewId)">Mark Presence</button>
                         }
                         else if (interview.InterviewState == InterviewState.Scheduled)
                         {
                             <button @onclick="() => CancelInterview(interview.InterviewId)">Cancel</button>
+=======
+                            <button class="btn btn-sm btn-success" @onclick="() => MarkPresence(interview.InterviewId)">Mark Presence</button>
+                        }
+                        else if (interview.InterviewState == InterviewState.Scheduled)
+                        {
+                            <button class="btn btn-sm btn-danger" @onclick="() => CancelInterview(interview.InterviewId)">Cancel</button>
+>>>>>>> origin/master
                         }
                     </td>
                     <td>

@@ -8,13 +8,16 @@ public class Job
     public Guid JobId { get; set; } = Guid.NewGuid();
 
     [Required]
-    public Guid ClientId { get; set; }
     public Client Client { get; set; }    // Client who created the Job
     
+
+    [Required]
+    public Guid ClientId { get; set; }  // Client who created the Job
+
     public DateTime? EndDate { get; set; }   // End date of the job opportunity
 
     [Required]
-    public String Position { get; set; }    // Position of the job
+    public string Position { get; set; }    // Position of the job
 
     public CommitmentType? Commitment { get; set; }  // Commitment type of the job
 
@@ -31,10 +34,21 @@ public class Job
 
     public String? Description { get; set; } // Additional information about the Job
     
+
+   
+
+    public string? Company { get; set; }
+
+    public string? OtherDetails { get; set; }
+
+    public Import? Import { get; set; }
+    public Guid? ImportId { get; set; }
+
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? DeletedAt { get; set; }
 
     public List<InterviewFeedback> InterviewFeedbacks;
+
 
 }

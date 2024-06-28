@@ -1,13 +1,16 @@
-﻿using System.Collections;
-using Common.Dtos.Profile;
+﻿using Common.Dtos.Profile;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Frontend.Services.Contracts;
 
 public interface IProfileService
 {
     // Profile
+    Task<IEnumerable<ProfileDto>> GetProfiles();
     Task<ProfileDto> GetProfile(Guid profileId);
+    Task<ProfileDto> GetProfileByUrl(String profileUrl);
     Task<ProfileDto> UpdateProfile(Guid profileId, ProfileDto updatedProfileDto);
+    Task<string> UploadProfileImageAsync(Guid profileId, IBrowserFile selectedFile);
     // Skill 
     Task<IEnumerable<SkillDto>> GetSkills();
     Task<IEnumerable<SkillDto>> GetSkillsForProfile(Guid profileId);
@@ -20,7 +23,7 @@ public interface IProfileService
     Task DeleteExperience(Guid profileId, Guid experienceId);
     // Education 
     Task<IEnumerable<EducationDto>> GetEducationsForProfile(Guid profileId);
-    Task<EducationDto> CreateEducation(Guid profileId, EducationDto educationDto);
+    Task<EducationDto> CreateEducation(Guid profileId, EducationDto updatedEducationDto);
     Task<EducationDto> UpdateEducation(Guid profileId, EducationDto updatedEducationDto);
     Task DeleteEducation(Guid profileId, Guid educationId);
 }

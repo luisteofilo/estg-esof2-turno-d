@@ -21,6 +21,7 @@ public class JobRepository : IJobRepository
         return await _dbContext.Clients.ToListAsync();
     }
 
+
     public async Task<Job> GetJobByIdAsync(Guid jobId)
     { 
         return await _dbContext.Jobs.FindAsync(jobId);

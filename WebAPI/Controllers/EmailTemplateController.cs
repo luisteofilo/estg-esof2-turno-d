@@ -28,6 +28,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
         public async Task<ActionResult<EmailTemplate>> GetTemplateById(int id)
         {
             var template = await _reademailTemplateService.GetTemplateByIdAsync(id);
+
             if (template == null)
             {
                 return NotFound();
@@ -55,6 +56,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
             try
             {
          await _reademailTemplateService.UpdateTemplateAsync(template);
+            await _reademailTemplateService.UpdateTemplateAsync(template);
             return NoContent();
             }
             catch (Exception)
@@ -67,6 +69,7 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTemplate(int id)
         {
+
             try
             {
             await _reademailTemplateService.DeleteTemplateAsync(id);
@@ -79,3 +82,6 @@ namespace ESOF.WebApp.WebAPI.Controllers
         }
     }
 }
+
+
+

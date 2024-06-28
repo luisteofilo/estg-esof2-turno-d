@@ -20,6 +20,11 @@ public partial class ApplicationDbContext
             .HasMany(j => j.JobSkills)
             .WithOne(js => js.Job)
             .HasForeignKey(js => js.JobId);
+        modelBuilder.Entity<Job>()
+            .HasKey(key => key.JobId);
     }
     
-}
+
+       
+    }
+
