@@ -7,11 +7,25 @@ using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using ESOF.WebApp.WebAPI.Services;
 using Hangfire;
+using Hangfire.PostgreSql;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var dbContext = new ApplicationDbContext();
+
+var connectionString = dbContext.Database.GetDbConnection().ConnectionString;
+
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString)));
+
+builder.Services.AddHangfireServer();
 
 // Add services to the container.
 
