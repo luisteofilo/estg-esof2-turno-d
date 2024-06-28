@@ -1,0 +1,212 @@
+﻿@page "/create-interview-feedback"
+@rendermode InteractiveServer
+@using Frontend.Helpers
+@using Common.Dtos.Optimization_Requests
+@using Common.Dtos.Interview
+@using Common.Dtos.Job
+@using System.Text.Json
+@using System.Text
+@attribute [StreamRendering]
+@inject HttpClient HttpClient
+
+<PageTitle>Create Interview Feedback</PageTitle>
+
+<h1>Create Interview Feedback</h1>
+
+<p>Fill out the form below to create interview feedback:</p>
+
+<form @onsubmit="HandleSubmit">
+    <div class="form-group">
+        <label for="InterviewFeedbackId">Interview Feedback ID:</label>
+        <input id="InterviewFeedbackId" class="form-control" @bind="@newFeedback.InterviewFeedbackId" />
+    </div>
+    <div class="form-group">
+        <label for="candidate">Candidate :</label>
+        <select id="candidate" class="form-control" @bind="@newFeedback.Candidate">
+            <option value="">Select Candidate...</option>
+            @foreach (var candidate in candidates)
+            {
+                <option value="@candidate.CandidateId">@candidate.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="interviewer">Interviewer :</label>
+        <select id="interviewer" class="form-control" @bind="@newFeedback.Interviewer">
+            <option value="">Select Interviewer...</option>
+            @foreach (var interviewer in interviewers)
+            {
+                <option value="@interviewer.InterviewerId">@interviewer.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="interview">Interview :</label>
+        <select id="interview" class="form-control" @bind="@newFeedback.Interview">
+            <option value="">Select Interview...</option>
+            @foreach (var interview in interviews)
+            {
+                <option value="@interview.InterviewId">@interview.InterviewId</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="Job">Job:</label>
+        <select id="Job" class="form-control" @bind="@newFeedback.JobId">
+            <option value="">Select Job Position...</option>
+            @foreach (var job in jobs)
+            {
+                <option value="@job.JobId">@job.Description</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="feedback">Feedback:</label>
+        <textarea id="feedback" class="form-control" @bind="@newFeedback.Feedback"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="rejectionReason">Rejection Reason:</label>
+        <input id="rejectionReason" class="form-control" @bind="@newFeedback.RejectionReason" />
+    </div>
+    <div class="form-group">
+        <label for="optimization">Optimization Suggestions:</label>
+        <input id="optimization" class="form-control" @bind="@newFeedback.OptimizationSuggestions" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@if (isSubmitting)
+{
+    <p>
+        <em>Submitting...</em>
+    </p>
+}
+
+@if (submitError != null)
+{
+    <p class="text-danger">@submitError</p>
+}
+
+<p>
+    <a href="/edit-job2/@newFeedback.JobId" class="btn btn-secondary">Edit Job Details</a>
+</p>
+
+@code {
+    private InterviewFeedbackDTO newFeedback = new InterviewFeedbackDTO();
+    private bool isSubmitting = false;
+    private string? submitError;
+    
+    // Lists to hold dropdown options
+    private List<CandidateDto> candidates = new List<CandidateDto>();
+    private List<InterviewerDto> interviewers = new List<InterviewerDto>();
+    private List<InterviewDto> interviews = new List<InterviewDto>();
+    private List<JobDto> jobs = new List<JobDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Fetch dropdown options from API
+            candidates = await GetCandidates();
+            interviewers = await GetInterviewers();
+            interviews = await GetInterviews();
+            jobs = await GetJobs();
+        }
+        catch (Exception ex)
+        {
+            // Handle or log the exception as needed
+            Console.WriteLine($"Error fetching dropdown options: {ex.Message}");
+        }
+    }
+
+    private async Task<List<CandidateDto>> GetCandidates()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync("http://localhost:5295/api/InterviewFeedback/Candidates-from-feedback");
+            response.EnsureSuccessStatusCode();
+            var candidates = await response.Content.ReadFromJsonAsync<List<CandidateDto>>();
+            return candidates ?? new List<CandidateDto>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching candidates: {ex.Message}");
+            return new List<CandidateDto>();
+        }
+    }
+
+    private async Task<List<InterviewerDto>> GetInterviewers()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync("http://localhost:5295/api/InterviewFeedback/Interviewers-from-feedback");
+            response.EnsureSuccessStatusCode();
+            var interviewers = await response.Content.ReadFromJsonAsync<List<InterviewerDto>>();
+            return interviewers ?? new List<InterviewerDto>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching interviewers: {ex.Message}");
+            return new List<InterviewerDto>();
+        }
+    }
+
+    private async Task<List<InterviewDto>> GetInterviews()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync("http://localhost:5295/api/InterviewFeedback/Interviews-from-feedback");
+            response.EnsureSuccessStatusCode();
+            var interviews = await response.Content.ReadFromJsonAsync<List<InterviewDto>>();
+            return interviews ?? new List<InterviewDto>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching interviews: {ex.Message}");
+            return new List<InterviewDto>();
+        }
+    }
+
+    private async Task<List<JobDto>> GetJobs()
+    {
+        try
+        {
+            var response = await HttpClient.GetAsync("http://localhost:5295/api/InterviewFeedback/jobs-from-feedback");
+            response.EnsureSuccessStatusCode();
+            var jobs = await response.Content.ReadFromJsonAsync<List<JobDto>>();
+            return jobs ?? new List<JobDto>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching jobs: {ex.Message}");
+            return new List<JobDto>();
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            isSubmitting = true;
+
+            var jsonPayload = JsonSerializer.Serialize(newFeedback);
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            var response = await HttpClient.PostAsync("http://localhost:5295/api/InterviewFeedback", content);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            newFeedback = new InterviewFeedbackDTO();
+        }
+        catch (Exception ex)
+        {
+            submitError = $"Error submitting feedback: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

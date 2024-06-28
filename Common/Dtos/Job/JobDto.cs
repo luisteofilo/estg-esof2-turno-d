@@ -1,3 +1,6 @@
+﻿﻿using System.Collections;
+using ESOF.WebApp.DBLayer.Entities;
+using Common.Dtos.Profile;
 using ESOF.WebApp.DBLayer.Entities;
 using Helpers.Job;
 
@@ -6,6 +9,8 @@ namespace Common.Dtos.Job;
 public class JobDto
 {
     public Guid JobId { get; set; }
+    
+ 
 
     public Guid ClientId { get; set; }
 

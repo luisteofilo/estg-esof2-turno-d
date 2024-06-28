@@ -8,6 +8,9 @@
 
 <h3>Interview List</h3>
 
+<<<<<<< HEAD
+@if (interviews == null)
+=======
 <div class="filter-section mb-3 p-3 rounded shadow-sm">
     <div class="row">
         <div class="col-md-4 mb-3">
@@ -57,13 +60,19 @@
 </div>
 
 @if (filteredInterviews == null)
+>>>>>>> origin/master
 {
     <p><em>Loading...</em></p>
 }
 else
 {
+<<<<<<< HEAD
+    <p>Current DateTime: @currentDateTime</p>
+    <table class="table">
+=======
     <p><b>Current DateTime</b>: @currentDateTime</p>
     <table class="table table-striped">
+>>>>>>> origin/master
         <thead>
             <tr>
                 <th>Candidate</th>
@@ -77,7 +86,11 @@ else
             </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
+            @foreach (var interview in interviews)
+=======
             @foreach (var interview in filteredInterviews)
+>>>>>>> origin/master
             {
                 <tr>
                     <td>@candidateNames[interview.CandidateId]</td>
@@ -89,11 +102,19 @@ else
                     <td>
                         @if (interview.InterviewState == InterviewState.OnGoing && !presenceMarked[interview.InterviewId])
                         {
+<<<<<<< HEAD
+                            <button @onclick="() => MarkPresence(interview.InterviewId)">Mark Presence</button>
+                        }
+                        else if (interview.InterviewState == InterviewState.Scheduled)
+                        {
+                            <button @onclick="() => CancelInterview(interview.InterviewId)">Cancel</button>
+=======
                             <button class="btn btn-sm btn-success" @onclick="() => MarkPresence(interview.InterviewId)">Mark Presence</button>
                         }
                         else if (interview.InterviewState == InterviewState.Scheduled)
                         {
                             <button class="btn btn-sm btn-danger" @onclick="() => CancelInterview(interview.InterviewId)">Cancel</button>
+>>>>>>> origin/master
                         }
                     </td>
                     <td>

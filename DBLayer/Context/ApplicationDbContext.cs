@@ -1,4 +1,7 @@
+using DotNetEnv;
 using ESOF.WebApp.DBLayer.Entities;
+using ESOF.WebApp.DBLayer.Entities.Interviews;
+using ESOF.WebApp.DBLayer.Entities.Emails;
 using ESOF.WebApp.DBLayer.Entities.FAQ;
 using ESOF.WebApp.DBLayer.Entities.Interviews;
 
@@ -56,19 +59,27 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<Experience> Experiences { get; set; }
     public DbSet<ProfileSkill> ProfileSkills { get; set; }
     public DbSet<Skill> Skills { get; set; }
+    public DbSet<Import> Imports{ get; set; }
+
+    public DbSet<InterviewFeedback> InterviewFeedbacks { get; set; }
+    
 
     // Interview Features
     public DbSet<Interview> Interviews { get; set; }
     public DbSet<Interviewer> Interviewers { get; set; }
     public DbSet<Candidate> Candidates { get; set; }
+
     // Email Template
-    public DbSet<EmailTemplate> EmailTemplates { get; set; }
+    public DbSet<EmailTemplate> EmailTemplates { get; set; } // DbSet para armazenar templates de email
+
+
     // Job Features
     public DbSet<Job> Jobs { get; set; }
-
-    public DbSet<Import> Imports{ get; set; }
-
+    public DbSet<Client> Clients { get; set; }
     public DbSet<JobSkill> JobSkills { get; set; }
+    
+
+ 
     
     // FAQ Features
     public DbSet<Question> FAQQuestions { get; set; }
@@ -89,6 +100,8 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         BuildPermissions(modelBuilder);
         BuildRolePermissions(modelBuilder);
         BuildUserRoles(modelBuilder);
+        BuildInterviewFeedback(modelBuilder);
+        
 
         // Profile Features 
         BuildProfiles(modelBuilder);
@@ -108,6 +121,17 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         BuildCandidates(modelBuilder);
 
         
+        // Interview Features 
+        BuildInterviews(modelBuilder);
+        BuildInterviewer(modelBuilder);
+        BuildCandidates(modelBuilder);
+        
+        // Job Features
+        BuildJobs(modelBuilder);
+        BuildJobSkills(modelBuilder);
+        BuildClients(modelBuilder);
+        BuildImports(modelBuilder);
+
         // FAQ Features
         BuildFAQJobs(modelBuilder);
         BuildFAQQuestions(modelBuilder);

@@ -10,14 +10,21 @@ public partial class ApplicationDbContext
         modelBuilder.Entity<Job>()
             .Property(p => p.JobId)
             .ValueGeneratedNever();
+        
+        modelBuilder.Entity<Job>()
+            .HasOne(j => j.Client)
+            .WithMany(c => c.Jobs)
+            .HasForeignKey(j => j.ClientId);
 
         modelBuilder.Entity<Job>()
             .HasMany(j => j.JobSkills)
             .WithOne(js => js.Job)
             .HasForeignKey(js => js.JobId);
-
         modelBuilder.Entity<Job>()
-           .HasKey(key => key.JobId);
+            .HasKey(key => key.JobId);
+    }
+    
+
+       
     }
 
-}

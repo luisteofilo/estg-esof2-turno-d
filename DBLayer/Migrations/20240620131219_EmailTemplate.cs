@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace ESOF.WebApp.DBLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class profilefeatures3 : Migration
+    public partial class EmailTemplate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -163,6 +164,20 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 table: "Educations",
                 column: "EducationId");
 
+            migrationBuilder.CreateTable(
+                name: "EmailTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Subject = table.Column<string>(type: "text", nullable: false),
+                    Body = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailTemplates", x => x.Id);
+                });
+
             migrationBuilder.AddForeignKey(
                 name: "FK_Educations_Profiles_ProfileId",
                 table: "Educations",
@@ -214,6 +229,9 @@ namespace ESOF.WebApp.DBLayer.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_ProfileSkills_Skills_SkillId",
                 table: "ProfileSkills");
+
+            migrationBuilder.DropTable(
+                name: "EmailTemplates");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Skills",

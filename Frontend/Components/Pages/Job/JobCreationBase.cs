@@ -9,6 +9,21 @@ public class JobCreationBase : ComponentBase
 {
     [Inject] IProfileService ProfileService { get; set; }
     [Inject] IJobService JobService { get; set; }
+<<<<<<< HEAD
+    
+    [Parameter] public string? ClientId { get; set; }
+    
+    protected string? ErrorMessage { get; set; }
+    
+    protected IEnumerable<SkillDto> AvailableSkills { get; set; } = new List<SkillDto>();
+    private List<SkillDto> RequiredSkills { get; set; } = [];
+    private List<SkillDto> NiceToHaveSkills { get; set; } = [];
+    
+    protected JobDto JobNew { get; set; } = new JobDto();
+    
+    protected bool showModal { get; set; }
+    
+=======
     [Inject] protected NavigationManager Navigation { get; set; }
 
     protected string? ErrorMessage { get; set; }
@@ -23,6 +38,7 @@ public class JobCreationBase : ComponentBase
     protected bool showWarningModal { get; set; }
     protected string WarningMessage { get; set; } = string.Empty;
 
+>>>>>>> origin/master
     protected override async Task OnInitializedAsync()
     {
         try
@@ -35,6 +51,25 @@ public class JobCreationBase : ComponentBase
             Console.WriteLine(e.Message);
         }
     }
+<<<<<<< HEAD
+    
+    
+    protected async Task CreateJob()
+    {
+        try
+        {
+            //Hard Coded ClientId
+            var JobDto = await JobService.CreateJob(Guid.Parse("392fd8cc-e617-49d0-a2ac-885ee2f0153a"), JobNew);
+            
+            await createSkillsForJob(JobDto.JobId);
+            showModal = true;
+            StateHasChanged();
+        }
+        catch (HttpRequestException ex)
+        {
+            ErrorMessage += "Error creating job";
+            Console.WriteLine($"Error creating job: {ex.Message}");
+=======
 
     protected void GoBack()
     {
@@ -62,6 +97,7 @@ public class JobCreationBase : ComponentBase
         else
         {
             showWarningModal = true;
+>>>>>>> origin/master
         }
     }
 
@@ -71,17 +107,25 @@ public class JobCreationBase : ComponentBase
         ClearForm();
     }
 
+<<<<<<< HEAD
+=======
     protected void CloseWarningModal()
     {
         showWarningModal = false;
     }
 
+>>>>>>> origin/master
     private void ClearForm()
     {
         JobNew = new JobDto();
         StateHasChanged();
     }
+<<<<<<< HEAD
+    
+    
+=======
 
+>>>>>>> origin/master
     protected void UpdateSkills(ChangeEventArgs e, SkillDto skill, bool isRequired)
     {
         var isChecked = (bool)e.Value;
@@ -111,6 +155,9 @@ public class JobCreationBase : ComponentBase
         StateHasChanged();
     }
 
+<<<<<<< HEAD
+    // TODO : Implementing
+=======
     private bool IsFormValid()
     {
         var missingFields = new List<string>();
@@ -141,18 +188,31 @@ public class JobCreationBase : ComponentBase
         return true;
     }
 
+>>>>>>> origin/master
     private Task createSkillsForJob(Guid jobId)
     {
         try
         {
             foreach (SkillDto RSkill in RequiredSkills)
             {
+<<<<<<< HEAD
+                var SkillDto = JobService.CreateJobSkill(JobNew.JobId, RSkill.SkillId, true, new JobSkillDto());
+            }
+            foreach (SkillDto NtHSkill in NiceToHaveSkills)
+            {
+                var SkillDto = JobService.CreateJobSkill(JobNew.JobId, NtHSkill.SkillId, false, new JobSkillDto());
+            }
+            
+            Console.WriteLine("Metodo para atualizar tabela de muitos para muitos" +
+                              "fazer a logica e chamar os servicos de acordo com o endpoint");
+=======
                 var SkillDto = JobService.CreateJobSkill(jobId, RSkill.SkillId, true, new JobSkillDto());
             }
             foreach (SkillDto NtHSkill in NiceToHaveSkills)
             {
                 var SkillDto = JobService.CreateJobSkill(jobId, NtHSkill.SkillId, false, new JobSkillDto());
             }
+>>>>>>> origin/master
         }
         catch (Exception e)
         {

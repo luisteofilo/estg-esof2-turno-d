@@ -12,8 +12,12 @@ namespace Frontend.Components.Pages.Interview
         [Inject] protected ICandidateService CandidateService { get; set; }
         [Inject] protected IInterviewerService InterviewerService { get; set; }
 
+<<<<<<< HEAD
+        protected IEnumerable<InterviewDto> interviews;
+=======
         private IEnumerable<InterviewDto> interviews;
         protected IEnumerable<InterviewDto> filteredInterviews;
+>>>>>>> origin/master
         protected Dictionary<Guid, string> candidateNames = new Dictionary<Guid, string>();
         protected Dictionary<Guid, string> interviewerNames = new Dictionary<Guid, string>();
 
@@ -22,6 +26,8 @@ namespace Frontend.Components.Pages.Interview
         protected Dictionary<Guid, bool> lightOn = new Dictionary<Guid, bool>();
         private bool _shouldContinuePolling = true;
 
+<<<<<<< HEAD
+=======
         private string searchText = string.Empty;
         private string selectedState = "All";
         private string selectedCandidate = string.Empty;
@@ -32,19 +38,27 @@ namespace Frontend.Components.Pages.Interview
         private DateTime? endDateEnd = null;
         protected string selectedLocation = string.Empty;
 
+>>>>>>> origin/master
         protected override async Task OnInitializedAsync()
         {
             await LoadDataAsync();
             _ = StartPollingAsync();
         }
 
+<<<<<<< HEAD
+        //Aqui Carregamos os dados para atualizar a lista
+=======
         // Aqui Carregamos os dados para atualizar a lista
+>>>>>>> origin/master
         protected async Task LoadDataAsync()
         {
             try
             {
                 interviews = await InterviewService.GetInterviewsAsync();
+<<<<<<< HEAD
+=======
                 filteredInterviews = interviews;
+>>>>>>> origin/master
 
                 var candidates = await CandidateService.GetCandidatesAsync();
                 var interviewers = await InterviewerService.GetInterviewersAsync();
@@ -58,8 +72,11 @@ namespace Frontend.Components.Pages.Interview
                     presenceMarked[interview.InterviewId] = isPresenceMarked;
                     lightOn[interview.InterviewId] = isPresenceMarked;
                 }
+<<<<<<< HEAD
+=======
 
                 FilterInterviews();
+>>>>>>> origin/master
             }
             catch (HttpRequestException ex)
             {
@@ -68,7 +85,11 @@ namespace Frontend.Components.Pages.Interview
             }
         }
 
+<<<<<<< HEAD
+        //Metodo para o botão Cancelar
+=======
         // Metodo para o botão Cancelar
+>>>>>>> origin/master
         protected async Task CancelInterview(Guid interviewId)
         {
             try
@@ -83,7 +104,11 @@ namespace Frontend.Components.Pages.Interview
             }
         }
 
+<<<<<<< HEAD
+        //Metodo para passar os states para Strings
+=======
         // Metodo para passar os states para Strings
+>>>>>>> origin/master
         protected string GetInterviewState(InterviewState state)
         {
             return state switch
@@ -97,7 +122,11 @@ namespace Frontend.Components.Pages.Interview
             };
         }
 
+<<<<<<< HEAD
+        //Metodo para atualizar a data e hora ao segundo
+=======
         // Metodo para atualizar a data e hora ao segundo
+>>>>>>> origin/master
         private async Task StartPollingAsync()
         {
             while (_shouldContinuePolling)
@@ -106,9 +135,16 @@ namespace Frontend.Components.Pages.Interview
                 StateHasChanged();
                 await Task.Delay(1000); // Aguarde 1 seg.
             }
+<<<<<<< HEAD
+        }  
+        
+        
+        //Metodo para o botão de Refresh da DataHora de hoje
+=======
         }
 
         // Metodo para o botão de Refresh da DataHora de hoje
+>>>>>>> origin/master
         protected async Task RefreshDate()
         {
             try
@@ -127,7 +163,11 @@ namespace Frontend.Components.Pages.Interview
             }
         }
 
+<<<<<<< HEAD
+        //Metodo para atualizar o estado da entrevista consoante a data e Hora recebida do refreshDate
+=======
         // Metodo para atualizar o estado da entrevista consoante a data e Hora recebida do refreshDate
+>>>>>>> origin/master
         protected async Task UpdateInterviewsState()
         {
             foreach (var interview in interviews)
@@ -150,7 +190,11 @@ namespace Frontend.Components.Pages.Interview
             StateHasChanged();
         }
 
+<<<<<<< HEAD
+        //O botão Marcar Presença
+=======
         // O botão Marcar Presença
+>>>>>>> origin/master
         protected async Task MarkPresence(Guid interviewId)
         {
             if (presenceMarked.ContainsKey(interviewId))
@@ -161,6 +205,8 @@ namespace Frontend.Components.Pages.Interview
             }
             StateHasChanged();
         }
+<<<<<<< HEAD
+=======
 
         protected void OnSearchTextChanged(ChangeEventArgs e)
         {
@@ -259,5 +305,6 @@ namespace Frontend.Components.Pages.Interview
                 (string.IsNullOrEmpty(selectedLocation) || i.Location.Contains(selectedLocation, StringComparison.OrdinalIgnoreCase))
             ).ToList();
         }
+>>>>>>> origin/master
     }
 }

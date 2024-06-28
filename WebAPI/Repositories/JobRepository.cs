@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ESOF.WebApp.WebAPI.Repositories;
     
+
 public class JobRepository : IJobRepository
 {
     private readonly ApplicationDbContext _dbContext = new ApplicationDbContext();
@@ -13,6 +14,13 @@ public class JobRepository : IJobRepository
     { 
         return await _dbContext.Jobs.ToListAsync();
     }
+    
+    
+    public async Task<IEnumerable<Client>> GetClients()
+    { 
+        return await _dbContext.Clients.ToListAsync();
+    }
+
 
     public async Task<Job> GetJobByIdAsync(Guid jobId)
     { 

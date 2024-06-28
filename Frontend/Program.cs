@@ -1,3 +1,4 @@
+using ESOF.WebApp.DBLayer.Entities;
 using System.ComponentModel.DataAnnotations;
 using Common.Dtos.Profile;
 using Common.Dtos.Profile.Validators;
@@ -22,6 +23,16 @@ builder.Services.AddScoped<ApiHelper>();
 
 // Profile features
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IJobService, JobService>();
+
+// Interview Services
+builder.Services.AddScoped<IInterviewService, InterviewService>();
+builder.Services.AddScoped<IInterviewerService, InterviewerService>();
+builder.Services.AddScoped<ICandidateService, CandidateService>();
+builder.Services.AddScoped<IInterviewFeedbackService, InterviewFeedbackService>();
+
+// Add EmailService
+builder.Services.AddScoped<EmailService>();
 builder.Services.AddTransient<IValidator<ProfileDto>, ProfileDtoValidator>();
 builder.Services.AddTransient<IValidator<ExperienceDto>, ExperienceDtoValidator>();
 builder.Services.AddTransient<IValidator<EducationDto>, EducationDtoValidator>();
@@ -52,8 +63,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseRouting();

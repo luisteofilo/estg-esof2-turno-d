@@ -11,6 +11,17 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Remove="Components\Pages\Optimization-Request\CreateInterviewFeedback..cshtml" />
+      <Content Remove="Components\Pages\Optimization-Request\CreateInterviewFeedback.razor" />
+      <Content Remove="Components\Pages\Optimization-Request\InterviewFeedbacks.cshtml" />
+      <Content Remove="Components\Pages\Job\**" />
+      <Content Remove="Components\Pages\Interview\**" />
+      <Content Remove="Components\Pages\Profile\**" />
+      <Content Remove="Components\Pages\Optimization-Request\EditJob.Razor" />
+      <Content Remove="Components\Pages\Optimization-Request\JobsDropdown.razor" />
+      <Content Remove="Components\Pages\Optimization-Request\EditJobComponent.razor" />
+      <Content Remove="Components\Pages\Optimization-Request\EditJobDropdownPage.razor" />
+      <Content Remove="Components\Pages\Send-feedback-email.razor" />
     </ItemGroup>
 
     <ItemGroup>
@@ -21,7 +32,39 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
-      <ProjectReference Include="..\Helpers\Helpers.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Components\Pages\Optimization-Requests" />
+      <None Remove="Components\Pages\Optimization-Request\CreateInterviewFeedback.razo" />
+      <None Remove="Components\Pages\Optimization-Request\InterviewFeedbackCreate.razor razor" />
+      <None Remove="Components\Pages\Job\**" />
+      <None Remove="Components\Pages\Interview\**" />
+      <None Remove="Components\Pages\Profile\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Components\Pages\Optimization-Request\CreateInterviewFeedback..cshtml.cs" />
+      <Compile Remove="Components\Pages\Optimization-Request\InterviewFeedbackCreation.cs" />
+      <Compile Remove="Components\Pages\Job\**" />
+      <Compile Remove="Components\Pages\Interview\**" />
+      <Compile Remove="Components\Pages\Profile\**" />
+      <Compile Remove="Components\Pages\Optimization-Request\InterviewFeesbackCreate.cs" />
+      <Compile Remove="Services\Contracts\IEmailService.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Components\Pages\Job\**" />
+      <EmbeddedResource Remove="Components\Pages\Interview\**" />
+      <EmbeddedResource Remove="Components\Pages\Profile\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\Pages\Job\DisplayError.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Job\JobCreation.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Interview\InterviewCreation.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Interview\InterviewList.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Profile\ProfileComponent.razor" />
     </ItemGroup>
 
 </Project>

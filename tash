@@ -1,0 +1,262 @@
+[33mcommit 7af4fe87111df6d4f07a5aac6a98a9e68085dbcd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32moptimization-requests[m[33m)[m
+Merge: 7c97429 ddc4780
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 21:42:48 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 7c97429f5c2feb6c99cf26ff24d493dc086cb712[m[33m ([m[1;31morigin/optimization-requests[m[33m)[m
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 21:35:42 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 4040017e7e2feffa4c40a5769e074ad2d7459452[m
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 21:20:40 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 19200d90b9709ecb9270f2691b6b72913949932a[m
+Merge: ac6a38e 7e9a230
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 20:37:05 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit ac6a38e1ef391b05b1d99ff605c00a05435b98af[m
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 20:16:50 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 6d2e771d2b1cedbbdab64a31fa3b5f79b4b9810a[m
+Merge: 83b31b0 ec5e307
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 19:48:57 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 83b31b0c28eb2ee7a401ef3f49a20e15abfba315[m
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 19:40:20 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 476b8087c79789e3200a2b4d5cd88b3e99cd98c4[m
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 11:31:54 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 38245fc1e361b9de233aae41a9a6d13a8417b5b2[m
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 10:45:23 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 79b640119afa7b2d93af9573a4b4a6a32a82e0e8[m
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 08:11:50 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 90468b17b92264cb2521683bf77b546386849eae[m
+Author: John Doe <john.doe@example.com>
+Date:   Wed Jun 26 05:53:05 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 4f120df9a41e28c5b02a771e67448db45a4785e8[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 20:12:32 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 193e7c4227da3fdc3a7f3a392380fa4df1fe0607[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 19:18:58 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit f0382f755fa542b9283047e7ea6f017183ecea9f[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 19:17:26 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 1761d616421f9c98a6c17ba90fcf9740aceb8a59[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 17:37:10 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 9045455cf2a17a60c60a5cf73b234d7cf1c9a593[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 17:00:27 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 1f0e35be693bb50f7c75e84ecedfd6a92ed72dcc[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 16:17:11 2024 +0100
+
+    Resolved merge conflict in project file
+
+[33mcommit 2358d8d9cf0865cc5cea0adc9c4dc7fde422bf6e[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 04:11:29 2024 +0100
+
+    Your commit message here
+
+[33mcommit 477582726c9dd33087e0ade76f150cdaa8e4ea0c[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 02:58:39 2024 +0100
+
+    Your commit message here
+
+[33mcommit afc99dfecd1ac2e30cc312114ab34056c6e9d2fd[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 01:38:43 2024 +0100
+
+    Your commit message here
+
+[33mcommit e1517ee3471791715c1929aef6e4d7c512e48fde[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 01:20:07 2024 +0100
+
+    Your commit message here
+
+[33mcommit 22df3295a442d6e16b9351314cb7e1a391f3fa19[m
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 01:20:05 2024 +0100
+
+    Your commit message here
+
+[33mcommit aa30ae3201bbee39a035495c6e255d68d11f2374[m
+Merge: 02b751d d1ce09e
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 00:21:04 2024 +0100
+
+    Resolved merge conflicts
+
+[33mcommit 02b751dcd025fd1e30812b574b843cd1e8cb1f02[m
+Merge: 2eaf88f 13e600c
+Author: John Doe <john.doe@example.com>
+Date:   Tue Jun 25 00:00:33 2024 +0100
+
+    Resolved merge conflict in ApplicationDbContext.cs
+
+[33mcommit d1ce09e9367a033c2e4321bde2b0ff4a9d8e70ad[m
+Author: juze23 <jose.edu.cruz.23.09@gmail.com>
+Date:   Mon Jun 24 21:06:38 2024 +0100
+
+    creating job fixed
+
+[33mcommit ddc47806cccd8f780acfeefc6ac6c224dc9c257c[m[33m ([m[1;32mmaster[m[33m)[m
+Author: Tiago Passos <100705276+Tiago02p@users.noreply.github.com>
+Date:   Mon Jun 24 19:22:33 2024 +0100
+
+    Grupo D6: Estado das Entrevistas para cada Cliente (Preparado para se juntar com Master Atual) (#27)
+    
+    * DBLayer + Dto Prontos para PR
+    
+    * WEB API + FRONTEND Prontos para PR
+    
+    * Migração Pronta para PR
+    
+    * Timer Implementado
+    
+    * Remover Botão Refresh
+
+[33mcommit 13e600c74dffea6cd1e8c0483af6fe34c2858388[m[33m ([m[1;31morigin/Grupo-D6-Estado-das-Entrevistas-para-cada-Cliente[m[33m)[m
+Author: tiago <100705276+Tiago02p@users.noreply.github.com>
+Date:   Mon Jun 24 19:17:05 2024 +0100
+
+    Remover Botão Refresh
+
+[33mcommit e9fc4c57232fa3fcd6cf40b177192dd43ebd5604[m
+Author: tiago <100705276+Tiago02p@users.noreply.github.com>
+Date:   Mon Jun 24 19:09:59 2024 +0100
+
+    Timer Implementado
+
+[33mcommit af9b37d119e4ba31ccf4e02eada98d0e6726576c[m
+Author: juze23 <jose.edu.cruz.23.09@gmail.com>
+Date:   Mon Jun 24 18:54:45 2024 +0100
+
+    jobSkills endpoints
+
+[33mcommit 3bf206220a6c4a9a11841d93f9dd4f9746625eb6[m
+Author: juze23 <jose.edu.cruz.23.09@gmail.com>
+Date:   Mon Jun 24 16:37:24 2024 +0100
+
+    migration update
+
+[33mcommit be6b38827da28693f4579a41d23b394632679d3f[m
+Author: juze23 <jose.edu.cruz.23.09@gmail.com>
+Date:   Mon Jun 24 15:24:39 2024 +0100
+
+    changes to the dblayer
+
+[33mcommit 1796c73ae3399be8541da29860413d594d179e07[m
+Author: juze23 <jose.edu.cruz.23.09@gmail.com>
+Date:   Mon Jun 24 14:49:59 2024 +0100
+
+    improvements / updates (migration out of date) (undone)
+
+[33mcommit 55fac2659ff61760437278ecc374912058a208c1[m
+Author: tiago <100705276+Tiago02p@users.noreply.github.com>
+Date:   Sun Jun 23 10:32:33 2024 +0100
+
+    Migração Pronta para PR
+
+[33mcommit 64229fa7fe82cdd62fc16ab6155ef50f6ef5d698[m
+Author: tiago <100705276+Tiago02p@users.noreply.github.com>
+Date:   Sun Jun 23 10:31:17 2024 +0100
+
+    WEB API + FRONTEND Prontos para PR
+
+[33mcommit 4f9db00550f6b0ca19720b1c4d135bb8af072736[m
+Author: tiago <100705276+Tiago02p@users.noreply.github.com>
+Date:   Sun Jun 23 01:25:51 2024 +0100
+
+    DBLayer + Dto + Nova Migração Prontos para PR
+
+[33mcommit ec5e30733e308fbbd06ee8661a0903232508f996[m[33m ([m[1;32mEmail-Templates-Recruitment-feature[m[33m)[m
+Author: brunoferreira17 <brunoferreiraferreira17@gmail.com>
+Date:   Fri Jun 21 15:55:00 2024 +0100
+
+    Fixed ApplicationDbContext.cs
+
+[33mcommit 6ab3da9888131a5412b3d7758ac00cf6344d93ab[m
+Merge: 8f50456 395f4e7
+Author: brunoferreira17 <brunoferreiraferreira17@gmail.com>
+Date:   Fri Jun 21 15:52:20 2024 +0100
+
+    Merge remote-tracking branch 'origin/Email-Templates-Recruitment-feature' into Email-Templates-Recruitment-feature
+    
+    # Conflicts:
+    #       DBLayer/Migrations/ApplicationDbContextModelSnapshot.cs
+    #       WebAPI/Program.cs
+    #       WebAPI/Services/EmailTemplateService.cs
+
+[33mcommit 8f50456b68c30be9db9009d8ee1a6c5cbaed9ea0[m
+Author: brunoferreira17 <brunoferreiraferreira17@gmail.com>
+Date:   Fri Jun 21 15:51:37 2024 +0100
+
+    Updated Files
+
+[33mcommit ac23fa1b4fe8bb1b3be141b3861702d746dace53[m
+Author: brunoferreira17 <brunoferreiraferreira17@gmail.com>
+Date:   Thu Jun 20 14:28:12 2024 +0100
+
+    migration
+
+[33mcommit 31f61fdf775aaa5466b2984c33a004039cbf5794[m
+Author: brunoferreira17 <brunoferreiraferreira17@gmail.com>
+Date:   Thu Jun 20 14:25:55 2024 +0100
+
+    migration file
+
+[33mcommit 3bfd96ec256

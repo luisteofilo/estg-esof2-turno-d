@@ -5,6 +5,10 @@ using ESOF.WebApp.DBLayer.Persistence.Repositories;
 using ESOF.WebApp.Scraper;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
+using ESOF.WebApp.WebAPI.Services; // Add this namespace for EmailTemplateService
+using Microsoft.EntityFrameworkCore;
+using WebAPI.Repositories; // Adjust namespaces accordingly
+using WebAPI.Repositories.Contracts; // Adjust namespaces accordingly
 using ESOF.WebApp.WebAPI.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -28,6 +32,21 @@ builder.Services.AddHangfire(config => config
 builder.Services.AddHangfireServer();
 
 // Add services to the container.
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+
+// Register repositories with their respective interfaces
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<ISkillRepository, SkillRepository>();
+builder.Services.AddScoped<IEducationRepository, EducationRepository>();
+builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
+builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
+builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
+builder.Services.AddScoped<IInterviewFeedback, InterviewFeedbackRepository>(); // Assuming this is correct
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -74,6 +93,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
+// Register services
+builder.Services.AddScoped<EmailTemplateService>(); // Assuming EmailTemplateService is correctly implemented and registered here
 
 var app = builder.Build();
 
@@ -88,6 +109,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Define endpoints
 //Profile features (Store Profile Avatar)
 app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions()
@@ -104,7 +126,8 @@ var summaries = new[]
 };
 
 app.MapGet("/weatherforecast", () =>
-    {
+{
+    
         var summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -123,6 +146,9 @@ app.MapGet("/weatherforecast", () =>
     .WithName("GetWeatherForecast")
     .WithOpenApi();
 
+   
+// Assuming this endpoint was intended, uncomment if needed
+/*
 app.MapGet("/users/emails", () =>
     {
         var db = new ApplicationDbContext();
@@ -130,7 +156,7 @@ app.MapGet("/users/emails", () =>
     })
     .WithName("GetUsersNames")
     .WithOpenApi();
-
+*/
 
 app.MapControllers();
 
