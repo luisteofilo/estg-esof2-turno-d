@@ -1,12 +1,11 @@
-﻿
-using Common.Dtos.Profile;
+﻿using Common.Dtos.Profile;
 using Frontend.Services.Contracts;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Frontend.Services;
 
 public class ProfileService(HttpClient _httpClient) : IProfileService
 {
-
     public async Task<IEnumerable<ProfileDto>> GetProfiles()
     {
         var response = await _httpClient.GetAsync("api/Profile");
@@ -17,6 +16,13 @@ public class ProfileService(HttpClient _httpClient) : IProfileService
     public async Task<ProfileDto> GetProfile(Guid profileId)
     {
         var response = await _httpClient.GetAsync($"api/Profile/{profileId}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<ProfileDto>();
+    }
+
+    public async Task<ProfileDto> GetProfileByUrl(String profileUrl)
+    {
+        var response = await _httpClient.GetAsync($"api/Profile/url/{profileUrl}");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<ProfileDto>();
     }
@@ -39,6 +45,20 @@ public class ProfileService(HttpClient _httpClient) : IProfileService
     {
         var response = await _httpClient.DeleteAsync($"api/Profile/{profileId}");
         response.EnsureSuccessStatusCode();
+    }
+    
+    public async Task<string> UploadProfileImageAsync(Guid profileId, IBrowserFile selectedFile)
+    {
+        using var content = new MultipartFormDataContent();
+        await using var fileStream = selectedFile.OpenReadStream();
+        using var streamContent = new StreamContent(fileStream);
+        
+        content.Add(streamContent, "File", selectedFile.Name);
+        content.Add(new StringContent(profileId.ToString()), "ProfileId");
+
+        var response = await _httpClient.PostAsync("api/Profile/upload-image", content);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
     }
 
     public async Task<IEnumerable<SkillDto>> GetSkills()
