@@ -9,9 +9,21 @@ public class InterviewRepository : IInterviewRepository
 {
     private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
-    public async Task<IEnumerable<Interview>> GetAllAsync()
+    public async Task<IEnumerable<Interview>> GetAllAsync(string candidate = null, string location = null)
     {
-        return await _context.Interviews.OrderBy(p => p.InterviewId).ToListAsync();
+        var query = _context.Interviews.AsQueryable();
+        
+        if (!string.IsNullOrEmpty(candidate))
+        {
+            query = query.Where(i => i.Candidate.Name.ToLower() == candidate.ToLower());
+        }
+
+        if (!string.IsNullOrEmpty(location))
+        {
+            query = query.Where(i => i.Location.ToLower() == location.ToLower());
+        }
+        
+        return await query.OrderBy(p => p.InterviewId).ToListAsync();
     }
 
     public async Task<Interview> GetByIdAsync(Guid interviewId)
@@ -113,6 +125,24 @@ public class InterviewRepository : IInterviewRepository
             return interview.PresenceMarked;
         }
         return false;
+    }
+
+    public async Task<List<Candidate>> GetAllInterviewCandidates()
+    {
+        return await _context.Interviews
+            .Where(i => i.Candidate != null)
+            .Select(i => i.Candidate)
+            .Distinct()
+            .ToListAsync();
+    }
+    
+    public async Task<List<string>> GetAllInterviewLocation()
+    {
+        return await _context.Interviews
+            .Where(i => i.Location != null)
+            .Select(i => i.Location)
+            .Distinct()
+            .ToListAsync();
     }
 
 }
