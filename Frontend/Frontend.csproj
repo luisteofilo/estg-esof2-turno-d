@@ -17,6 +17,7 @@
       <PackageReference Include="Blazored.FluentValidation" Version="2.2.0" />
       <PackageReference Include="Blazored.Typeahead" Version="4.7.0" />
       <PackageReference Include="DotNetEnv" Version="3.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.6" />
     </ItemGroup>
 
     <ItemGroup>
