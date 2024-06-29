@@ -19,6 +19,11 @@ public class ProfileRepository : IProfileRepository
         return await _dbContext.Profiles.FirstOrDefaultAsync(p => p.ProfileId == profileId);
     }
 
+    public async Task<Profile> GetProfileByUserIdAsync(Guid userId)
+    {
+        return await _dbContext.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
+    }
+
     public async Task<Profile> GetProfileByUrlAsync(string profileUrl)
     {
         return await _dbContext.Profiles.FirstOrDefaultAsync(p => p.UrlProfile == profileUrl);

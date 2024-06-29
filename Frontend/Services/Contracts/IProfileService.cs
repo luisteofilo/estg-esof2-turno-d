@@ -8,6 +8,7 @@ public interface IProfileService
     // Profile
     Task<IEnumerable<ProfileDto>> GetProfiles();
     Task<ProfileDto> GetProfile(Guid profileId);
+    Task<ProfileDto> GetProfileByUserId(Guid userId);
     Task<ProfileDto> GetProfileByUrl(String profileUrl);
     Task<ProfileDto> UpdateProfile(Guid profileId, ProfileDto updatedProfileDto);
     Task<string> UploadProfileImageAsync(Guid profileId, IBrowserFile selectedFile);

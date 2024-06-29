@@ -184,6 +184,24 @@ public class ProfileController(
         }
     }
     
+    [HttpGet("user/{userId}")]
+    [ProducesResponseType(200, Type = typeof(ProfileDto))]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetProfileByUserId(Guid userId)
+    {
+        try
+        {
+            var profile = await _profileRepository.GetProfileByUserIdAsync(userId);
+            var profileDto = profile.ProfileConvertToDto();
+
+            return Ok(profileDto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving profile: {ex.Message}");
+        }
+    }
+    
     [HttpGet("url/{profileUrl}")]
     [ProducesResponseType(200, Type = typeof(ProfileDto))]
     [ProducesResponseType(404)]

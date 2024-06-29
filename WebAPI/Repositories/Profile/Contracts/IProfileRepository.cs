@@ -6,6 +6,7 @@ public interface IProfileRepository
 {
     Task<IEnumerable<Profile>> GetProfilesAsync();
     Task<Profile> GetProfileAsync(Guid profileId);
+    Task<Profile> GetProfileByUserIdAsync(Guid userId);
     Task<Profile> GetProfileByUrlAsync(string profileUrl);
     Task<bool> ProfileExistsAsync(Guid profileId);
     Task<int> UpdateProfileAsync(Profile profile);
