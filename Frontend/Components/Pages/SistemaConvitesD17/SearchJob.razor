@@ -1,5 +1,6 @@
 @page "/SearchJob"
 @rendermode InteractiveServer
+@inject HttpClient Http
 
 <PageTitle>Search Job</PageTitle>
 
@@ -41,38 +42,38 @@
         <div class="containerTabela">
             <div class="containerRowTituloTabela">
                 <div class="containerTextoTabelas">
-                    <h1 class="textoRowTituloTabela">Job</h1>
+                    <h1 class="textoRowTituloTabela">Position</h1>
                 </div>
                 <div class="containerTextoTabelas">
-                    <h1 class="textoRowTituloTabela">Company</h1>
+                    <h1 class="textoRowTituloTabela">Experience</h1>
                 </div>
                 <div class="containerTextoTabelas">
-                    <h1 class="textoRowTituloTabela">Location</h1>
+                    <h1 class="textoRowTituloTabela">Localization</h1>
                 </div>
                 <div class="containerTextoTabelas">
-                    <h1 class="textoRowTituloTabela">Email</h1>
+                    <h1 class="textoRowTituloTabela">Description</h1>
                 </div>
             </div>
             <div class="linha"></div>
             @foreach (var job in filteredJobs)
             {
-            var rowClass = (filteredJobs.IndexOf(job) % 2 == 0) ? "corLinhaPar" : "corLinhaImpar";
-            <NavLink href="SelectProfile">
-                <div class="containerRowDadosTabela @rowClass">
-                    <div class="containerTextoTabelas">
-                        <h1 class="textoRowDadosTabelaColuna1">@job[0]</h1>
+                var rowClass = (filteredJobs.IndexOf(job) % 2 == 0) ? "corLinhaPar" : "corLinhaImpar";
+                <NavLink href="SelectProfile">
+                    <div class="containerRowDadosTabela @rowClass">
+                        <div class="containerTextoTabelas">
+                            <h1 class="textoRowDadosTabelaColuna1">@job.Position</h1>
+                        </div>
+                        <div class="containerTextoTabelas">
+                            <h1 class="textoRowDadosTabela">@job.Experience</h1>
+                        </div>
+                        <div class="containerTextoTabelas">
+                            <h1 class="textoRowDadosTabela">@job.Localization</h1>
+                        </div>
+                        <div class="containerTextoTabelas">
+                            <h1 class="textoRowDadosTabela">@job.Description</h1>
+                        </div>
                     </div>
-                    <div class="containerTextoTabelas">
-                        <h1 class="textoRowDadosTabela">@job[1]</h1>
-                    </div>
-                    <div class="containerTextoTabelas">
-                        <h1 class="textoRowDadosTabela">@job[2]</h1>
-                    </div>
-                    <div class="containerTextoTabelas">
-                        <h1 class="textoRowDadosTabela">@job[3]</h1>
-                    </div>
-                </div>
-            </NavLink>
+                </NavLink>
             }
         </div>
     }
@@ -80,21 +81,46 @@
 
 @code {
     private string searchText = string.Empty;
-    private List<string[]> filteredJobs;
+    private List<Job> filteredJobs;
     private bool isSearchPerformed = false;
-
-    string[][] jobs = new string[][]
+    
+    // Classe para representar um Job
+    public class Job
     {
-        new string[] { "Software Developer", "Google", "New York City", "john.doe@example.com" },
-        new string[] { "Product Manager", "Facebook", "San Francisco dhawihdwaihiuwahiu dhawi", "jane.smith@facebook.com" },
-        new string[] { "UX Designer", "Amazon", "Seattle", "mike.jones@amazon.com" },
-        new string[] { "Data Scientist", "Microsoft", "Redmond", "emily.davis@microsoft.com" },
-        new string[] { "DevOps Engineer", "Netflix", "Los Gatos", "chris.wilson@netflix.com" }
+        public string Position { get; set; }
+        public string Experience { get; set; }
+        public string Localization { get; set; }
+        public string Description { get; set; }
+    }
+
+    // Lista para armazenar todos os jobs carregados
+    private List<Job> allJobs = new List<Job>
+    {
+        new Job { Position = "Software Developer", Experience = "5+ years", Localization = "New York City", Description = "Develop and maintain web applications using modern frameworks and technologies." },
+        new Job { Position = "Product Manager", Experience = "7+ years", Localization = "San Francisco", Description = "Lead product development teams to create innovative solutions that meet market needs." },
+        new Job { Position = "UX Designer", Experience = "4+ years", Localization = "Seattle", Description = "Design user interfaces and experiences that are both intuitive and visually appealing." },
+        new Job { Position = "Data Scientist", Experience = "6+ years", Localization = "Redmond", Description = "Analyze large datasets to extract insights and inform business decisions." },
+        new Job { Position = "DevOps Engineer", Experience = "5+ years", Localization = "Los Gatos", Description = "Implement and manage continuous integration and continuous deployment pipelines." },
+        new Job { Position = "Frontend Developer", Experience = "3+ years", Localization = "San Francisco", Description = "Build responsive and interactive user interfaces using HTML, CSS, and JavaScript." },
+        new Job { Position = "Backend Developer", Experience = "5+ years", Localization = "Sunnyvale", Description = "Develop and maintain server-side logic and databases for web applications." },
+        new Job { Position = "Mobile Developer", Experience = "4+ years", Localization = "San Francisco", Description = "Create and maintain mobile applications for iOS and Android platforms." },
+        new Job { Position = "Cloud Engineer", Experience = "6+ years", Localization = "Seattle", Description = "Design and manage cloud infrastructure to ensure scalability and reliability." },
+        new Job { Position = "AI Researcher", Experience = "3+ years", Localization = "San Francisco", Description = "Conduct research and development in artificial intelligence and machine learning." },
+        new Job { Position = "Cybersecurity Analyst", Experience = "5+ years", Localization = "San Jose", Description = "Protect company systems and data from cyber threats and attacks." },
+        new Job { Position = "IT Support Specialist", Experience = "2+ years", Localization = "Armonk", Description = "Provide technical support and assistance to end-users and troubleshoot IT issues." },
+        new Job { Position = "Network Engineer", Experience = "4+ years", Localization = "Dallas", Description = "Design, implement, and maintain computer networks and related infrastructure." },
+        new Job { Position = "Database Administrator", Experience = "5+ years", Localization = "Redwood City", Description = "Manage and maintain databases to ensure data integrity and availability." },
+        new Job { Position = "Systems Architect", Experience = "8+ years", Localization = "Santa Clara", Description = "Design and oversee the implementation of complex IT systems and infrastructures." },
+        new Job { Position = "Full Stack Developer", Experience = "4+ years", Localization = "San Jose", Description = "Work on both the frontend and backend of web applications." },
+        new Job { Position = "Scrum Master", Experience = "6+ years", Localization = "San Francisco", Description = "Facilitate agile development processes and ensure team adherence to Scrum principles." },
+        new Job { Position = "Technical Writer", Experience = "3+ years", Localization = "Palo Alto", Description = "Create and maintain technical documentation for software and hardware products." },
+        new Job { Position = "Data Analyst", Experience = "3+ years", Localization = "New York City", Description = "Analyze data to identify trends and support business decision-making." },
+        new Job { Position = "Game Developer", Experience = "5+ years", Localization = "Redwood City", Description = "Design and develop video games for various platforms and genres." }
     };
 
     protected override void OnInitialized()
     {
-        filteredJobs = jobs.ToList();
+        filteredJobs = allJobs;
     }
 
     private void SearchJobs()
@@ -102,11 +128,15 @@
         isSearchPerformed = true;
         if (string.IsNullOrWhiteSpace(searchText))
         {
-            filteredJobs = jobs.ToList();
+            filteredJobs = allJobs;
         }
         else
         {
-            filteredJobs = jobs.Where(job => job.Any(field => field.Contains(searchText, StringComparison.OrdinalIgnoreCase))).ToList();
+            filteredJobs = allJobs.Where(job =>
+                job.Position.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                job.Experience.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                job.Localization.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                job.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
 }
