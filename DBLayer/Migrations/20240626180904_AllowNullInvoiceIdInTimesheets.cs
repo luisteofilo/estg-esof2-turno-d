@@ -5,15 +5,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ESOF.WebApp.DBLayer.Migrations
 {
-    /// <inheritdoc />
     public partial class AllowNullInvoiceIdInTimesheets : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Timesheets_Invoices_TimesheetId",
-                table: "Timesheets");
+            migrationBuilder.Sql(@"
+                DO $$
+                BEGIN
+                    IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FK_Timesheets_Invoices_TimesheetId') THEN
+                        ALTER TABLE ""Timesheets"" DROP CONSTRAINT ""FK_Timesheets_Invoices_TimesheetId"";
+                    END IF;
+                END $$;
+            ");
 
             migrationBuilder.AlterColumn<Guid>(
                 name: "InvoiceId",
@@ -38,7 +41,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 onDelete: ReferentialAction.Cascade);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
