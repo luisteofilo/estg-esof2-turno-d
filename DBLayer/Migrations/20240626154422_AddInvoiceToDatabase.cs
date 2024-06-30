@@ -24,7 +24,12 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invoices", x => x.InvoiceId);
-                });
+                    table.ForeignKey(name: "FK_Invoices_Timesheets_TimesheetId",
+                        column: x => x.TimesheetId,
+                        principalTable: "Timesheets",
+                        principalColumn: "TimesheetId",
+                        onDelete: ReferentialAction.Cascade);
+                });        
 
         }
 
@@ -69,6 +74,10 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Permissions");
+            
+            migrationBuilder.DropForeignKey(
+                name: "FK_Invoices_Timesheets_TimesheetId",
+                table: "Invoices");
 
             migrationBuilder.DropTable(
                 name: "Invoices");
