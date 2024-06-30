@@ -20,6 +20,12 @@ public class ProfileService(HttpClient _httpClient) : IProfileService
         return await response.Content.ReadFromJsonAsync<ProfileDto>();
     }
 
+    public async Task<ProfileDto> GetProfileByUserId(Guid userId)
+    {
+        var response = await _httpClient.GetAsync($"api/Profile/user/{userId}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<ProfileDto>();
+    }
     public async Task<ProfileDto> GetProfileByUrl(String profileUrl)
     {
         var response = await _httpClient.GetAsync($"api/Profile/url/{profileUrl}");

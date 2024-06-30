@@ -1,7 +1,9 @@
-﻿using Common.Dtos.Profile;
+﻿using System.Security.Claims;
+using Common.Dtos.Profile;
 using Frontend.Services.Contracts;
 using Helpers;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace Frontend.Components.Pages.Profile;
@@ -9,6 +11,7 @@ namespace Frontend.Components.Pages.Profile;
 public class ProfileBase : ComponentBase
 {
     [Inject] private IProfileService ProfileService { get; set; }
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
     [Parameter] public string? ProfileId { get; set; }
     [Parameter] public string? ProfileUrl { get; set; }
 
@@ -37,8 +40,24 @@ public class ProfileBase : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
+        
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        
         try
         {
+            if (user.Identity.IsAuthenticated)
+            {
+                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+                if (Guid.TryParse(userId, out var guidUserId))
+                {
+                    var profile = await ProfileService.GetProfileByUserId(guidUserId);
+                    ProfileId = profile.ProfileId.ToString();
+                    Console.WriteLine(ProfileId);
+                }
+            }
+            
             if (!string.IsNullOrEmpty(ProfileId))
             {
                 Profile = await ProfileService.GetProfile(Guid.Parse(ProfileId));
