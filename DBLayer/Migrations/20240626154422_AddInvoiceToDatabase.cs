@@ -11,22 +11,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            
-            migrationBuilder.CreateTable(
-                name: "Imports",
-                columns: table => new
-                {
-                    ImportId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Url = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    DeletedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Imports", x => x.ImportId);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Interviewers",
                 columns: table => new
