@@ -1,4 +1,10 @@
 using ESOF.WebApp.DBLayer.Context;
+using Helpers.Models;
+using ESOF.WebApp.WebAPI.Repositories;
+using ESOF.WebApp.WebAPI.Repositories.Contracts;
+
+using ESOF.WebApp.WebAPI.Services;
+
 using ESOF.WebApp.DBLayer.Persistence;
 using ESOF.WebApp.DBLayer.Persistence.Interfaces;
 using ESOF.WebApp.DBLayer.Persistence.Repositories;
@@ -8,6 +14,8 @@ using ESOF.WebApp.WebAPI.Repositories.Contracts;
 using ESOF.WebApp.WebAPI.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
+using Microsoft.EntityFrameworkCore;
+using ESOF.WebApp.WebAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using WebAPI.Repositories;
@@ -41,9 +49,9 @@ builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
-
+builder.Services.AddScoped<RoleRepository>();
+builder.Services.AddScoped<RegisterRepository>();
 builder.Services.AddScraperDependencyInjection();
-
 
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
@@ -96,11 +104,6 @@ app.UseStaticFiles(new StaticFileOptions()
 });
 
 app.UseExceptionHandler("/error");
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
 app.MapGet("/weatherforecast", () =>
     {
