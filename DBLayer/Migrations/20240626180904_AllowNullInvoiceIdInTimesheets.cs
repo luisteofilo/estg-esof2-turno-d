@@ -12,6 +12,15 @@ namespace ESOF.WebApp.DBLayer.Migrations
             migrationBuilder.Sql(@"
                 DO $$
                 BEGIN
+                    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='Timesheets' AND column_name='InvoiceId') THEN
+                        ALTER TABLE ""Timesheets"" ADD COLUMN ""InvoiceId"" uuid;
+                    END IF;
+                END $$;
+            ");
+
+            migrationBuilder.Sql(@"
+                DO $$
+                BEGIN
                     IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FK_Timesheets_Invoices_TimesheetId') THEN
                         ALTER TABLE ""Timesheets"" DROP CONSTRAINT ""FK_Timesheets_Invoices_TimesheetId"";
                     END IF;
