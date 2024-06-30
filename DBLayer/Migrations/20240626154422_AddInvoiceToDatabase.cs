@@ -11,18 +11,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Candidates",
-                columns: table => new
-                {
-                    CandidateId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Candidates", x => x.CandidateId);
-                });
-
+            
             migrationBuilder.CreateTable(
                 name: "Imports",
                 columns: table => new
