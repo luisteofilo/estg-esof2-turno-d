@@ -21,8 +21,8 @@ namespace ESOF.WebApp.DBLayer.Migrations
             migrationBuilder.Sql(@"
                 DO $$
                 BEGIN
-                    IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FK_Timesheets_Invoices_TimesheetId') THEN
-                        ALTER TABLE ""Timesheets"" DROP CONSTRAINT ""FK_Timesheets_Invoices_TimesheetId"";
+                    IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FK_Invoices_Timesheets_TimesheetId') THEN
+                        ALTER TABLE ""Invoices"" DROP CONSTRAINT ""FK_Invoices_Timesheets_TimesheetId"";
                     END IF;
                 END $$;
             ");
@@ -34,12 +34,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 nullable: true,
                 oldClrType: typeof(Guid),
                 oldType: "uuid");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Invoices_TimesheetId",
-                table: "Invoices",
-                column: "TimesheetId",
-                unique: true);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Invoices_Timesheets_TimesheetId",
@@ -56,10 +50,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 name: "FK_Invoices_Timesheets_TimesheetId",
                 table: "Invoices");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Invoices_TimesheetId",
-                table: "Invoices");
-
             migrationBuilder.AlterColumn<Guid>(
                 name: "InvoiceId",
                 table: "Timesheets",
@@ -70,13 +60,14 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 oldType: "uuid",
                 oldNullable: true);
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Timesheets_Invoices_TimesheetId",
-                table: "Timesheets",
-                column: "TimesheetId",
-                principalTable: "Invoices",
-                principalColumn: "InvoiceId",
-                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.Sql(@"
+                DO $$
+                BEGIN
+                    IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FK_Timesheets_Invoices_TimesheetId') THEN
+                        ALTER TABLE ""Timesheets"" DROP CONSTRAINT ""FK_Timesheets_Invoices_TimesheetId"";
+                    END IF;
+                END $$;
+            ");
         }
     }
 }
