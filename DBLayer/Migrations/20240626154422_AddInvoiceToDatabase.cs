@@ -31,10 +31,62 @@ namespace ESOF.WebApp.DBLayer.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Educations");
+
+            migrationBuilder.DropTable(
+                name: "Experiences");
+
+            migrationBuilder.DropTable(
+                name: "Interviews");
+
+            migrationBuilder.DropTable(
+                name: "JobSkills");
+
+            migrationBuilder.DropTable(
+                name: "ProfileSkills");
+
+            migrationBuilder.DropTable(
+                name: "RolePermissions");
+
+            migrationBuilder.DropTable(
+                name: "Timesheets");
+
+            migrationBuilder.DropTable(
+                name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "Candidates");
+
+            migrationBuilder.DropTable(
+                name: "Interviewers");
+
+            migrationBuilder.DropTable(
+                name: "Profiles");
+
+            migrationBuilder.DropTable(
+                name: "Skills");
+
+            migrationBuilder.DropTable(
+                name: "Permissions");
 
             migrationBuilder.DropTable(
                 name: "Invoices");
 
+            migrationBuilder.DropTable(
+                name: "Positions");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Jobs");
+
+            migrationBuilder.DropTable(
+                name: "Imports");
         }
     }
 }
