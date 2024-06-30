@@ -5,6 +5,8 @@
 
 <PageTitle>Job Creation</PageTitle>
 
+
+
 @if (ErrorMessage != null)
 {
     <DisplayError ErrorMessage="@ErrorMessage" />
@@ -18,18 +20,22 @@ else
         <h3 class="col-10 d-flex justify-content-center">Job Creation</h3>
     </div>
     <form @onsubmit="CreateJob">
-        <div>
-            <label for="position">Position:</label>
-            <input type="text" id="position" @bind="JobNew.Position" />
-        </div>
+
+    <div>
+        <label for="position">Position:</label>
+        <input type="text"  id="position" @bind="JobNew.Positions"/>
+    </div>
+
         <div>
             <label for="date">End Date:</label>
             <input type="date" id="date" @bind="JobNew.EndDate" />
         </div>
+
         <div>
             <label for="experience">Experience:</label>
             <input type="text" id="experience" @bind="JobNew.Experience" />
         </div>
+
         <div>
             <label for="commitment">Commitment:</label>
             <InputSelect id="commitment" @bind-Value="JobNew.Commitment">
@@ -39,10 +45,12 @@ else
                 <option value="@CommitmentType.FullTime">Full Time</option>
             </InputSelect>
         </div>
+
         <div>
             <label for="localization">Localization:</label>
             <input type="text" id="localization" @bind="JobNew.Localization" />
         </div>
+
         <div>
             <label for="remote">Remote:</label>
             <InputSelect id="remote" @bind-Value="JobNew.Remote">
@@ -67,6 +75,7 @@ else
                 <option value="@EducationLevel.Doctoral">Doctoral</option>
             </InputSelect>
         </div>
+
         <!-- Required Skills -->
         <div class="skills-label">
             <label for="skills">Required Skills (Optional):</label>
@@ -82,6 +91,7 @@ else
                 }
             </div>
         </div>
+
         <!-- Nice to Have Skills -->
         <div class="nice-to-have-skills-label">
             <label for="niceToHaveSkills">Nice to Have Skills (Optional):</label>
@@ -97,12 +107,14 @@ else
                 }
             </div>
         </div>
+
         <div class="description-label">
             <label for="description">Description (Optional):</label>
         </div>
         <div class="description-input">
             <input type="text" Area id="description" @bind="JobNew.Description" />
         </div>
+
         <button type="submit">Submit</button>
     </form>
 }

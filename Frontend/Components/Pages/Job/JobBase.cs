@@ -90,8 +90,11 @@ public class JobBase : ComponentBase
 
     protected void FilterJobs()
     {
+        Guid searchPositionGuid;
+        bool isSearchPositionGuidValid = Guid.TryParse(searchPosition, out searchPositionGuid);
+        
         FilteredJobs = Jobs.Where(j =>
-            (string.IsNullOrEmpty(searchPosition) || j.Position.Contains(searchPosition, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(searchPosition) || (isSearchPositionGuidValid && j.Positions != null && j.Positions.Any(p => p.PositionId == searchPositionGuid))) &&
             (string.IsNullOrEmpty(searchLocalization) || j.Localization.Contains(searchLocalization, StringComparison.OrdinalIgnoreCase)) &&
             (string.IsNullOrEmpty(searchCompany) || j.Company != null && j.Company.Contains(searchCompany, StringComparison.OrdinalIgnoreCase))
         ).ToList();

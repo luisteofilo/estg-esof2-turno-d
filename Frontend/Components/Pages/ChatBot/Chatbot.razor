@@ -154,7 +154,7 @@
         
         foreach (var job in jobs)
         {
-            var jobDetails = $"<b>Posição:</b> {job.Position}<br><b>Empresa:</b> {job.Company};<br><b>Local:</b> {job.Localization}<br><b>Experiência:</b> {job.Experience}";
+            var jobDetails = $"<b>Posição:</b> {job.Positions}<br><b>Empresa:</b> {job.Company};<br><b>Local:</b> {job.Localization}<br><b>Experiência:</b> {job.Experience}";
             var jobsAiMessage = new MessageDto("ai", jobDetails, TIPO.DISPLAY);
             _messages.Add(jobsAiMessage);
         }

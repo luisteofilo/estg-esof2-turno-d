@@ -1,0 +1,99 @@
+﻿@page "/Positions"
+@using Common.Dtos.Interview
+@using ESOF.WebApp.DBLayer.Entities.Interviews
+@inherits PositionListBase
+@rendermode InteractiveServer
+
+<h1>Positions</h1>
+
+@if (positions == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <div style="margin: 20px auto; width: 80%;">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th colspan="5" style="text-align: center; background-color: #f0f0f0;">Positions Overview</th>
+            </tr>
+            <tr>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Billing Type</th>
+                <th>Job Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var position in positions)
+            {
+                <tr>
+                    <td>@position.StartDate</td>
+                    <td>@position.EndDate</td>
+                    <td>@position.BillingType</td>
+                    <td>@position.JobDetails</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="timesheetModal1" tabindex="-1" aria-labelledby="timesheetModalLabel1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="timesheetModalLabel1">Timesheets for Position 1</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Timesheet ID</th>
+                            <th>Date</th>
+                            <th>Hours Worked</th>
+                            <th>Task Description</th>
+                            <th>Position ID</th>
+                            <th>Invoice ID</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="timesheetModal2" tabindex="-1" aria-labelledby="timesheetModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="timesheetModalLabel2">Timesheets for Position 2</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Timesheet ID</th>
+                            <th>Date</th>
+                            <th>Hours Worked</th>
+                            <th>Task Description</th>
+                            <th>Position ID</th>
+                            <th>Invoice ID</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

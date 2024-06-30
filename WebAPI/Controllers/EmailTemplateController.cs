@@ -68,7 +68,6 @@ namespace ESOF.WebApp.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTemplate(int id)
         {
-
             try
             {
                 await _reademailTemplateService.DeleteTemplateAsync(id);

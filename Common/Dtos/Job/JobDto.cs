@@ -6,15 +6,15 @@ namespace Common.Dtos.Job;
 public class JobDto
 {
     public Guid JobId { get; set; }
-
+    
     public Guid ClientId { get; set; }
-
+    
     public DateTime? EndDate { get; set; }
-
-    public string Position { get; set; }
-
+    
+    public ICollection<ESOF.WebApp.DBLayer.Entities.Position>? Positions { get; set; }
+    
     public CommitmentType? Commitment { get; set; }
-
+    
     public RemoteType? Remote { get; set; }
 
     public string Localization { get; set; }

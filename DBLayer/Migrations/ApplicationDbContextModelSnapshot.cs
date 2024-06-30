@@ -20,7 +20,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);  
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Client", b =>
                 {
@@ -28,6 +28,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -323,6 +324,33 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.ToTable("Interviewers");
                 });
 
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Invoice", b =>
+                {
+                    b.Property<Guid>("InvoiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Payment")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TimesheetId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("InvoiceId");
+
+                    b.HasIndex("TimesheetId")
+                        .IsUnique();
+
+                    b.ToTable("Invoices");
+                });
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
                 {
                     b.Property<Guid>("JobId")
@@ -414,6 +442,31 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasKey("PermissionId");
 
                     b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Position", b =>
+                {
+                    b.Property<Guid>("PositionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BillingType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("JobId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("PositionId");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("Positions");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
@@ -512,6 +565,35 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.HasKey("SkillId");
 
                     b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Timesheet", b =>
+                {
+                    b.Property<Guid>("TimesheetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("HoursWorked")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("InvoiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PositionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("TaskDescription")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("TimesheetId");
+
+                    b.HasIndex("PositionId");
+
+                    b.ToTable("Timesheets");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Talent", b =>
@@ -697,6 +779,17 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Interviewer");
                 });
 
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Invoice", b =>
+                {
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Timesheet", "Timesheet")
+                        .WithOne("Invoice")
+                        .HasForeignKey("ESOF.WebApp.DBLayer.Entities.Invoice", "TimesheetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Timesheet");
+                });
+
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
                 {
                     b.HasOne("ESOF.WebApp.DBLayer.Entities.Import", "Import")
@@ -723,6 +816,17 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Job");
 
                     b.Navigation("Skill");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Position", b =>
+                {
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Job", "Job")
+                        .WithMany("Positions")
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
@@ -772,6 +876,17 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("Permission");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Timesheet", b =>
+                {
+                    b.HasOne("ESOF.WebApp.DBLayer.Entities.Position", "Position")
+                        .WithMany("Timesheets")
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Position");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Talent", b =>
@@ -835,11 +950,18 @@ namespace ESOF.WebApp.DBLayer.Migrations
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Job", b =>
                 {
                     b.Navigation("JobSkills");
+
+                    b.Navigation("Positions");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Position", b =>
+                {
+                    b.Navigation("Timesheets");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Profile", b =>
@@ -866,6 +988,11 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     b.Navigation("JobSkills");
 
                     b.Navigation("ProfileSkills");
+                });
+
+            modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.Timesheet", b =>
+                {
+                    b.Navigation("Invoice");
                 });
 
             modelBuilder.Entity("ESOF.WebApp.DBLayer.Entities.User", b =>

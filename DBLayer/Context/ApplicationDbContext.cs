@@ -80,6 +80,11 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
     
     public DbSet<Entities.FAQ.Job> FAQJobs { get; set; }
 
+    // Position Features
+    public DbSet<Entities.Position> Positions { get; set; }
+    public DbSet<Timesheet> Timesheets { get; set; }
+    
+    public DbSet<Invoice> Invoices { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -113,6 +118,11 @@ public partial class ApplicationDbContext : DbContext, IUnitOfWork
         BuildInterviews(modelBuilder);
         BuildInterviewer(modelBuilder);
         BuildCandidates(modelBuilder);
+
+        // Position Features
+        BuildPositions(modelBuilder);
+        BuildTimesheets(modelBuilder);
+        BuildInvoices(modelBuilder);
 
         
         // FAQ Features

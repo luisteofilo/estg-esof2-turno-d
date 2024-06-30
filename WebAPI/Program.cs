@@ -1,17 +1,16 @@
+using System.Text.Json.Serialization;
 using ESOF.WebApp.DBLayer.Context;
 using Helpers.Models;
 using ESOF.WebApp.WebAPI.Repositories;
 using ESOF.WebApp.WebAPI.Repositories.Contracts;
-
 using ESOF.WebApp.WebAPI.Services;
+
+using ESOF.WebApp.Services;
 
 using ESOF.WebApp.DBLayer.Persistence;
 using ESOF.WebApp.DBLayer.Persistence.Interfaces;
 using ESOF.WebApp.DBLayer.Persistence.Repositories;
 using ESOF.WebApp.Scraper;
-using ESOF.WebApp.WebAPI.Repositories;
-using ESOF.WebApp.WebAPI.Repositories.Contracts;
-using ESOF.WebApp.WebAPI.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +20,11 @@ using Microsoft.Extensions.FileProviders;
 using WebAPI.Repositories;
 using WebAPI.Repositories.Contracts;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 var dbContext = new ApplicationDbContext();
-
 var connectionString = dbContext.Database.GetDbConnection().ConnectionString;
 
 builder.Services.AddHangfire(config => config
@@ -36,7 +36,8 @@ builder.Services.AddHangfire(config => config
 builder.Services.AddHangfireServer();
 
 // Add services to the container.
-
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
@@ -54,6 +55,7 @@ builder.Services.AddScoped<RoleRepository>();
 builder.Services.AddScoped<RegisterRepository>();
 builder.Services.AddScraperDependencyInjection();
 
+
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
 builder.Services.AddScoped<IExternalJobRepository, ExternalJobRepository>();
@@ -67,6 +69,23 @@ builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
 builder.Services.AddScoped<IInterviewerRepository, InterviewerRepository>();
 builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
 
+//Position Repository
+builder.Services.AddScoped<IPositionRepository, PositionRepository>();
+builder.Services.AddScoped<PositionService>();
+builder.Services.AddScoped<TimesheetService>();
+builder.Services.AddScoped<ITimesheetRepository, TimesheetRepository>();
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<InvoiceService>();
+builder.Services.AddScoped<JobPositionService>();
+
+builder.Services.AddScoped<Common.Dtos.Invoice.InvoiceDTOConverter>();
+builder.Services.AddScoped<Common.Dtos.Position.PositionDTOConverter>();
+builder.Services.AddScoped<Common.Dtos.Timesheet.TimesheetDTOConverter>();
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
 
 //Dashboard
 builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
@@ -133,7 +152,6 @@ app.MapGet("/users/emails", () =>
     })
     .WithName("GetUsersNames")
     .WithOpenApi();
-
 
 app.MapControllers();
 

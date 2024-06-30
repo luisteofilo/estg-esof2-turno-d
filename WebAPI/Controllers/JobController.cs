@@ -54,7 +54,7 @@ public class JobController(
             var jobsDto = jobs.Select(job => new JobDto
             {
                 JobId = job.JobId,
-                Position = job.Position,
+                Positions = job.Positions,
                 Company = job.Company,
                 Localization = job.Localization,
                 Experience = job.Experience,

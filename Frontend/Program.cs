@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Common.Dtos.Profile;
 using Common.Dtos.Profile.Validators;
@@ -60,6 +61,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IInterviewerService, InterviewerService>();
 builder.Services.AddScoped<ICandidateService, CandidateService>();
+
+//Position Services
+builder.Services.AddScoped<IPositionService, PositionService>();
 
 
 //Dashboard
