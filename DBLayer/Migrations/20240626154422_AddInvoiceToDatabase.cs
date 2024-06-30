@@ -26,64 +26,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
                     table.PrimaryKey("PK_Invoices", x => x.InvoiceId);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Jobs",
-                columns: table => new
-                {
-                    JobId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ClientId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Commitment = table.Column<int>(type: "integer", nullable: true),
-                    Remote = table.Column<int>(type: "integer", nullable: true),
-                    Localization = table.Column<string>(type: "text", nullable: false),
-                    Education = table.Column<int>(type: "integer", nullable: true),
-                    Experience = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Company = table.Column<string>(type: "text", nullable: true),
-                    OtherDetails = table.Column<string>(type: "text", nullable: true),
-                    ImportId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    DeletedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Jobs", x => x.JobId);
-                    table.ForeignKey(
-                        name: "FK_Jobs_Imports_ImportId",
-                        column: x => x.ImportId,
-                        principalTable: "Imports",
-                        principalColumn: "ImportId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Timesheets",
-                columns: table => new
-                {
-                    TimesheetId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    HoursWorked = table.Column<int>(type: "integer", nullable: false),
-                    TaskDescription = table.Column<string>(type: "text", nullable: false),
-                    PositionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    InvoiceId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Timesheets", x => x.TimesheetId);
-                    table.ForeignKey(
-                        name: "FK_Timesheets_Invoices_TimesheetId",
-                        column: x => x.TimesheetId,
-                        principalTable: "Invoices",
-                        principalColumn: "InvoiceId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Timesheets_Positions_PositionId",
-                        column: x => x.PositionId,
-                        principalTable: "Positions",
-                        principalColumn: "PositionId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Educations_ProfileId",
                 table: "Educations",
