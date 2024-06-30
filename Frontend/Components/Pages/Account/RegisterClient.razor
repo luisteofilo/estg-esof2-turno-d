@@ -1,0 +1,164 @@
+@page "/register-client"
+@layout LoginLayout
+@using ESOF.WebApp.DBLayer.Entities
+@using Frontend.Components.Layout
+@using Frontend.Models.ViewModels
+@using Frontend.Services.Contracts
+@inject NavigationManager NavigationManager
+@inject IRegisterService RegisterService
+
+<PageTitle>Register Client</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body flex-column">
+                        <div class="text-center mt-2">
+                            <span class="text-danger fw-bolder">You don't have permission to access this page.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized Context="_">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3 pt-4 pb-4 border">
+                <EditForm Model="@Model" OnValidSubmit="HandleRegistration" FormName="RegisterClientForm">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    @if (!string.IsNullOrEmpty(EmailExistsError))
+                    {
+                    <div class="alert alert-danger">@EmailExistsError</div>
+                    }
+                    @if (!string.IsNullOrEmpty(GeneralError))
+                    {
+                    <div class="alert alert-danger">@GeneralError</div>
+                    }
+
+                    <div class="mb-3 text-center">
+                        <h3>Register Client</h3>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Company Name</label>
+                        <InputText @bind-Value="Model.CompanyName" class="form-control" placeholder="Company Name" />
+                        <ValidationMessage For="() => Model.CompanyName" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <InputText @bind-Value="Model.Email" class="form-control" placeholder="Email" />
+                        <ValidationMessage For="() => Model.Email" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Password</label>
+                        <InputText @bind-Value="Model.Password" class="form-control" placeholder="Password" type="password" />
+                        <ValidationMessage For="() => Model.Password" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Confirm Password</label>
+                        <InputText @bind-Value="Model.ConfirmPassword" class="form-control" placeholder="Confirm Password" type="password" />
+                        <ValidationMessage For="() => Model.ConfirmPassword" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Phone</label>
+                        <InputText @bind-Value="Model.Phone" class="form-control" placeholder="Phone" />
+                        <ValidationMessage For="() => Model.Phone" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Address</label>
+                        <InputText @bind-Value="Model.Address" class="form-control" placeholder="Address" />
+                        <ValidationMessage For="() => Model.Address" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>City</label>
+                        <InputText @bind-Value="Model.City" class="form-control" placeholder="City" />
+                        <ValidationMessage For="() => Model.City" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Country</label>
+                        <InputText @bind-Value="Model.Country" class="form-control" placeholder="Country" />
+                        <ValidationMessage For="() => Model.Country" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Postal Code</label>
+                        <InputText @bind-Value="Model.PostalCode" class="form-control" placeholder="Postal Code" />
+                        <ValidationMessage For="() => Model.PostalCode" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Company Description</label>
+                        <InputTextArea @bind-Value="Model.CompanyDescription" class="form-control" placeholder="Company Description" />
+                        <ValidationMessage For="() => Model.CompanyDescription" />
+                    </div>
+
+                    <div class="mb-3 d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    [SupplyParameterFromForm]
+    public RegisterClientModel Model { get; set; } = new();
+
+    private string? EmailExistsError { get; set; }
+    private string? GeneralError { get; set; }
+
+    private async Task HandleRegistration()
+    {
+        var (passwordHash, passwordSalt) = CreatePasswordHash(Model.Password);
+
+        var user = new User
+        {
+            UserId = Guid.NewGuid(),
+            Email = Model.Email,
+            PasswordHash = passwordHash,
+            PasswordSalt = passwordSalt,
+            UserRoles = new List<UserRole>()
+        };
+
+        var client = new Client
+        {
+            ClientId = Guid.NewGuid(),
+            CompanyName = Model.CompanyName,
+            Phone = Model.Phone,
+            Address = Model.Address,
+            City = Model.City,
+            Country = Model.Country,
+            PostalCode = Model.PostalCode,
+            CompanyDescription = Model.CompanyDescription,
+            UserId = user.UserId
+        };
+        
+            await RegisterService.RegisterClientAsync(client, user);
+            Model = new RegisterClientModel();
+            EmailExistsError = null;
+            GeneralError = null;
+            NavigationManager.NavigateTo("/login");
+            
+    }
+
+    
+    private static (byte[] passwordHash, byte[] passwordSalt) CreatePasswordHash(string password)
+    {
+        using var hmac = new System.Security.Cryptography.HMACSHA512();
+        var passwordSalt = hmac.Key;
+        var passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        return (passwordHash, passwordSalt);
+    }
+}

@@ -15,6 +15,7 @@ public class Profile
     public string? UrlProfile { get; set; }
     
     public User User { get; set; }
+    public Talent Talent { get; set; }
     public ICollection<ProfileSkill> ProfileSkills { get; set; }
     public ICollection<Education> Educations { get; set; }
     public ICollection<Experience> Experiences { get; set; }

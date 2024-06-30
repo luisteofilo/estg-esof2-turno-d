@@ -55,8 +55,8 @@ namespace ESOF.WebApp.WebAPI.Controllers
             
             try
             {
-            await _reademailTemplateService.UpdateTemplateAsync(template);
-            return NoContent();
+                await _reademailTemplateService.UpdateTemplateAsync(template);
+                return NoContent();
             }
             catch (Exception)
             {
@@ -70,8 +70,8 @@ namespace ESOF.WebApp.WebAPI.Controllers
         {
             try
             {
-            await _reademailTemplateService.DeleteTemplateAsync(id);
-            return NoContent();
+                await _reademailTemplateService.DeleteTemplateAsync(id);
+                return NoContent();
             }
             catch (Exception)
             {
