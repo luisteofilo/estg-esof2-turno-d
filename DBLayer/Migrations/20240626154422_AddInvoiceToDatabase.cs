@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ESOF.WebApp.DBLayer.Migrations
 {
-    /// <inheritdoc />
     public partial class AddInvoiceToDatabase : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -24,78 +22,27 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invoices", x => x.InvoiceId);
-                    table.ForeignKey(name: "FK_Invoices_Timesheets_TimesheetId",
+                    table.ForeignKey(
+                        name: "FK_Invoices_Timesheets_TimesheetId",
                         column: x => x.TimesheetId,
                         principalTable: "Timesheets",
                         principalColumn: "TimesheetId",
                         onDelete: ReferentialAction.Cascade);
-                });        
+                });
 
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_TimesheetId",
+                table: "Invoices",
+                column: "TimesheetId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Educations");
-
-            migrationBuilder.DropTable(
-                name: "Experiences");
-
-            migrationBuilder.DropTable(
-                name: "Interviews");
-
-            migrationBuilder.DropTable(
-                name: "JobSkills");
-
-            migrationBuilder.DropTable(
-                name: "ProfileSkills");
-
-            migrationBuilder.DropTable(
-                name: "RolePermissions");
-
-            migrationBuilder.DropTable(
-                name: "Timesheets");
-
-            migrationBuilder.DropTable(
-                name: "UserRoles");
-
-            migrationBuilder.DropTable(
-                name: "Candidates");
-
-            migrationBuilder.DropTable(
-                name: "Interviewers");
-
-            migrationBuilder.DropTable(
-                name: "Profiles");
-
-            migrationBuilder.DropTable(
-                name: "Skills");
-
-            migrationBuilder.DropTable(
-                name: "Permissions");
-            
-            migrationBuilder.DropForeignKey(
-                name: "FK_Invoices_Timesheets_TimesheetId",
-                table: "Invoices");
+            migrationBuilder.Sql("DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'FK_Invoices_Timesheets_TimesheetId') THEN ALTER TABLE \"Invoices\" DROP CONSTRAINT \"FK_Invoices_Timesheets_TimesheetId\"; END IF; END $$;");
 
             migrationBuilder.DropTable(
                 name: "Invoices");
-
-            migrationBuilder.DropTable(
-                name: "Positions");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Jobs");
-
-            migrationBuilder.DropTable(
-                name: "Imports");
+            
         }
     }
 }
