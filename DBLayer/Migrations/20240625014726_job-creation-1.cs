@@ -1,26 +1,16 @@
-﻿using System;
+﻿﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace ESOF.WebApp.DBLayer.Migrations
 {
+    /// <inheritdoc />
     public partial class jobcreation1 : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Skills",
-                columns: table => new
-                {
-                    SkillId = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Skills", x => x.SkillId);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Jobs",
                 columns: table => new
@@ -75,6 +65,7 @@ namespace ESOF.WebApp.DBLayer.Migrations
                 column: "SkillId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -82,9 +73,6 @@ namespace ESOF.WebApp.DBLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Jobs");
-
-            migrationBuilder.DropTable(
-                name: "Skills");
         }
     }
 }
